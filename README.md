@@ -48,3 +48,6 @@ Students:
  - Will have access to information about all of the lectures they have registered for (I think it would be helpful to create a distinction between the lectures they can register for and the ones they already have registered for)
  - Will be able to Cancel a registration, signalling that they no longer intend to attend that lecture.
  - Must be able to attend at least one lecture every two weeks.
+
+### Group members
+Jakub Tokarz | J.M.Tokarz@student.tudelft.nl | 5017475
