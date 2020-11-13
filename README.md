@@ -51,3 +51,5 @@ Students:
 
 ### Group members
 Jakub Tokarz | J.M.Tokarz@student.tudelft.nl | 5017475
+
+Nathan Ordonez | N.A.OrdonezCardenas@student.tudelft.nl | 5017475
