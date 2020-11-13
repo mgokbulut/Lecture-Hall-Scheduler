@@ -53,3 +53,11 @@ Students:
 Jakub Tokarz | J.M.Tokarz@student.tudelft.nl | 5017475
 
 Nathan Ordonez | N.A.OrdonezCardenas@student.tudelft.nl | 5017475
+
+Baran Ozan Yarar | B.O.Yarar@student.tudelft.nl | 5018102
+
+Mert Gokbulut | M.Gokbulut@student.tudelft.nl | 5044065
+
+Louis Milliken | L.M.Milliken@student.tudelft.nl | 5068991
+
+Jop Schaap | J.Schaap-1@student.tudelft.nl | 5086302
