@@ -50,4 +50,11 @@ Students:
  - Must be able to attend at least one lecture every two weeks.
 
 ### Group members
-Jakub Tokarz | J.M.Tokarz@student.tudelft.nl | 5017475
+|📸|Name|Email|student id|
+|---|---|---|---|
+|<img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/2551/avatar.png?width=90" width="80"> |Jakub Tokarz | J.M.Tokarz@student.tudelft.nl | 5017475|
+|<img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/1652/avatar.png?width=80" width="80"> |Nathan Ordonez | N.A.OrdonezCardenas@student.tudelft.nl | 5017475|
+|<img src="https://secure.gravatar.com/avatar/5d2d5141179be445a6ca6b2859663dca?s=80&d=identicon" width="80"> |Baran Ozan Yarar | B.O.Yarar@student.tudelft.nl | 5018102|
+|<img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/2606/avatar.png?width=80" width="80"> |Mert Gokbulut | M.Gokbulut@student.tudelft.nl | 5044065|
+|<img src="https://secure.gravatar.com/avatar/d023862c0fde22221f4b22128056c55b?s=80&d=identicon" width="80"> |Louis Milliken | L.M.Milliken@student.tudelft.nl | 5068991|
+|<img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/2740/avatar.png?width=90" width="80"> | Jop Schaap | J.Schaap-1@student.tudelft.nl | 5086302|
