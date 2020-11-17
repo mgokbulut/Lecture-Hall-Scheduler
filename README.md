@@ -52,7 +52,7 @@ Students:
 ### Group members
 |📸|Name|Email|student id|
 |---|---|---|---|
-|<img src="https://secure.gravatar.com/avatar/010cc4008db80e28527b9ab1cc1974d6?s=800&d=identicon" width="80"> |Jakub Tokarz | J.M.Tokarz@student.tudelft.nl | 5017475|
+|<img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/2551/avatar.png?width=90" width="80"> |Jakub Tokarz | J.M.Tokarz@student.tudelft.nl | 5017475|
 |<img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/1652/avatar.png?width=80" width="80"> |Nathan Ordonez | N.A.OrdonezCardenas@student.tudelft.nl | 5017475|
 |<img src="https://secure.gravatar.com/avatar/5d2d5141179be445a6ca6b2859663dca?s=80&d=identicon" width="80"> |Baran Ozan Yarar | B.O.Yarar@student.tudelft.nl | 5018102|
 |<img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/2606/avatar.png?width=80" width="80"> |Mert Gokbulut | M.Gokbulut@student.tudelft.nl | 5044065|
