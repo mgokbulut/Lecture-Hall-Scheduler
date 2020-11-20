@@ -1,3 +1,5 @@
+package Rules;
+
 public class Ruleset {
 
     private int[][] thresholds;

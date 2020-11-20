@@ -1,4 +1,6 @@
-import RuleSet;
+package Rules;
+import java.sql.Timestamp;
+import java.sql.Time;
 
 public class RulesModule {
 
@@ -6,7 +8,9 @@ public class RulesModule {
     private long breakTime;
     private int maxDays;
 
+
     public void Rules() {
+
         Ruleset rules = rulesTable.getRulesFromDataBase();
 
     }
@@ -18,36 +22,36 @@ public class RulesModule {
     public int getCapacity(int init) {
 
         int index = 0;
-        for (int i = 1; i < thresholds[][0].length; i++) {
+        for (int i = 1; i < thresholds[0].length; i++) {
 
             if (init < thresholds[i][0]) break;
 
             index = i;
         }
 
-        return (init * thresholds[init][1]);
+        return (init * thresholds[init][1] / 100);
 
     }
 
-    public Timestamp getNextStartTime(Lecture lecture) {
+    private Timestamp getNextStartTime(Lecture lecture) {
 
-        long endTime = lecture.startTime.getTime + lecture.duration
-        return new Timestamp(endTime + break);
+        long endTime = lecture.startTime.getTime + lecture.duration;
+        return new Timestamp(endTime + breakTime);
 
     }
 
     public boolean availableForSignUp(Lecture lecture) {
         int maxStudentsInRoom = calculateCapacity(lecture.room.maxCapacity);
-        return lecture.attendingStudents < maxStudentsInRoom
+        return lecture.attendingStudents < maxStudentsInRoom;
     }
 
     public boolean overlap(Lecture l1, Lecture l2) {
-        long start1 = l1.startTime.getTime;
-        long start2 = l2.startTime.getTime;
+        long start1 = l1.startTime.getTime();
+        long start2 = l2.startTime.getTime();
         if (start1 < start2){
-            return (getNextStartTime(l1) > start2);
+            return (getNextStartTime(l1).getTime() > start2);
         } else {
-            return (getNextStartTime(l2) > start1);
+            return (getNextStartTime(l2).getTime() > start1);
         }
 
     }
@@ -59,7 +63,7 @@ public class RulesModule {
     }
 
     public void updateRules() {
-        Ruleset rules = new RuleSet(thresholds, breakTime, maxDays);
+        Ruleset rules = new Ruleset(thresholds, breakTime, maxDays);
         rulesTable.updateRules(rules);
     }
 
