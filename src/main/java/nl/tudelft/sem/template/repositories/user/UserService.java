@@ -1,6 +1,6 @@
 package nl.tudelft.sem.template.repositories.user;
 
-import nl.tudelft.sem.template.models.AppUser;
+import nl.tudelft.sem.template.entities.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,5 +1,4 @@
-package nl.tudelft.sem.template.models;
-
+package nl.tudelft.sem.template.entities;
 
 import java.util.Objects;
 import javax.persistence.Column;
@@ -8,12 +7,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "AppUser")
+@Table(name = "AppUser", schema = "loginDB")
 public class AppUser {
     @Id
-    @Column(name = "netId")
+    @Column(name = "netId", nullable = false, unique = true)
     private String netID;
-    @Column(name = "hashedPassword")
+    @Column(name = "hashedPassword", nullable = false)
     private String password;
 
     public AppUser(String netID, String password) {
@@ -53,7 +52,5 @@ public class AppUser {
     public int hashCode() {
         return Objects.hash(netID, password);
     }
-    //    @ManyToOne
-//    @JoinColumn(name = "role", referencedColumnName = "id")
-//    private Role role;
+
 }
