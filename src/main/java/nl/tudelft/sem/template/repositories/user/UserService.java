@@ -1,6 +1,6 @@
 package nl.tudelft.sem.template.repositories.user;
 
-import nl.tudelft.sem.template.entities.AppUser;
+import nl.tudelft.sem.template.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class UserService {
      * Get all users method.
      * @return returns all users from database
      */
-    public Iterable<AppUser> getAllUsers() {
+    public Iterable<User> getAllUsers() {
         System.out.println("kinda works !!!!");
         return userRepository.findAll();
         //Iterable returns

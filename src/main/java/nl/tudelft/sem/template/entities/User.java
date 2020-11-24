@@ -4,22 +4,21 @@ import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "AppUser", schema = "loginDB")
-public class AppUser {
+//@Table(name = "AppUser", schema = "loginDB")
+public class User {
     @Id
-    @Column(name = "netId", nullable = false, unique = true)
+    @Column(name = "net_id", nullable = false, unique = true)
     private String netID;
-    @Column(name = "hashedPassword", nullable = false)
+    @Column(name = "hashed_password", nullable = false)
     private String password;
 
-    public AppUser(String netID, String password) {
+    public User(String netID, String password) {
         this.netID = netID;
         this.password = password;
     }
-    public AppUser() {
+    public User() {
 
     }
 
@@ -43,7 +42,7 @@ public class AppUser {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AppUser user = (AppUser) o;
+        User user = (User) o;
         return Objects.equals(netID, user.netID) &&
                 Objects.equals(password, user.password);
     }
