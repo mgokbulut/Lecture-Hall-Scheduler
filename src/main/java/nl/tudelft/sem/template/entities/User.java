@@ -4,9 +4,10 @@ import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-//@Table(name = "AppUser", schema = "loginDB")
+@Table(name = "app_user", schema = "loginDB")
 public class User {
     @Id
     @Column(name = "net_id", nullable = false, unique = true)

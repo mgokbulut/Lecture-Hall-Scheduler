@@ -8,10 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-//@RestController
-@RequestMapping(path="/demo")
+@RestController
+//@RequestMapping(path="/demo")
 public class UserController {
 
     @Autowired
@@ -19,8 +19,7 @@ public class UserController {
 
 
     @GetMapping(path = "/users")
-    public @ResponseBody
-    Iterable<User> getAllUsers() {
+    public Iterable<User> getAllUsers() {
         System.out.println("A Request has Arrived !!!!!!!!!!!!!!!!!!!!!!!");
         return userService.getAllUsers();
     }
