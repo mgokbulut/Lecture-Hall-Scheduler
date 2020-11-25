@@ -6,6 +6,7 @@ import nl.tudelft.sem.template.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.MessageDigest;
 import java.util.Optional;
 
 @Service
@@ -27,8 +28,16 @@ public class UserService {
         if (!tmp.isEmpty()) {
             return "{message:\"This NetID already exists\"}";
         } else {
-            // hash password here
-            userRepository.save(user);
+            try {
+                MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+                messageDigest.update(user.getPassword().getBytes());
+                String stringHash = new String(messageDigest.digest());
+                user.setPassword(stringHash);
+                userRepository.save(user);
+            } catch (Exception e) {
+                System.out.println("Something went wrong in register method");
+                return null;
+            }
             return "{message:\"Successfully registered\"}";
         }
     }
@@ -40,6 +49,10 @@ public class UserService {
      */
     public String login(User user) {
         try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(user.getPassword().getBytes());
+            String stringHash = new String(messageDigest.digest());
+            user.setPassword(stringHash);
             String token = authenticationService.createAuthenticationToken(user.getNetID(), user.getPassword());
             if(token == null) {
                 return "{message:\"Invalid credentials\"}";
@@ -70,3 +83,4 @@ public class UserService {
         return Optional.of(user);
     }
 }
+
