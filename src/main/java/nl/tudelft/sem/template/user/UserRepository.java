@@ -1,13 +1,13 @@
-package nl.tudelft.sem.template.repositories.user;
+package nl.tudelft.sem.template.user;
 
-import nl.tudelft.sem.template.entities.User;
+import nl.tudelft.sem.template.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
-    @Override
-    List<User> findAll();
+    public Optional<User> findByNetID(String netId);
 }

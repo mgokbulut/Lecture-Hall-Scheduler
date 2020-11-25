@@ -1,4 +1,4 @@
-package nl.tudelft.sem.template.entities;
+package nl.tudelft.sem.template.user;
 
 import java.util.Objects;
 import javax.persistence.Column;
