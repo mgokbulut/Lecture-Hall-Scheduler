@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.authentication;
+package nl.tudelft.sem.template.authentication;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,12 +30,13 @@ public class AuthenticationController {
     public String createAuthenticationToken(
             @PathVariable String id,
             @PathVariable String password) {
-        password = "" + password.hashCode();
+        // hash the password before putting it to the authenticationManager in the future
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     id, password));
         } catch (BadCredentialsException e) {
-            return null;
+
+            return "Invalid credentials";
         }
 
         final UserDetails userDetails = userDetailsService
