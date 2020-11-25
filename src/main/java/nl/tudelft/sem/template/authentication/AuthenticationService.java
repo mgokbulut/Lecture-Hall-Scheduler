@@ -5,12 +5,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-public class AuthenticationController {
+@Service
+public class AuthenticationService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -23,20 +25,16 @@ public class AuthenticationController {
 
     /** Creates a token for the user if the provided credentials are correct.
      *
-     * @return the token
+     * @return the token, or null
      * @throws Exception if the provided username or password is incorrect
      */
-    @PostMapping("/authenticate/{id}/{password}")
-    public String createAuthenticationToken(
-            @PathVariable String id,
-            @PathVariable String password) {
+    public String createAuthenticationToken(String id, String password) {
         // hash the password before putting it to the authenticationManager in the future
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     id, password));
         } catch (BadCredentialsException e) {
-
-            return "Invalid credentials";
+            return null;
         }
 
         final UserDetails userDetails = userDetailsService
