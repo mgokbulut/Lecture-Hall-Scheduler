@@ -14,11 +14,15 @@ public class User {
     private String netID;
     @Column(name = "hashed_password", nullable = false)
     private String password;
+    @Column(name = "type")
+    private String type;
 
-    public User(String netID, String password) {
+    public User(String netID, String password, String type) {
         this.netID = netID;
         this.password = password;
+        this.type = type;
     }
+
     public User() {
 
     }
@@ -39,18 +43,37 @@ public class User {
         this.password = password;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String authenticationRole() {
+        if (this.type.equals("STUDENT")) {
+            return "ROLE_STUDENT";
+        } else if (this.type.equals("TEACHER")) {
+            return "ROLE_TEACHER";
+        } else if (this.type.equals("FACULTY_MEMBER")) {
+            return "ROLE_ADMIN";
+        }
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return Objects.equals(netID, user.netID) &&
-                Objects.equals(password, user.password);
+                Objects.equals(password, user.password) &&
+                Objects.equals(type, user.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(netID, password);
+        return Objects.hash(netID, password, type);
     }
-
 }
