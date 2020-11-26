@@ -5,38 +5,65 @@ import java.sql.Time;
 public class RulesModule {
 
     class Lecture {
-
-
-
     }
-
 
     private int[][] thresholds;
     private long breakTime;
+
     private int maxDays;
+
     private Ruleset rules;
 
-    public void Rules() {
+    public int[][] getThresholds() {
+        return thresholds;
+    }
 
-        Ruleset rules = new Ruleset(); //rulesTable.getRulesFromDataBase();
+    public void setThresholds(int[][] thresholds) {
+        this.thresholds = thresholds;
+    }
 
+    public long getBreakTime() {
+        return breakTime;
+    }
+
+    public void setBreakTime(long breakTime) {
+        this.breakTime = breakTime;
     }
 
     public int getMaxDays() {
         return maxDays;
     }
 
+    public void setMaxDays(int maxDays) {
+        this.maxDays = maxDays;
+    }
+
+    public Ruleset getRules() {
+        return rules;
+    }
+
+    public void setRules(Ruleset rules) {
+        this.rules = rules;
+    }
+
+    /*
+    public void Rules() {
+
+        Ruleset rules = rulesTable.getRulesFromDataBase();
+
+    }
+    */
+
     public int getCapacity(int init) {
 
         int index = 0;
-        for (int i = 1; i < thresholds[0].length; i++) {
+        for (; index < thresholds[0].length; index++) {
 
-            if (init < thresholds[i][0]) break;
+            if (init < thresholds[index][0]) break;
 
-            index = i;
         }
 
-        return (init * thresholds[init][1] / 100);
+        return (init * thresholds[index][1] / 100);
 
     }
 
@@ -48,7 +75,7 @@ public class RulesModule {
     }
 
     public boolean availableForSignUp(Lecture lecture) {
-        int maxStudentsInRoom = 0; //calculateCapacity(lecture.room.maxCapacity);
+        //int maxStudentsInRoom = calculateCapacity(lecture.room.maxCapacity);
         return true; //lecture.attendingStudents < maxStudentsInRoom;
     }
 
@@ -69,9 +96,10 @@ public class RulesModule {
         //scheduler.reschedule();
     }
 
+    /*
     public void updateRules() {
         Ruleset rules = new Ruleset(thresholds, breakTime, maxDays);
-        //rulesTable.updateRules(rules);
+        rulesTable.updateRules(rules);
     }
-
+    */
 }
