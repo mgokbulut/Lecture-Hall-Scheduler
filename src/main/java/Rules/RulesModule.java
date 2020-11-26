@@ -4,6 +4,13 @@ import java.sql.Time;
 
 public class RulesModule {
 
+    class Lecture {
+
+
+
+    }
+
+
     private int[][] thresholds;
     private long breakTime;
     private int maxDays;
@@ -11,7 +18,7 @@ public class RulesModule {
 
     public void Rules() {
 
-        Ruleset rules = rulesTable.getRulesFromDataBase();
+        Ruleset rules = new Ruleset(); //rulesTable.getRulesFromDataBase();
 
     }
 
@@ -35,31 +42,31 @@ public class RulesModule {
 
     private Timestamp getNextStartTime(Lecture lecture) {
 
-        long endTime = lecture.startTime.getTime + lecture.duration;
+        long endTime = 0; //lecture.startTime.getTime + lecture.duration;
         return new Timestamp(endTime + breakTime);
 
     }
 
     public boolean availableForSignUp(Lecture lecture) {
-        int maxStudentsInRoom = calculateCapacity(lecture.room.maxCapacity);
-        return lecture.attendingStudents < maxStudentsInRoom;
+        int maxStudentsInRoom = 0; //calculateCapacity(lecture.room.maxCapacity);
+        return true; //lecture.attendingStudents < maxStudentsInRoom;
     }
 
     public boolean overlap(Lecture l1, Lecture l2) {
-        long start1 = l1.startTime.getTime();
-        long start2 = l2.startTime.getTime();
+        long start1 = 0; //l1.startTime.getTime();
+        long start2 = 0; //l2.startTime.getTime();
         if (start1 < start2){
-            return (getNextStartTime(l1).getTime() > start2);
+            return 0; //(getNextStartTime(l1).getTime() > start2);
         } else {
-            return (getNextStartTime(l2).getTime() > start1);
+            return 0; //(getNextStartTime(l2).getTime() > start1);
         }
 
     }
 
     public void getNewRules() {
-        this.rules = rulesTable.getRulesFromDataBase();
+        this.rules = new Ruleset(); //rulesTable.getRulesFromDataBase();
         //Tells the scheduler that the rules have changed and should update the schedule when there is time.
-        scheduler.reschedule();
+        //scheduler.reschedule();
     }
 
     public void updateRules() {

@@ -6,6 +6,10 @@ public class Ruleset {
     private long breakTime;
     private int maxDays;
 
+    public RuleSet() {
+
+    }
+
     public Ruleset(int[][] thresholds, long breakTime, int maxDays) {
         this.thresholds = thresholds;
         this.breakTime = breakTime;
