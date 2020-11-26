@@ -7,7 +7,7 @@ public class Ruleset {
     private int maxDays;
 
     public Ruleset() {
-        this.breaktime = 0;
+        this.breakTime = 0;
         this.maxDays = 0;
     }
 

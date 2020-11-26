@@ -71,7 +71,7 @@ public class RulesModule {
 
     public void updateRules() {
         Ruleset rules = new Ruleset(thresholds, breakTime, maxDays);
-        rulesTable.updateRules(rules);
+        //rulesTable.updateRules(rules);
     }
 
 }
