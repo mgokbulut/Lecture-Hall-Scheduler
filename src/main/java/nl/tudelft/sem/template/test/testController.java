@@ -14,7 +14,6 @@ import java.util.Optional;
 public class testController {
     @GetMapping(path = "/test")
     public String getAllUsers() {
-        System.out.println("saaaaaaxxxx");
         return "You can access this route";
     }
 }
