@@ -56,9 +56,9 @@ public class RulesModule {
         long start1 = 0; //l1.startTime.getTime();
         long start2 = 0; //l2.startTime.getTime();
         if (start1 < start2){
-            return 0; //(getNextStartTime(l1).getTime() > start2);
+            return true; //(getNextStartTime(l1).getTime() > start2);
         } else {
-            return 0; //(getNextStartTime(l2).getTime() > start1);
+            return true; //(getNextStartTime(l2).getTime() > start1);
         }
 
     }
