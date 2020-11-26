@@ -14,7 +14,7 @@ public class RulesModule {
     private int[][] thresholds;
     private long breakTime;
     private int maxDays;
-    private Rules rules;
+    private Ruleset rules;
 
     public void Rules() {
 
