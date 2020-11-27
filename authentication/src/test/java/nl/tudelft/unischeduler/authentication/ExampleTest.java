@@ -1,4 +1,4 @@
-package nl.tudelft.sem59.authentication;
+package nl.tudelft.unischeduler.authentication;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

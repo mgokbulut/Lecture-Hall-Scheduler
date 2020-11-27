@@ -1,7 +1,7 @@
-package nl.tudelft.sem59.authentication.repositories;
+package nl.tudelft.unischeduler.authentication.repositories;
 
 
-import nl.tudelft.sem59.authentication.entities.User;
+import nl.tudelft.unischeduler.authentication.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

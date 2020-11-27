@@ -1,4 +1,4 @@
-package nl.tudelft.sem59.authentication.entities;
+package nl.tudelft.unischeduler.authentication.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
