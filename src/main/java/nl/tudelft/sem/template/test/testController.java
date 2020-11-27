@@ -1,17 +1,12 @@
 package nl.tudelft.sem.template.test;
 
 
-import nl.tudelft.sem.template.authentication.AuthenticationService;
-import nl.tudelft.sem.template.user.User;
-import nl.tudelft.sem.template.user.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 //@RequestMapping(path="/demo")
-public class testController {
+public class TestController {
     @GetMapping(path = "/test")
     public String getAllUsers() {
         return "You can access this route";

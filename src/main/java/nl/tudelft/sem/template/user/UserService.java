@@ -1,13 +1,10 @@
 package nl.tudelft.sem.template.user;
 
-import nl.tudelft.sem.template.authentication.AuthenticationService;
-import nl.tudelft.sem.template.user.User;
-import nl.tudelft.sem.template.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.security.MessageDigest;
 import java.util.Optional;
+import nl.tudelft.sem.template.authentication.AuthenticationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
@@ -20,11 +17,12 @@ public class UserService {
 
     /**
      * Register user method.
+     *
      * @param user input username
      * @return result of operation
      */
     public String register(User user) {
-        Optional<User> tmp = userRepository.findById(user.getNetID());
+        Optional<User> tmp = userRepository.findById(user.getNetId());
         if (!tmp.isEmpty()) {
             return "{message:\"This NetID already exists\"}";
         } else {
@@ -43,8 +41,9 @@ public class UserService {
     }
 
     /**
-     * Login user method
-     * @param user
+     * Login user method.
+     *
+     * @param user the user supplied to this method
      * @return returns error message or authentication token
      */
     public String login(User user) {
@@ -53,8 +52,9 @@ public class UserService {
             messageDigest.update(user.getPassword().getBytes());
             String stringHash = new String(messageDigest.digest());
             user.setPassword(stringHash);
-            String token = authenticationService.createAuthenticationToken(user.getNetID(), user.getPassword());
-            if(token == null) {
+            String token = authenticationService
+                .createAuthenticationToken(user.getNetId(), user.getPassword());
+            if (token == null) {
                 return "{message:\"Invalid credentials\"}";
             }
             return "{token:\"" + token + "\"}";
@@ -63,8 +63,10 @@ public class UserService {
         }
         return null;
     }
+
     /**
      * Get all users method.
+     *
      * @return returns all users from database
      */
     public Iterable<User> getAllUsers() {
@@ -72,12 +74,13 @@ public class UserService {
     }
 
     /**
-     * Get user information by netID.
-     * @param netID - netID
-     * @return
+     * Get user information by netId.
+     *
+     * @param netId - netId
+     * @return returns the user found or null
      */
-    public Optional<User> getUser(String netID) {
-        Optional<User> optionalUser = userRepository.findById(netID);
+    public Optional<User> getUser(String netId) {
+        Optional<User> optionalUser = userRepository.findById(netId);
         User user = optionalUser.get();
         user.setPassword("");
         return Optional.of(user);

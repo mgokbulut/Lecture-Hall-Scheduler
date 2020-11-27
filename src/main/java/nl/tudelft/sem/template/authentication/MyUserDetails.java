@@ -1,14 +1,13 @@
 package nl.tudelft.sem.template.authentication;
 
-import nl.tudelft.sem.template.user.User;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import nl.tudelft.sem.template.user.User;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public class MyUserDetails implements UserDetails {
 
@@ -23,18 +22,19 @@ public class MyUserDetails implements UserDetails {
 
     }
 
-    /** Constructor for MyUserDetails.
+    /**
+     * Constructor for MyUserDetails.
      *
      * @param user - the user to get the details from - also sets authority to their role
      */
     public MyUserDetails(User user) {
-        this.netid = user.getNetID();
-        this.username = user.getNetID();
+        this.netid = user.getNetId();
+        this.username = user.getNetId();
         this.password = user.getPassword();
         this.role = user.authenticationRole();
         this.authorities = Arrays.stream(user.authenticationRole().split(" "))
-                            .map(SimpleGrantedAuthority::new)
-                            .collect(Collectors.toList());
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
     }
 
     @Override
