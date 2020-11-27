@@ -18,6 +18,7 @@ plugins {
 group = 'nl.tudelft.sem59'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+targetCompatibility = 11
 
 repositories {
 	mavenCentral()
