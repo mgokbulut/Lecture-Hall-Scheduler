@@ -1,4 +1,4 @@
-image: gradle:6.7-jdk15
+image: gradle:6.7-jdk11
 
 variables:
   MODULE_NAME: schedule-edit
@@ -8,22 +8,22 @@ stages:
   - staticAnalysis
   - test
 
-$(MODULE_NAME)-build:
+schedule-edit-build:
   stage: build
   script:
-    gradle --build-cache :$(MODULE_NAME):assemble
+    gradle --build-cache :schedule-edit:assemble
 
-$(MODULE_NAME)-checkStyle:
+schedule-edit-checkStyle:
   stage: staticAnalysis
   script:
-    gradle :$(MODULE_NAME):checkstyleMain :$(MODULE_NAME):checkStyleTest
+    gradle :schedule-edit:checkstyleMain :schedule-edit:checkStyleTest
 
-$(MODULE_NAME)-PMD:
+schedule-edit-PMD:
   stage: staticAnalysis
   script:
-    gradle :$(MODULE_NAME):pmdMain :$(MODULE_NAME):pmdTest
+    gradle :schedule-edit:pmdMain :schedule-edit:pmdTest
 
-$(MODULE_NAME)-test:
+schedule-edit-test:
   stage: test
   script:
-    gradle :$(MODULE_NAME):test
+    gradle :schedule-edit:test

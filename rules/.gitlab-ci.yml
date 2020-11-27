@@ -1,29 +1,27 @@
-image: gradle:6.7-jdk15
+image: gradle:6.7-jdk11
 
-variables:
-  MODULE_NAME: rules
 
 stages:
   - build
   - staticAnalysis
   - test
 
-$(MODULE_NAME)-build:
+rules-build:
   stage: build
   script:
-    gradle --build-cache :$(MODULE_NAME):assemble
+    gradle --build-cache :rules:assemble
 
-$(MODULE_NAME)-checkStyle:
+rules-checkStyle:
   stage: staticAnalysis
   script:
-    gradle :$(MODULE_NAME):checkstyleMain :$(MODULE_NAME):checkStyleTest
+    gradle :rules:checkstyleMain :rules:checkStyleTest
 
-$(MODULE_NAME)-PMD:
+rules-PMD:
   stage: staticAnalysis
   script:
-    gradle :$(MODULE_NAME):pmdMain :$(MODULE_NAME):pmdTest
+    gradle :rules:pmdMain :rules:pmdTest
 
-$(MODULE_NAME)-test:
+rules-test:
   stage: test
   script:
-    gradle :$(MODULE_NAME):test
+    gradle :rules:test

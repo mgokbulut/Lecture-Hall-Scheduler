@@ -1,29 +1,26 @@
-image: gradle:6.7-jdk15
-
-variables:
-  MODULE_NAME: viewer
+image: gradle:6.7-jdk11
 
 stages:
   - build
   - staticAnalysis
   - test
 
-$(MODULE_NAME)-build:
+build:
   stage: build
   script:
-    gradle --build-cache :$(MODULE_NAME):assemble
+    gradle --build-cache :viewer:assemble
 
-$(MODULE_NAME)-checkStyle:
+viewer-checkStyle:
   stage: staticAnalysis
   script:
-    gradle :$(MODULE_NAME):checkstyleMain :$(MODULE_NAME):checkStyleTest
+    gradle :viewer:checkstyleMain :viewer:checkStyleTest
 
-$(MODULE_NAME)-PMD:
+viewer-PMD:
   stage: staticAnalysis
   script:
-    gradle :$(MODULE_NAME):pmdMain :$(MODULE_NAME):pmdTest
+    gradle :viewer:pmdMain :viewer:pmdTest
 
-$(MODULE_NAME)-test:
+viewer-test:
   stage: test
   script:
-    gradle :$(MODULE_NAME):test
+    gradle :viewer:test

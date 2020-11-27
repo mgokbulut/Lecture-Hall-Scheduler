@@ -1,29 +1,26 @@
-image: gradle:6.7-jdk15
-
-variables:
-  MODULE_NAME: authentication
+image: gradle:6.7-jdk11
 
 stages:
   - build
   - staticAnalysis
   - test
 
-$(MODULE_NAME)-build:
+authentication-build:
   stage: build
   script:
-    gradle --build-cache :$(MODULE_NAME):assemble
+    gradle --build-cache :authentication:assemble
 
-$(MODULE_NAME)-checkStyle:
+authentication-checkStyle:
   stage: staticAnalysis
   script:
-    gradle :$(MODULE_NAME):checkstyleMain :$(MODULE_NAME):checkStyleTest
+    gradle :authentication:checkstyleMain :authentication:checkStyleTest
 
-$(MODULE_NAME)-PMD:
+authentication-PMD:
   stage: staticAnalysis
   script:
-    gradle :$(MODULE_NAME):pmdMain :$(MODULE_NAME):pmdTest
+    gradle :authentication:pmdMain :authentication:pmdTest
 
-$(MODULE_NAME)-test:
+authentication-test:
   stage: test
   script:
-    gradle :$(MODULE_NAME):test
+    gradle :authentication:test
