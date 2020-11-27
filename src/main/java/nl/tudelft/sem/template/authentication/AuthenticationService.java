@@ -40,4 +40,30 @@ public class AuthenticationService {
         final String jwt = jwtTokenUtil.generateToken(userDetails);
         return jwt;
     }
+
+    public AuthenticationManager getAuthenticationManager() {
+        return authenticationManager;
+    }
+
+    public void setAuthenticationManager(
+        AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
+    public MyUserDetailsService getUserDetailsService() {
+        return userDetailsService;
+    }
+
+    public void setUserDetailsService(
+        MyUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
+    public JwtUtil getJwtTokenUtil() {
+        return jwtTokenUtil;
+    }
+
+    public void setJwtTokenUtil(JwtUtil jwtTokenUtil) {
+        this.jwtTokenUtil = jwtTokenUtil;
+    }
 }

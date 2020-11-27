@@ -11,8 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class MyUserDetails implements UserDetails {
 
+    static final long serialVersionUID = 42L;
     private String netid;
-    private String username;
     private String password;
     private boolean active;
     private List<GrantedAuthority> authorities;
@@ -29,7 +29,6 @@ public class MyUserDetails implements UserDetails {
      */
     public MyUserDetails(User user) {
         this.netid = user.getNetId();
-        this.username = user.getNetId();
         this.password = user.getPassword();
         this.role = user.authenticationRole();
         this.authorities = Arrays.stream(user.authenticationRole().split(" "))
@@ -70,5 +69,38 @@ public class MyUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public String getNetid() {
+        return netid;
+    }
+
+    public void setNetid(String netid) {
+        this.netid = netid;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setAuthorities(
+        List<GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

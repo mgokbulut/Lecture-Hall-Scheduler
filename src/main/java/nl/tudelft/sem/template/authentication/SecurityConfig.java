@@ -53,4 +53,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder getPasswordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
+
+    public MyUserDetailsService getUserDetailsService() {
+        return userDetailsService;
+    }
+
+    public void setUserDetailsService(
+        MyUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
+    public JwtRequestFilter getJwtRequestFilter() {
+        return jwtRequestFilter;
+    }
+
+    public void setJwtRequestFilter(JwtRequestFilter jwtRequestFilter) {
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
 }

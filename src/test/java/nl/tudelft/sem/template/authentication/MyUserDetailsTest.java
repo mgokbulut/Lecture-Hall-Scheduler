@@ -26,8 +26,8 @@ public class MyUserDetailsTest {
     }
 
     @Test
-    public void getUsernameTest() {
-        assertEquals("user@student.tudelft.nl", userDetails.getUsername());
+    public void getNetIdTest() {
+        assertEquals("user@student.tudelft.nl", userDetails.getNetid());
     }
 
     @Test
@@ -62,5 +62,21 @@ public class MyUserDetailsTest {
     @Test
     public void isEnabledTest() {
         assertTrue(userDetails.isEnabled());
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public MyUserDetails getUserDetails() {
+        return userDetails;
+    }
+
+    public void setUserDetails(MyUserDetails userDetails) {
+        this.userDetails = userDetails;
     }
 }
