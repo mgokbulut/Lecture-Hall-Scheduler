@@ -1,2 +1,3 @@
 rootProject.name = 'OP30-sem59'
 include 'authentication'
+include 'database'
