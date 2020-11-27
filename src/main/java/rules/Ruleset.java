@@ -1,4 +1,4 @@
-package Rules;
+package rules;
 
 public class Ruleset {
 
@@ -11,6 +11,16 @@ public class Ruleset {
         this.maxDays = 0;
     }
 
+    /**
+     * constructor for ruleset.
+     *
+     * @param thresholds a 2d array of thresholds, the first value being the the
+     *                   capacity of a room, and the second value being the % of the max
+     *                   capacity allowed for rooms of a size between this threshold and the next.
+     * @param breakTime the minimum time between two lectures being hosted in the same room
+     * @param maxDays the maximum amount of time a student should go
+     *                without being offered an on-campus activity
+     */
     public Ruleset(int[][] thresholds, long breakTime, int maxDays) {
         this.thresholds = thresholds;
         this.breakTime = breakTime;
