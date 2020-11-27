@@ -4,4 +4,4 @@ include:
   - /viewer/.gitlab-ci.yml
   - /schedule-edit/.gitlab-ci.yml
   - /schedule-generate/.gitlab-ci.yml
-  - /nl.tudelft.unischeduler.rules.rules/.gitlab-ci.yml
+  - /rules/.gitlab-ci.yml
