@@ -1,4 +1,4 @@
-package nl.tudelft.sem59.database;
+package nl.tudelft.unischeduler.database;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

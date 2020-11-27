@@ -1,4 +1,4 @@
-package nl.tudelft.sem59.database;
+package nl.tudelft.unischeduler.database;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

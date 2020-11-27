@@ -1,7 +1,7 @@
-package nl.tudelft.sem59.authentication.controllers;
+package nl.tudelft.unischeduler.authentication.controllers;
 
-import nl.tudelft.sem59.authentication.entities.User;
-import nl.tudelft.sem59.authentication.repositories.UserService;
+import nl.tudelft.unischeduler.authentication.entities.User;
+import nl.tudelft.unischeduler.authentication.repositories.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

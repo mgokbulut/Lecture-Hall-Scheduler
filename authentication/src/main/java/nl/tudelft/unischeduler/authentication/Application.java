@@ -1,4 +1,4 @@
-package nl.tudelft.sem59.authentication;
+package nl.tudelft.unischeduler.authentication;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

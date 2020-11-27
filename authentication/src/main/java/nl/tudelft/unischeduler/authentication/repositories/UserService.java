@@ -1,6 +1,6 @@
-package nl.tudelft.sem59.authentication.repositories;
+package nl.tudelft.unischeduler.authentication.repositories;
 
-import nl.tudelft.sem59.authentication.entities.User;
+import nl.tudelft.unischeduler.authentication.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
