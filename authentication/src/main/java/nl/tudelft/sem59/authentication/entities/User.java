@@ -1,10 +1,10 @@
-package nl.tudelft.sem59.database.entities;
+package nl.tudelft.sem59.authentication.entities;
 
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Objects;
 
 @Entity
 @Table(name = "app_user", schema = "loginDB")
