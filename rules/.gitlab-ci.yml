@@ -11,19 +11,19 @@ stages:
 rules-build:
   stage: build
   script:
-    gradle --build-cache :nl.tudelft.unischeduler.rules.rules:assemble
+    gradle --build-cache :rules:assemble
 
 rules-checkStyle:
   stage: staticAnalysis
   script:
-    gradle :nl.tudelft.unischeduler.rules.rules:checkstyleMain :nl.tudelft.unischeduler.rules.rules:checkStyleTest
+    gradle :rules:checkstyleMain :rules:checkStyleTest
 
 rules-PMD:
   stage: staticAnalysis
   script:
-    gradle :nl.tudelft.unischeduler.rules.rules:pmdMain :nl.tudelft.unischeduler.rules.rules:pmdTest
+    gradle :rules:pmdMain :rules:pmdTest
 
 rules-test:
   stage: test
   script:
-    gradle :nl.tudelft.unischeduler.rules.rules:test
+    gradle :rules:test
