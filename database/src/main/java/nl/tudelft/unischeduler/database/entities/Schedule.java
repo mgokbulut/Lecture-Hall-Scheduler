@@ -1,49 +1,74 @@
 package nl.tudelft.unischeduler.database.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "schedule", schema = "schedulingDB")
 public class Schedule {
     @Id
-    @Column(name = "id", nullable = false, unique = true)
-    private int id;
-    @Column(name = "app_user")
-    private String appUser;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Long id;
 
-    public Schedule(int id, String appUser) {
-        this.id = id;
-        this.appUser = appUser;
-    }
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "app_user", referencedColumnName = "net_id")
+    private User user;
 
-    /***
-     * <p>This method initialises the schedule object.</p>
+    @ManyToMany
+    @JoinTable(name = "lecture_schedule",
+            joinColumns = @JoinColumn(name = "schedule_id"),
+            inverseJoinColumns = @JoinColumn(name = "lecture_id"))
+    private Set<Lecture> lectures;
+
+    /**
+     * This method initialises the schedule object.
      */
     public Schedule() {
 
     }
 
-    public int getId() { return id; }
+    public Schedule(Long id, User user, Set<Lecture> lectures) {
+        this.id = id;
+        this.user = user;
+        this.lectures = lectures;
+    }
 
-    public void setId(int id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getAppUser() { return appUser; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public void setAppUser(String appUser) { this.appUser = appUser; }
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Set<Lecture> getLectures() {
+        return lectures;
+    }
+
+    public void setLectures(Set<Lecture> lectures) {
+        this.lectures = lectures;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Schedule)) return false;
         Schedule schedule = (Schedule) o;
-        return id == schedule.id &&
-                Objects.equals(appUser, schedule.appUser);
+        return id.equals(schedule.id);
     }
 
     @Override
-    public int hashCode() { return Objects.hash(id, appUser); }
+    public int hashCode() {
+        return Objects.hash(id, user, lectures);
+    }
 }

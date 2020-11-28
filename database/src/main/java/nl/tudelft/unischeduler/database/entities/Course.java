@@ -1,49 +1,81 @@
 package nl.tudelft.unischeduler.database.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "course", schema = "schedulingDB")
 public class Course {
     @Id
-    @Column(name = "id", nullable = false, unique = true)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Long id;
     @Column(name = "name")
     private String name;
 
-    public Course(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    @ManyToMany(mappedBy = "courses")
+    private Set<User> students;
 
-    /***
-     * <p>This method initialises the course object.</p>
+    @OneToMany(mappedBy = "course")
+    private Set<Lecture> lectures;
+
+    /**
+     * This method initialises the course object.
      */
     public Course() {
 
     }
 
-    public int getId() { return id; }
+    public Course(Long id, String name, Set<User> students, Set<Lecture> lectures) {
+        this.id = id;
+        this.name = name;
+        this.students = students;
+        this.lectures = lectures;
+    }
 
-    public void setId(int id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public void setName(String name) { this.name = name; }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<User> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<User> students) {
+        this.students = students;
+    }
+
+    public Set<Lecture> getLectures() {
+        return lectures;
+    }
+
+    public void setLectures(Set<Lecture> lectures) {
+        this.lectures = lectures;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Course)) return false;
         Course course = (Course) o;
-        return id == course.id &&
-                Objects.equals(name, course.name);
+        return id.equals(course.id);
     }
 
     @Override
-    public int hashCode() { return Objects.hash(id, name); }
+    public int hashCode() {
+        return Objects.hash(id, name, students, lectures);
+    }
 }

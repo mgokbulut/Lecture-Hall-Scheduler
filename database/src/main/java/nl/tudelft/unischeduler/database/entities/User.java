@@ -1,11 +1,9 @@
 package nl.tudelft.unischeduler.database.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "app_user", schema = "schedulingDB")
@@ -20,57 +18,89 @@ public class User {
     @Column(name = "last_time_on_campus", nullable = false)
     private Date lastTimeOnCampus;
 
-    /***
-     * <p>This method initialises the user object.</p>
+    @OneToOne(mappedBy = "schedule")
+    private Schedule schedule;
+
+    @ManyToMany
+    @JoinTable(name = "user_course",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id"))
+    private Set<Course> courses;
+
+    @OneToMany(mappedBy = "teacher")
+    private Set<Lecture> lectures;
+
+    /**
+     * This method initialises the user object.
      */
     public User() {
 
     }
 
-    /**
-     * User constructor.
-     * @param netId the net id of the user
-     * @param type the type of user
-     * @param interested interested in attending physical classes
-     * @param lastTimeOnCampus last time a user was on campus
-     */
-    public User(String netId, String type, boolean interested, Date lastTimeOnCampus) {
+    public User(String netId, String type, boolean interested, Date lastTimeOnCampus, Schedule schedule, Set<Course> courses, Set<Lecture> lectures) {
         this.netId = netId;
         this.type = type;
         this.interested = interested;
         this.lastTimeOnCampus = lastTimeOnCampus;
+        this.schedule = schedule;
+        this.courses = courses;
+        this.lectures = lectures;
     }
 
     public String getNetId() {
         return netId;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public boolean isInterested() {
-        return interested;
-    }
-
-    public Date getLastTimeOnCampus() {
-        return lastTimeOnCampus;
-    }
-
     public void setNetId(String netId) {
         this.netId = netId;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public void setType(String type) {
         this.type = type;
     }
 
+    public boolean isInterested() {
+        return interested;
+    }
+
     public void setInterested(boolean interested) {
         this.interested = interested;
     }
 
+    public Date getLastTimeOnCampus() {
+        return lastTimeOnCampus;
+    }
+
     public void setLastTimeOnCampus(Date lastTimeOnCampus) {
         this.lastTimeOnCampus = lastTimeOnCampus;
+    }
+
+    public Schedule getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
+    }
+
+    public Set<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
+    }
+
+    public Set<Lecture> getLectures() {
+        return lectures;
+    }
+
+    public void setLectures(Set<Lecture> lectures) {
+        this.lectures = lectures;
     }
 
     @Override
@@ -78,11 +108,11 @@ public class User {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        return isInterested() == getNetId().equals(user.getNetId());
+        return  netId.equals(user.netId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getNetId(), getType(), isInterested(), getLastTimeOnCampus());
+        return Objects.hash(netId, type, interested, lastTimeOnCampus, schedule, courses, lectures);
     }
 }

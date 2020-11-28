@@ -1,73 +1,102 @@
 package nl.tudelft.unischeduler.database.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "classroom", schema = "schedulingDB")
 public class Classroom {
     @Id
-    @Column(name = "id", nullable = false, unique = true)
-    private int id;
-    @Column(name = "full_capacity")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Long id;
+    @Column(name = "full_capacity", nullable = false)
     private int fullCapacity;
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
-    @Column(name = "building_name")
+    @Column(name = "building_name", nullable = false)
     private String buildingName;
-    @Column(name = "floor")
+    @Column(name = "floor", nullable = false)
     private int floor;
 
-    public Classroom(int id, int fullCapacity, String name, String buildingName, int floor) {
-        this.id = id;
-        this.fullCapacity = fullCapacity;
-        this.name = name;
-        this.buildingName = buildingName;
-        this.floor = floor;
-    }
+    @OneToMany(mappedBy = "classroom")
+    private Set<Lecture> lectures;
 
-    /***
-     * <p>This method initialises the classroom object.</p>
+    /**
+     * This method initialises the classroom object.
      */
     public Classroom() {
 
     }
 
-    public int getId() { return id; }
+    public Classroom(Long id, int fullCapacity, String name, String buildingName, int floor, Set<Lecture> lectures) {
+        this.id = id;
+        this.fullCapacity = fullCapacity;
+        this.name = name;
+        this.buildingName = buildingName;
+        this.floor = floor;
+        this.lectures = lectures;
+    }
 
-    public void setId(int id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public int getFullCapacity() { return fullCapacity; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public void setFullCapacity(int fullCapacity) { this.fullCapacity = fullCapacity; }
+    public int getFullCapacity() {
+        return fullCapacity;
+    }
 
-    public String getName() { return name; }
+    public void setFullCapacity(int fullCapacity) {
+        this.fullCapacity = fullCapacity;
+    }
 
-    public void setName(String name) { this.name = name; }
+    public String getName() {
+        return name;
+    }
 
-    public String getBuildingName() { return buildingName; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public void setBuildingName(String buildingName) { this.buildingName = buildingName; }
+    public String getBuildingName() {
+        return buildingName;
+    }
 
-    public int getFloor() { return floor; }
+    public void setBuildingName(String buildingName) {
+        this.buildingName = buildingName;
+    }
 
-    public void setFloor(int floor) { this.floor = floor; }
+    public int getFloor() {
+        return floor;
+    }
+
+    public void setFloor(int floor) {
+        this.floor = floor;
+    }
+
+    public Set<Lecture> getLectures() {
+        return lectures;
+    }
+
+    public void setLectures(Set<Lecture> lectures) {
+        this.lectures = lectures;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Classroom)) return false;
         Classroom classroom = (Classroom) o;
-        return id == classroom.id &&
-                fullCapacity == classroom.fullCapacity &&
-                floor == classroom.floor &&
-                Objects.equals(name, classroom.name) &&
-                Objects.equals(buildingName, classroom.buildingName);
+        return id.equals(classroom.id);
     }
 
     @Override
-    public int hashCode() { return Objects.hash(id, fullCapacity, name, buildingName, floor); }
+    public int hashCode() {
+        return Objects.hash(id, fullCapacity, name, buildingName, floor, lectures);
+    }
 }
