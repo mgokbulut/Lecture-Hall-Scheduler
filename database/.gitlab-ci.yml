@@ -1,0 +1,29 @@
+image: gradle:6.7-jdk11
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+stages:
+  - build
+  - staticAnalysis
+  - test
+
+database-build:
+  stage: build
+  script:
+    gradle --build-cache :database:assemble
+
+database-checkStyle:
+  stage: staticAnalysis
+  script:
+    gradle :database:checkstyleMain :database:checkStyleTest
+
+database-PMD:
+  stage: staticAnalysis
+  script:
+    gradle :database:pmdMain :database:pmdTest
+
+database-test:
+  stage: test
+  script:
+    gradle :database:test

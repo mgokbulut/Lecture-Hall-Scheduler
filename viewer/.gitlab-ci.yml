@@ -1,0 +1,29 @@
+image: gradle:6.7-jdk11
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+stages:
+  - build
+  - staticAnalysis
+  - test
+
+build:
+  stage: build
+  script:
+    gradle --build-cache :viewer:assemble
+
+viewer-checkStyle:
+  stage: staticAnalysis
+  script:
+    gradle :viewer:checkstyleMain :viewer:checkStyleTest
+
+viewer-PMD:
+  stage: staticAnalysis
+  script:
+    gradle :viewer:pmdMain :viewer:pmdTest
+
+viewer-test:
+  stage: test
+  script:
+    gradle :viewer:test
