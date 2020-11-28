@@ -33,9 +33,7 @@ public class User {
 
     }
 
-    public String getNetId() {
-        return netId;
-    }
+    public String getNetId() { return netId; }
 
     public void setNetId(String netId) {
         this.netId = netId;
