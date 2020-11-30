@@ -18,7 +18,8 @@ public class User {
     @Column(name = "last_time_on_campus", nullable = false)
     private Date lastTimeOnCampus;
 
-    @OneToOne(mappedBy = "schedule")
+    //something wrong, infinite recursive call
+    @OneToOne(mappedBy = "user")
     private Schedule schedule;
 
     @ManyToMany

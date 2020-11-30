@@ -12,6 +12,7 @@ public class Schedule {
     @Column(name = "id")
     private Long id;
 
+    //something wrong, infinite recursive call
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "app_user", referencedColumnName = "net_id")
     private User user;
