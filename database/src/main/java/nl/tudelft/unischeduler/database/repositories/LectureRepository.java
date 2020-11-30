@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
-public interface LectureRepository extends JpaRepository<Lecture, Timestamp> {
+public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     void assignRoomToLecture(int lectureId, int classroomId);
     void setLectureTime(int lectureId, Timestamp t);
     List<Lecture> getLecturesInRoomOnDay(Classroom c, Timestamp t);
