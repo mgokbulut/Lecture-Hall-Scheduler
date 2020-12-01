@@ -12,16 +12,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class CourseController {
 
     @Autowired
-    private CourseService courseService;
+    //not sure if should be transient but checkstyle complaints without it...
+    private transient CourseService courseService;
 
     @GetMapping(path = "/courses")
     public @ResponseBody
-    Iterable<Course> getAllCourses(){
+    Iterable<Course> getAllCourses() {
         return courseService.getAllCourses();
     }
 
     @GetMapping(path = "/studentsInCourse/{courseId}")
-    public Iterable<User> getStudentsInCourse(@PathVariable Long courseId){
+    public Iterable<User> getStudentsInCourse(@PathVariable Long courseId) {
         Course c = courseService.getCourse(courseId);
         return c.getStudents();
     }

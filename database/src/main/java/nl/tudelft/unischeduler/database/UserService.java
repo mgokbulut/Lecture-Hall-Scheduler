@@ -9,9 +9,10 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    //not sure if should be transient but checkstyle complaints without it...
+    private transient UserRepository userRepository;
 
-    public Iterable<User> getAllUsers(){
+    public Iterable<User> getAllUsers() {
         return userRepository.findAll();
     }
 }

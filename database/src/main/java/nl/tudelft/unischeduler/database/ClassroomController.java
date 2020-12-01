@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ClassroomController {
 
     @Autowired
-    //not sure if should be static but checkstyle complaints without it...
-    private static ClassroomService classroomService;
+    //not sure if should be transient but checkstyle complaints without it...
+    private transient ClassroomService classroomService;
 
     @GetMapping(path = "/classrooms")
     public @ResponseBody
-    Iterable<Classroom> getAllClassrooms(){
+    Iterable<Classroom> getAllClassrooms() {
         return classroomService.getAllClassrooms();
     }
 }

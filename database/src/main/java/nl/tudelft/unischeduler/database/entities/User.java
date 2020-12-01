@@ -1,12 +1,19 @@
 package nl.tudelft.unischeduler.database.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 
 @Entity
 @Table(name = "app_user", schema = "schedulingDB")
@@ -44,7 +51,21 @@ public class User {
 
     }
 
-    public User(String netId, String type, boolean interested, Date lastTimeOnCampus, Schedule schedule, Set<Course> courses, Set<Lecture> lectures) {
+    /**
+     * TODO a.
+     *
+     * @param netId a
+     * @param type a
+     * @param interested a
+     * @param lastTimeOnCampus a
+     * @param schedule a
+     * @param courses a
+     * @param lectures a
+     */
+    public User(String netId, String type,
+                boolean interested, Date lastTimeOnCampus,
+                Schedule schedule, Set<Course> courses,
+                Set<Lecture> lectures) {
         this.netId = netId;
         this.type = type;
         this.interested = interested;
@@ -112,8 +133,12 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof User)) {
+            return false;
+        }
         User user = (User) o;
         return  netId.equals(user.netId);
     }

@@ -1,8 +1,14 @@
 package nl.tudelft.unischeduler.database.entities;
 
-import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "classroom", schema = "schedulingDB")
@@ -31,7 +37,19 @@ public class Classroom {
 
     }
 
-    public Classroom(Long id, int fullCapacity, String name, String buildingName, int floor, Set<Lecture> lectures) {
+    /**
+     * TODO a.
+     *
+     * @param id a
+     * @param fullCapacity a
+     * @param name a
+     * @param buildingName a
+     * @param floor a
+     * @param lectures a
+     */
+    public Classroom(Long id, int fullCapacity,
+                     String name, String buildingName,
+                     int floor, Set<Lecture> lectures) {
         this.id = id;
         this.fullCapacity = fullCapacity;
         this.name = name;
@@ -90,8 +108,12 @@ public class Classroom {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Classroom)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Classroom)) {
+            return false;
+        }
         Classroom classroom = (Classroom) o;
         return id.equals(classroom.id);
     }

@@ -2,12 +2,20 @@ package nl.tudelft.unischeduler.database.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import javax.persistence.*;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 
 @Entity
 @Table(name = "lecture", schema = "schedulingDB")
@@ -53,7 +61,22 @@ public class Lecture {
 
     }
 
-    public Lecture(Long id, Set<Schedule> schedules, Classroom classroom, Course course, User teacher, Timestamp startTimeDate, Time duration, boolean movedOnline) {
+    /**
+     * TODO a.
+     *
+     * @param id a
+     * @param schedules a
+     * @param classroom a
+     * @param course a
+     * @param teacher a
+     * @param startTimeDate a
+     * @param duration a
+     * @param movedOnline a
+     */
+    public Lecture(Long id, Set<Schedule> schedules,
+                   Classroom classroom, Course course,
+                   User teacher, Timestamp startTimeDate,
+                   Time duration, boolean movedOnline) {
         this.id = id;
         this.schedules = schedules;
         this.classroom = classroom;
@@ -130,14 +153,20 @@ public class Lecture {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Lecture)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Lecture)) {
+            return false;
+        }
         Lecture lecture = (Lecture) o;
         return id.equals(lecture.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, schedules, classroom, course, teacher, startTimeDate, duration, movedOnline);
+        return Objects.hash(id, schedules, classroom,
+                course, teacher, startTimeDate,
+                duration, movedOnline);
     }
 }

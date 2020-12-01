@@ -9,13 +9,14 @@ import org.springframework.stereotype.Service;
 public class CourseService {
 
     @Autowired
-    private CourseRepository courseRepository;
+    //not sure if should be transient but checkstyle complaints without it...
+    private transient CourseRepository courseRepository;
 
-    public Iterable<Course> getAllCourses(){
+    public Iterable<Course> getAllCourses() {
         return courseRepository.findAll();
     }
 
-    public Course getCourse(Long courseId){
+    public Course getCourse(Long courseId) {
         return courseRepository.getOne(courseId);
     }
 }

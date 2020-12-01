@@ -9,9 +9,10 @@ import org.springframework.stereotype.Service;
 public class ClassroomService {
 
     @Autowired
-    private ClassroomRepository classroomRepository;
+    //not sure if should be transient but checkstyle complaints without it...
+    private transient ClassroomRepository classroomRepository;
 
-    public Iterable<Classroom> getAllClassrooms(){
+    public Iterable<Classroom> getAllClassrooms() {
         return classroomRepository.findAll();
     }
 }

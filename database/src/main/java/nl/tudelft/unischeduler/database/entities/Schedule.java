@@ -1,10 +1,20 @@
 package nl.tudelft.unischeduler.database.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 
 @Entity
 @Table(name = "schedule", schema = "schedulingDB")
@@ -33,6 +43,13 @@ public class Schedule {
 
     }
 
+    /**
+     * TODO a.
+     *
+     * @param id a
+     * @param user a
+     * @param lectures a
+     */
     public Schedule(Long id, User user, Set<Lecture> lectures) {
         this.id = id;
         this.user = user;
@@ -65,8 +82,12 @@ public class Schedule {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Schedule)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Schedule)) {
+            return false;
+        }
         Schedule schedule = (Schedule) o;
         return id.equals(schedule.id);
     }

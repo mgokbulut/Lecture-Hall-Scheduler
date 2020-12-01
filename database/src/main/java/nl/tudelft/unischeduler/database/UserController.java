@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    //not sure if should be transient but checkstyle complaints without it...
+    private transient UserService userService;
 
     @GetMapping(path = "/users")
     public @ResponseBody
-    Iterable<User> getAllUsers(){
+    Iterable<User> getAllUsers() {
         return userService.getAllUsers();
     }
 }
