@@ -1,7 +1,7 @@
 package nl.tudelft.unischeduler.rules.entities;
 
-import java.sql.Timestamp;
 import java.sql.Time;
+import java.sql.Timestamp;
 
 public class Lecture {
 
@@ -11,6 +11,15 @@ public class Lecture {
     private Time duration;
     private Room room;
 
+    /**
+     * constructor for Lecture.
+     *
+     * @param id the unique identifier representing this lecture
+     * @param attendance the number of students currently assigned to this lecture
+     * @param startTime the startTime of the lecture, day is always specified,
+     *                  time of day can be set later
+     * @param duration the duration of the lecture
+     */
     public Lecture(int id, int attendance, Timestamp startTime, Time duration) {
         this.id = id;
         this.attendance = attendance;
