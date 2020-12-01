@@ -1,17 +1,15 @@
-package nl.tudelft.unischeduler.rules;
+package nl.tudelft.unischeduler.rules.core;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
+import nl.tudelft.unischeduler.rules.entities.Lecture;
+import nl.tudelft.unischeduler.rules.entities.Room;
 import nl.tudelft.unischeduler.rules.entities.Ruleset;
-
 
 public class RulesModule {
 
-    class Lecture {
-    }
-
     private int[][] thresholds;
     private long breakTime;
-
     private int maxDays;
 
     private Ruleset rules;
@@ -85,12 +83,13 @@ public class RulesModule {
      * @param lecture the prior lecture
      * @return the time at which another lecture can start
      */
-    private Timestamp getNextStartTime(Lecture lecture) {
+    public Timestamp getNextStartTime(Lecture lecture) {
 
-        long endTime = 0; //lecture.startTime.getTime + lecture.duration;
+        long endTime = lecture.getStartTime().getTime() + lecture.getDuration().getTime();
         return new Timestamp(endTime + breakTime);
 
     }
+
 
     /**
      * returns whether or not a lecture is at maximum capacity yet.
@@ -100,8 +99,8 @@ public class RulesModule {
      *     false otherwise
      */
     public boolean availableForSignUp(Lecture lecture) {
-        //int maxStudentsInRoom = calculateCapacity(lecture.room.maxCapacity);
-        return true; //lecture.attendingStudents < maxStudentsInRoom;
+        int maxStudentsInRoom = getCapacity(lecture.getRoom().getCapacity());
+        return lecture.getAttendance() < maxStudentsInRoom;
     }
 
     /**
@@ -112,11 +111,12 @@ public class RulesModule {
      * @return true if one lecture starts before the other ends, else false.
      */
     public boolean overlap(Lecture l1, Lecture l2) {
-        long start1 = 0; //l1.startTime.getTime();
-        long start2 = 0; //l2.startTime.getTime();
-        //(getNextStartTime(l2).getTime() > start1);
-        return start1 == start2; //(getNextStartTime(l1).getTime() > start2);
+        long start1 = l1.getStartTime().getTime();
+        long start2 = l2.getStartTime().getTime();
 
+        return (start1 < start2 && getNextStartTime(l1).getTime() > start2)
+                || (start1 > start2 && getNextStartTime(l2).getTime() < start1)
+                || (start1 == start2);
     }
 
     /**
@@ -136,4 +136,34 @@ public class RulesModule {
         rulesTable.updateRules(nl.tudelft.unischeduler.rules.rules);
     }
     */
+
+    /**
+     * iterates through all lectures to ensure that the social distancing guidelines
+     * are followed, if not then that lecture will be cleared
+     * (room removed and students deregistered).
+     *
+     * @param lectures list of all lectures
+     * @return whether or not any lectures violated the rules.
+     */
+    public boolean verifyCapacities(Lecture[] lectures) {
+        boolean ret = true;
+        Arrays.sort(lectures);
+        for (int i = 0; i < lectures.length; i++) {
+            if (lectures[i].getRoom() == null) {
+                continue;
+            }
+            int attendance = lectures[i].getAttendance();
+            int capacity = getCapacity(lectures[i].getRoom().getCapacity());
+            if (attendance > capacity
+                    || overlap(lectures[i], lectures[(i + 1) % lectures.length])) {
+                ret &= false;
+                //remove building from lecture
+                //remove lecture from schedule
+            }
+        }
+
+        return ret;
+
+    }
+
 }
