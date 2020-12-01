@@ -1,5 +1,7 @@
 package nl.tudelft.unischeduler.rules;
 
+import nl.tudelft.unischeduler.rules.entities.Ruleset;
+
 import java.sql.Timestamp;
 
 public class RulesModule {
@@ -112,11 +114,8 @@ public class RulesModule {
     public boolean overlap(Lecture l1, Lecture l2) {
         long start1 = 0; //l1.startTime.getTime();
         long start2 = 0; //l2.startTime.getTime();
-        if (start1 < start2) {
-            return true; //(getNextStartTime(l1).getTime() > start2);
-        } else {
-            return true; //(getNextStartTime(l2).getTime() > start1);
-        }
+        //(getNextStartTime(l2).getTime() > start1);
+        return true; //(getNextStartTime(l1).getTime() > start2);
 
     }
 
