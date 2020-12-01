@@ -6,6 +6,14 @@ public class Room {
     private int capacity;
     private String name;
 
+    /**
+     * constructor for Room.
+     *
+     * @param id the unique identifier representing this room
+     * @param capacity the maximum capacity of the room,
+     *                 before social distancing guidelines are enforced
+     * @param name the name of the room
+     */
     public Room(int id, int capacity, String name) {
         this.id = id;
         this.capacity = capacity;
