@@ -1,4 +1,4 @@
-package nl.tudelft.unischeduler.rules;
+package nl.tudelft.unischeduler.rules.entities;
 
 public class Ruleset {
 
