@@ -3,10 +3,7 @@ package nl.tudelft.unischeduler.database;
 import nl.tudelft.unischeduler.database.entities.Classroom;
 import nl.tudelft.unischeduler.database.entities.Lecture;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 
@@ -15,21 +12,21 @@ public class LectureController {
     @Autowired
     private LectureService lectureService;
 
-    @PutMapping (path = "/lectures")
-    public @ResponseBody
-    void assignRoomToLecture (int lectureId, int classroomId){
-        lectureService.assignRoomToLecture(lectureId, classroomId);
-    }
+//    @PutMapping (path = "/assignRoomToLecture/{lectureId}/{classroomId}")
+//    public @ResponseBody
+//    void assignRoomToLecture (@PathVariable Long lectureId, Long classroomId){
+//        lectureService.assignRoomToLecture(lectureId, classroomId);
+//    }
+//
+//    @PutMapping (path = "/setLectureTime/{lectureId}/{t}")
+//    public @ResponseBody
+//    void setLectureTime (@PathVariable Long lectureId, Timestamp t){
+//        lectureService.setLectureTime(lectureId, t);
+//    }
 
-    @PutMapping (path = "/lectures")
+    @GetMapping (path = "/assignRoomToLecture/{classroomId}/{t}")
     public @ResponseBody
-    void setLectureTime(int lectureId, Timestamp t){
-        lectureService.setLectureTime(lectureId, t);
-    }
-
-    @GetMapping (path = "/lectures")
-    public @ResponseBody
-    Iterable<Lecture> getLecturesInRoomOnDay(Classroom c, Timestamp t){
-        return lectureService.getLecturesInRoomOnDay(c, t);
+    Iterable<Lecture> getLecturesInRoomOnDay(@PathVariable Long classroomId, @PathVariable Timestamp t){
+        return lectureService.getLecturesInRoomOnDay(classroomId, t);
     }
 }

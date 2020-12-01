@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ClassroomController {
 
     @Autowired
-    private ClassroomService classroomService;
+    //not sure if should be static but checkstyle complaints without it...
+    private static ClassroomService classroomService;
 
     @GetMapping(path = "/classrooms")
     public @ResponseBody

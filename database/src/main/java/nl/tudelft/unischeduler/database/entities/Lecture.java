@@ -1,6 +1,8 @@
 package nl.tudelft.unischeduler.database.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -15,19 +17,24 @@ public class Lecture {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+
     @ManyToMany(mappedBy = "lectures")
+    //@JsonBackReference//
     private Set<Schedule> schedules;
 
     @ManyToOne
     @JoinColumn(name = "classroom_id", nullable = false)
+    //@JsonManagedReference//
     private Classroom classroom;
 
     @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
+    @JsonManagedReference//courses works
     private Course course;
 
     @ManyToOne
     @JoinColumn(name = "teacher", nullable = false)
+    @JsonManagedReference//
     private User teacher;
 
     @Column(name = "start_time_date", nullable = false)

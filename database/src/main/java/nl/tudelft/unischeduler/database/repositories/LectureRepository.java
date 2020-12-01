@@ -10,7 +10,8 @@ import java.util.List;
 
 @Repository
 public interface LectureRepository extends JpaRepository<Lecture, Integer> {
-    void assignRoomToLecture(int lectureId, int classroomId);
-    void setLectureTime(int lectureId, Timestamp t);
-    List<Lecture> getLecturesInRoomOnDay(Classroom c, Timestamp t);
+//    void assignRoomToLecture(Long lectureId, Long classroomId);
+//    void setLectureTime(Long lectureId, Timestamp t);
+    //List<Lecture> getLecturesInRoomOnDay(Long classroomId, Timestamp t);
+    Iterable<Lecture> getLectureByClassroomAndStartTimeDate(Long classroomId, Timestamp t);
 }

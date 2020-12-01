@@ -10,7 +10,4 @@ public class ScheduleService {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
-    public void assignStudentToLecture(int studentId, int lectureId){
-        scheduleRepository.assignStudentToLecture(studentId, lectureId);
-    }
 }

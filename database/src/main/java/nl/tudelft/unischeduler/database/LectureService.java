@@ -14,15 +14,15 @@ public class LectureService {
     @Autowired
     private LectureRepository lectureRepository;
 
-    public void assignRoomToLecture (int lectureId, int classroomId){
-        lectureRepository.assignRoomToLecture(lectureId, classroomId);
-    }
+//    public void assignRoomToLecture (Long lectureId, Long classroomId){
+//        lectureRepository.assignRoomToLecture(lectureId, classroomId);
+//    }
+//
+//    public void setLectureTime(Long lectureId, Timestamp t){
+//        lectureRepository.setLectureTime(lectureId, t);
+//    }
 
-    public void setLectureTime(int lectureId, Timestamp t){
-        lectureRepository.setLectureTime(lectureId, t);
-    }
-
-    public Iterable<Lecture> getLecturesInRoomOnDay(Classroom c, Timestamp t){
-        return lectureRepository.getLecturesInRoomOnDay(c, t);
+    public Iterable<Lecture> getLecturesInRoomOnDay(Long classroomId, Timestamp t){
+        return lectureRepository.getLectureByClassroomAndStartTimeDate(classroomId, t);
     }
 }

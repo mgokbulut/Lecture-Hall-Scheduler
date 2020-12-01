@@ -1,5 +1,8 @@
 package nl.tudelft.unischeduler.database.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -18,17 +21,20 @@ public class User {
     @Column(name = "last_time_on_campus", nullable = false)
     private Date lastTimeOnCampus;
 
-    //something wrong, infinite recursive call
     @OneToOne(mappedBy = "user")
+    @JsonBackReference//
     private Schedule schedule;
 
     @ManyToMany
     @JoinTable(name = "user_course",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "course_id"))
+    //@JsonManagedReference//courses works
+    @JsonBackReference //users works
     private Set<Course> courses;
 
     @OneToMany(mappedBy = "teacher")
+    @JsonBackReference//
     private Set<Lecture> lectures;
 
     /**

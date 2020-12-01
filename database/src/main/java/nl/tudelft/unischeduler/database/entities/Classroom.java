@@ -21,6 +21,7 @@ public class Classroom {
     private int floor;
 
     @OneToMany(mappedBy = "classroom")
+    //@JsonBackReference//
     private Set<Lecture> lectures;
 
     /**

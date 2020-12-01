@@ -12,9 +12,4 @@ public class ScheduleController {
     @Autowired
     private ScheduleService scheduleService;
 
-    @PutMapping (path = "/schedules")
-    public @ResponseBody
-    void assignStudentToLecture(int studentId, int lectureId) {
-        scheduleService.assignStudentToLecture(studentId, lectureId);
-    }
 }

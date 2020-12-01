@@ -1,5 +1,8 @@
 package nl.tudelft.unischeduler.database.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
@@ -15,9 +18,12 @@ public class Course {
     private String name;
 
     @ManyToMany(mappedBy = "courses")
+    //@JsonBackReference//courses works
+    @JsonManagedReference //users works
     private Set<User> students;
 
     @OneToMany(mappedBy = "course")
+    @JsonBackReference //courses works
     private Set<Lecture> lectures;
 
     /**

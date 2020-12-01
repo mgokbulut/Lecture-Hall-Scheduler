@@ -1,5 +1,7 @@
 package nl.tudelft.unischeduler.database.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
@@ -12,15 +14,16 @@ public class Schedule {
     @Column(name = "id")
     private Long id;
 
-    //something wrong, infinite recursive call
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "app_user", referencedColumnName = "net_id")
+    @JsonManagedReference//
     private User user;
 
     @ManyToMany
     @JoinTable(name = "lecture_schedule",
             joinColumns = @JoinColumn(name = "schedule_id"),
             inverseJoinColumns = @JoinColumn(name = "lecture_id"))
+    //@JsonManagedReference//
     private Set<Lecture> lectures;
 
     /**
