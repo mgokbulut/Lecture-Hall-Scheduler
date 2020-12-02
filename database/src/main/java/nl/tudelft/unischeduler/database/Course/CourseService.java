@@ -1,7 +1,5 @@
 package nl.tudelft.unischeduler.database.Course;
 
-import nl.tudelft.unischeduler.database.Course.Course;
-import nl.tudelft.unischeduler.database.Course.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

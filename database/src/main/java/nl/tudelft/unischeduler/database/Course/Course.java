@@ -22,6 +22,8 @@ public class Course {
     private Long id;
     @Column(name = "name")
     private String name;
+    @Column(name = "year")
+    private int year;
 
 //    @ManyToMany(mappedBy = "courses")
 //    //@JsonBackReference//courses works
@@ -44,14 +46,12 @@ public class Course {
      *
      * @param id a
      * @param name a
-     * @param students a
-     * @param lectures a
+     * @param year a
      */
-    public Course(Long id, String name, Set<User> students, Set<Lecture> lectures) {
+    public Course(Long id, String name, int year) {
         this.id = id;
         this.name = name;
-        //this.students = students;
-        //this.lectures = lectures;
+        this.year = year;
     }
 
     public Long getId() {
@@ -70,36 +70,24 @@ public class Course {
         this.name = name;
     }
 
-//    public Set<User> getStudents() {
-//        return students;
-//    }
-//
-//    public void setStudents(Set<User> students) {
-//        this.students = students;
-//    }
+    public int getYear() {
+        return year;
+    }
 
-//    public Set<Lecture> getLectures() {
-//        return lectures;
-//    }
-//
-//    public void setLectures(Set<Lecture> lectures) {
-//        this.lectures = lectures;
-//    }
+    public void setYear(int year) {
+        this.year = year;
+    }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Course)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (!(o instanceof Course)) return false;
         Course course = (Course) o;
         return id.equals(course.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, name, year);
     }
 }

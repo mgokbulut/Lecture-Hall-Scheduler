@@ -1,17 +1,12 @@
 package nl.tudelft.unischeduler.database.Lecture;
 
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import nl.tudelft.unischeduler.database.Classroom.ClassroomService;
-import nl.tudelft.unischeduler.database.Schedule.Schedule;
 import nl.tudelft.unischeduler.database.Schedule.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.List;
 
 @RestController
 public class LectureController {

@@ -1,7 +1,5 @@
 package nl.tudelft.unischeduler.database.User;
 
-import nl.tudelft.unischeduler.database.User.User;
-import nl.tudelft.unischeduler.database.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

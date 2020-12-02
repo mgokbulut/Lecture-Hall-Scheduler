@@ -1,15 +1,13 @@
 package nl.tudelft.unischeduler.database.LectureSchedule;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class LectureScheduleId implements Serializable {
     private Long lectureId;
     private Long scheduleId;
+    //the only reason this is here is because of PMD rule violation
+    public static final long serialVersionUID = 4328744;
 
 
     public LectureScheduleId() {
@@ -25,6 +23,22 @@ public class LectureScheduleId implements Serializable {
     public LectureScheduleId(Long lecture_id, Long schedule_id) {
         this.lectureId = lecture_id;
         this.scheduleId = schedule_id;
+    }
+
+    public Long getLectureId() {
+        return lectureId;
+    }
+
+    public void setLectureId(Long lectureId) {
+        this.lectureId = lectureId;
+    }
+
+    public Long getScheduleId() {
+        return scheduleId;
+    }
+
+    public void setScheduleId(Long scheduleId) {
+        this.scheduleId = scheduleId;
     }
 
     @Override

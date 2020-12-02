@@ -1,13 +1,8 @@
 package nl.tudelft.unischeduler.database.Schedule;
 
-import nl.tudelft.unischeduler.database.Course.Course;
-import nl.tudelft.unischeduler.database.Lecture.Lecture;
-import nl.tudelft.unischeduler.database.Lecture.LectureRepository;
-import nl.tudelft.unischeduler.database.Schedule.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
