@@ -47,7 +47,12 @@ public class RulesParser {
         return mapper;
     }
 
-
+    /**
+     * Reads and parses the rulesFile and returns the RuleSet read from disc.
+     *
+     * @return A Ruleset object containing all the rules read from disc.
+     * @throws IOException If something goes wrong with accessing the files.
+     */
     public Ruleset parseRules() throws IOException {
         JsonNode jsonNode = mapper.readTree(rulesFile);
         return mapper.treeToValue(jsonNode, Ruleset.class);
