@@ -1,4 +1,6 @@
-package nl.tudelft.unischeduler.database.entities;
+package nl.tudelft.unischeduler.database.Classroom;
+
+import nl.tudelft.unischeduler.database.Lecture.Lecture;
 
 import java.util.Objects;
 import java.util.Set;
@@ -7,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity

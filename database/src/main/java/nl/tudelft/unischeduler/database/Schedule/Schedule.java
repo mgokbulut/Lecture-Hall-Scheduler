@@ -1,6 +1,9 @@
-package nl.tudelft.unischeduler.database.entities;
+package nl.tudelft.unischeduler.database.Schedule;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import nl.tudelft.unischeduler.database.Lecture.Lecture;
+import nl.tudelft.unischeduler.database.User.User;
+
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -10,8 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -24,10 +25,11 @@ public class Schedule {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "app_user", referencedColumnName = "net_id")
-    @JsonManagedReference//
-    private User user;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "app_user", referencedColumnName = "net_id")
+//    //@JsonManagedReference//
+    @Column(name = "app_user")
+    private String user;
 
 //    @ManyToMany
 //    @JoinTable(name = "lecture_schedule",
@@ -50,7 +52,7 @@ public class Schedule {
      * @param user a
      * @param lectures a
      */
-    public Schedule(Long id, User user, Set<Lecture> lectures) {
+    public Schedule(Long id, String user, Set<Lecture> lectures) {
         this.id = id;
         this.user = user;
         //this.lectures = lectures;
@@ -64,11 +66,11 @@ public class Schedule {
         this.id = id;
     }
 
-    public User getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         this.user = user;
     }
 

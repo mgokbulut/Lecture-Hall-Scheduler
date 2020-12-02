@@ -1,9 +1,11 @@
-package nl.tudelft.unischeduler.database;
+package nl.tudelft.unischeduler.database.User;
 
-import nl.tudelft.unischeduler.database.entities.User;
-import nl.tudelft.unischeduler.database.repositories.UserRepository;
+import nl.tudelft.unischeduler.database.User.User;
+import nl.tudelft.unischeduler.database.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -16,7 +18,7 @@ public class UserService {
         return userRepository.findByNetId(id).get();
     }
 
-    public Iterable<User> getAllUsers() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 }

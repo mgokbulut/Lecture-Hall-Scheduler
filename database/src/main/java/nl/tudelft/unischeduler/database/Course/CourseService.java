@@ -1,7 +1,7 @@
-package nl.tudelft.unischeduler.database;
+package nl.tudelft.unischeduler.database.Course;
 
-import nl.tudelft.unischeduler.database.entities.Course;
-import nl.tudelft.unischeduler.database.repositories.CourseRepository;
+import nl.tudelft.unischeduler.database.Course.Course;
+import nl.tudelft.unischeduler.database.Course.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +19,6 @@ public class CourseService {
     }
 
     public Course getCourse(Long courseId) {
-        return courseRepository.getOne(courseId);
+        return courseRepository.getById(courseId);
     }
 }

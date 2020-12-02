@@ -1,17 +1,15 @@
-package nl.tudelft.unischeduler.database.entities;
+package nl.tudelft.unischeduler.database.User;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import nl.tudelft.unischeduler.database.Course.Course;
+import nl.tudelft.unischeduler.database.Lecture.Lecture;
+import nl.tudelft.unischeduler.database.Schedule.Schedule;
+
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
@@ -64,16 +62,11 @@ public class User {
      * @param lectures a
      */
     public User(String netId, String type,
-                boolean interested, Date lastTimeOnCampus,
-                Schedule schedule, Set<Course> courses,
-                Set<Lecture> lectures) {
+                boolean interested, Date lastTimeOnCampus) {
         this.netId = netId;
         this.type = type;
         this.interested = interested;
         this.lastTimeOnCampus = lastTimeOnCampus;
-        //this.schedule = schedule;
-        //this.courses = courses;
-        //this.lectures = lectures;
     }
 
     public String getNetId() {
@@ -108,29 +101,6 @@ public class User {
         this.lastTimeOnCampus = lastTimeOnCampus;
     }
 
-//    public Schedule getSchedule() {
-//        return schedule;
-//    }
-//
-//    public void setSchedule(Schedule schedule) {
-//        this.schedule = schedule;
-//    }
-
-//    public Set<Course> getCourses() {
-//        return courses;
-//    }
-//
-//    public void setCourses(Set<Course> courses) {
-//        this.courses = courses;
-//    }
-
-//    public Set<Lecture> getLectures() {
-//        return lectures;
-//    }
-//
-//    public void setLectures(Set<Lecture> lectures) {
-//        this.lectures = lectures;
-//    }
 
     @Override
     public boolean equals(Object o) {
