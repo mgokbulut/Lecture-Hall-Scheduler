@@ -18,6 +18,8 @@ public class RulesParser {
      * Only used for testing the class make sure that fileName points to the same file as rulesFile.
      *
      * @param rulesFile The file located at the rulesFile location.
+     * @param mapper The ObjectMapper to be used for parsing and creating the json text.
+     *               Can be the same for all parsing needs.
      */
     public RulesParser(File rulesFile, ObjectMapper mapper) {
         this.rulesFile = rulesFile;
@@ -45,12 +47,36 @@ public class RulesParser {
         return mapper;
     }
 
-    public synchronized Ruleset parseRules() throws IOException {
+
+    public Ruleset parseRules() throws IOException {
         JsonNode jsonNode = mapper.readTree(rulesFile);
         return mapper.treeToValue(jsonNode, Ruleset.class);
     }
 
-    public synchronized void writeRules(Ruleset newRuleset) throws IOException {
+    /**
+     * Creates a new file or replaces the content with the newRuleset.
+     *
+     * @param newRuleset The new set of rules that should be stored on disc.
+     * @throws IOException If something goes wrong with accessing the files.
+     */
+    public void writeRules(Ruleset newRuleset) throws IOException {
+        rulesFile.createNewFile();
         mapper.writeValue(rulesFile, newRuleset);
+    }
+
+    /**
+     * deletes the file corresponding to this rulesParser from the server.
+     *
+     * @return True iff the file was successfully deleted.
+     * @throws IOException If something goes wrong with accessing the files.
+     */
+    public boolean delete() throws IOException {
+        if (rulesFile.isFile()) {
+            return rulesFile.delete();
+        } else if (!rulesFile.exists()) {
+            return false;
+        } else {
+            throw new IOException("File was not pointing to a file");
+        }
     }
 }
