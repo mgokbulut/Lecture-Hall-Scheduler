@@ -29,12 +29,12 @@ public class Schedule {
     @JsonManagedReference//
     private User user;
 
-    @ManyToMany
-    @JoinTable(name = "lecture_schedule",
-            joinColumns = @JoinColumn(name = "schedule_id"),
-            inverseJoinColumns = @JoinColumn(name = "lecture_id"))
-    //@JsonManagedReference//
-    private Set<Lecture> lectures;
+//    @ManyToMany
+//    @JoinTable(name = "lecture_schedule",
+//            joinColumns = @JoinColumn(name = "schedule_id"),
+//            inverseJoinColumns = @JoinColumn(name = "lecture_id"))
+//    //@JsonManagedReference//
+//    private Set<Lecture> lectures;
 
     /**
      * This method initialises the schedule object.
@@ -53,7 +53,7 @@ public class Schedule {
     public Schedule(Long id, User user, Set<Lecture> lectures) {
         this.id = id;
         this.user = user;
-        this.lectures = lectures;
+        //this.lectures = lectures;
     }
 
     public Long getId() {
@@ -72,14 +72,6 @@ public class Schedule {
         this.user = user;
     }
 
-    public Set<Lecture> getLectures() {
-        return lectures;
-    }
-
-    public void setLectures(Set<Lecture> lectures) {
-        this.lectures = lectures;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -94,6 +86,6 @@ public class Schedule {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, lectures);
+        return Objects.hash(id, user);
     }
 }

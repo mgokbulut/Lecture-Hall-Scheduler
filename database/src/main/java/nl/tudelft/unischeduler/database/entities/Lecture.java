@@ -26,24 +26,27 @@ public class Lecture {
     private Long id;
 
 
-    @ManyToMany(mappedBy = "lectures")
-    //@JsonBackReference//
-    private Set<Schedule> schedules;
+//    @ManyToMany(mappedBy = "lectures")
+//    //@JsonBackReference//
+//    private Set<Schedule> schedules;
 
-    @ManyToOne
-    @JoinColumn(name = "classroom_id", nullable = false)
-    //@JsonManagedReference//
-    private Classroom classroom;
+//    @ManyToOne
+//    @JoinColumn(name = "classroom_id", nullable = false)
+//    //@JsonManagedReference//
+    @Column(name = "classroom_id")
+    private Long classroom;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
-    @JsonManagedReference//courses works
-    private Course course;
+//    @ManyToOne
+//    @JoinColumn(name = "course_id", nullable = false)
+//    @JsonManagedReference//courses works
+    @Column(name = "course_id")
+    private Long course;
 
-    @ManyToOne
-    @JoinColumn(name = "teacher", nullable = false)
-    @JsonManagedReference//
-    private User teacher;
+//    @ManyToOne
+//    @JoinColumn(name = "teacher", nullable = false)
+//    @JsonManagedReference//
+    @Column(name = "teacher")
+    private String teacher;
 
     @Column(name = "start_time_date", nullable = false)
     private Timestamp startTimeDate;
@@ -65,7 +68,6 @@ public class Lecture {
      * TODO a.
      *
      * @param id a
-     * @param schedules a
      * @param classroom a
      * @param course a
      * @param teacher a
@@ -73,12 +75,8 @@ public class Lecture {
      * @param duration a
      * @param movedOnline a
      */
-    public Lecture(Long id, Set<Schedule> schedules,
-                   Classroom classroom, Course course,
-                   User teacher, Timestamp startTimeDate,
-                   Time duration, boolean movedOnline) {
+    public Lecture(Long id, Long classroom, Long course, String teacher, Timestamp startTimeDate, Time duration, boolean movedOnline) {
         this.id = id;
-        this.schedules = schedules;
         this.classroom = classroom;
         this.course = course;
         this.teacher = teacher;
@@ -86,6 +84,7 @@ public class Lecture {
         this.duration = duration;
         this.movedOnline = movedOnline;
     }
+
 
     public Long getId() {
         return id;
@@ -95,35 +94,27 @@ public class Lecture {
         this.id = id;
     }
 
-    public Set<Schedule> getSchedules() {
-        return schedules;
-    }
-
-    public void setSchedules(Set<Schedule> schedules) {
-        this.schedules = schedules;
-    }
-
-    public Classroom getClassroom() {
+    public Long getClassroom() {
         return classroom;
     }
 
-    public void setClassroom(Classroom classroom) {
+    public void setClassroom(Long classroom) {
         this.classroom = classroom;
     }
 
-    public Course getCourse() {
+    public Long getCourse() {
         return course;
     }
 
-    public void setCourse(Course course) {
+    public void setCourse(Long course) {
         this.course = course;
     }
 
-    public User getTeacher() {
+    public String getTeacher() {
         return teacher;
     }
 
-    public void setTeacher(User teacher) {
+    public void setTeacher(String teacher) {
         this.teacher = teacher;
     }
 
@@ -165,7 +156,7 @@ public class Lecture {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, schedules, classroom,
+        return Objects.hash(id, classroom,
                 course, teacher, startTimeDate,
                 duration, movedOnline);
     }

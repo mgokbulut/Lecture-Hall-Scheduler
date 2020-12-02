@@ -28,21 +28,22 @@ public class User {
     @Column(name = "last_time_on_campus", nullable = false)
     private Date lastTimeOnCampus;
 
-    @OneToOne(mappedBy = "user")
-    @JsonBackReference//
-    private Schedule schedule;
+//    @OneToOne(mappedBy = "user")
+//    @JsonBackReference//
+//    private Schedule schedule;
 
-    @ManyToMany
-    @JoinTable(name = "user_course",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id"))
+//    @ManyToMany
+//    @JoinTable(name = "user_course",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "course_id"))
     //@JsonManagedReference//courses works
-    @JsonBackReference //users works
-    private Set<Course> courses;
+    //@JsonBackReference //users works
 
-    @OneToMany(mappedBy = "teacher")
-    @JsonBackReference//
-    private Set<Lecture> lectures;
+    //private Set<Long> courses;
+
+//    @OneToMany(mappedBy = "teacher")
+//    @JsonBackReference//
+//    private Set<Lecture> lectures;
 
     /**
      * This method initialises the user object.
@@ -70,9 +71,9 @@ public class User {
         this.type = type;
         this.interested = interested;
         this.lastTimeOnCampus = lastTimeOnCampus;
-        this.schedule = schedule;
-        this.courses = courses;
-        this.lectures = lectures;
+        //this.schedule = schedule;
+        //this.courses = courses;
+        //this.lectures = lectures;
     }
 
     public String getNetId() {
@@ -107,29 +108,29 @@ public class User {
         this.lastTimeOnCampus = lastTimeOnCampus;
     }
 
-    public Schedule getSchedule() {
-        return schedule;
-    }
+//    public Schedule getSchedule() {
+//        return schedule;
+//    }
+//
+//    public void setSchedule(Schedule schedule) {
+//        this.schedule = schedule;
+//    }
 
-    public void setSchedule(Schedule schedule) {
-        this.schedule = schedule;
-    }
+//    public Set<Course> getCourses() {
+//        return courses;
+//    }
+//
+//    public void setCourses(Set<Course> courses) {
+//        this.courses = courses;
+//    }
 
-    public Set<Course> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(Set<Course> courses) {
-        this.courses = courses;
-    }
-
-    public Set<Lecture> getLectures() {
-        return lectures;
-    }
-
-    public void setLectures(Set<Lecture> lectures) {
-        this.lectures = lectures;
-    }
+//    public Set<Lecture> getLectures() {
+//        return lectures;
+//    }
+//
+//    public void setLectures(Set<Lecture> lectures) {
+//        this.lectures = lectures;
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -145,6 +146,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(netId, type, interested, lastTimeOnCampus, schedule, courses, lectures);
+        return Objects.hash(netId, type, interested, lastTimeOnCampus);
     }
 }

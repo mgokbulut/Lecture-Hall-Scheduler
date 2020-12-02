@@ -15,11 +15,11 @@ public class LectureController {
     @Autowired
     private transient ClassroomService classroomService;
 
-    @GetMapping(path = "/assignRoomToLecture/{classroomId}/{t}")
-    public @ResponseBody
-    Iterable<Lecture> getLecturesInRoomOnDay( @PathVariable Long classroomId, @PathVariable Timestamp t) {
-        return lectureService.getLecturesInRoomOnDay(classroomId, t);
-    }
+//    @GetMapping(path = "/assignRoomToLecture/{classroomId}/{t}")
+//    public @ResponseBody
+//    Iterable<Lecture> getLecturesInRoomOnDay( @PathVariable Long classroomId, @PathVariable Timestamp t) {
+//        return lectureService.getLecturesInRoomOnDay(classroomId, t);
+//    }
 
     @PutMapping(path = "/setLectureTime/{lectureId}/{t}")
     public @ResponseBody
@@ -27,10 +27,10 @@ public class LectureController {
         lectureService.getLecture(lectureId).setStartTimeDate(t);
     }
 
-    @PutMapping(path = "/assignRoomToLecture/{lectureId}/{classroomId}")
-    public @ResponseBody
-    void assignRoomToLecture(@PathVariable Long lectureId, @PathVariable Long classroomId){
-        Classroom c = classroomService.getClassroom(classroomId);
-        lectureService.getLecture(lectureId).setClassroom(c);
-    }
+//    @PutMapping(path = "/assignRoomToLecture/{lectureId}/{classroomId}")
+//    public @ResponseBody
+//    void assignRoomToLecture(@PathVariable Long lectureId, @PathVariable Long classroomId){
+//        Classroom c = classroomService.getClassroom(classroomId);
+//        lectureService.getLecture(lectureId).setClassroom(c);
+//    }
 }

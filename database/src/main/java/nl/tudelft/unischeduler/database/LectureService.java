@@ -18,7 +18,7 @@ public class LectureService {
         return lectureRepository.findById(id).get();
     }
 
-    public Iterable<Lecture> getLecturesInRoomOnDay(Long classroomId, Timestamp t) {
-        return lectureRepository.getLectureByClassroom_IdAndStartTimeDate(classroomId, t);
-    }
+//    public Iterable<Lecture> getLecturesInRoomOnDay(Long classroomId, Timestamp t) {
+//        return lectureRepository.getLectureByClassroom_IdAndStartTimeDate(classroomId, t);
+//    }
 }

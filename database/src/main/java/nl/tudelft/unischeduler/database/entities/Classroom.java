@@ -26,9 +26,9 @@ public class Classroom {
     @Column(name = "floor", nullable = false)
     private int floor;
 
-    @OneToMany(mappedBy = "classroom")
-    //@JsonBackReference//
-    private Set<Lecture> lectures;
+//    @OneToMany(mappedBy = "classroom")
+//    //@JsonBackReference//
+//    private Set<Lecture> lectures;
 
     /**
      * This method initialises the classroom object.
@@ -55,7 +55,7 @@ public class Classroom {
         this.name = name;
         this.buildingName = buildingName;
         this.floor = floor;
-        this.lectures = lectures;
+        //this.lectures = lectures;
     }
 
     public Long getId() {
@@ -98,13 +98,13 @@ public class Classroom {
         this.floor = floor;
     }
 
-    public Set<Lecture> getLectures() {
-        return lectures;
-    }
-
-    public void setLectures(Set<Lecture> lectures) {
-        this.lectures = lectures;
-    }
+//    public Set<Lecture> getLectures() {
+//        return lectures;
+//    }
+//
+//    public void setLectures(Set<Lecture> lectures) {
+//        this.lectures = lectures;
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -120,6 +120,6 @@ public class Classroom {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fullCapacity, name, buildingName, floor, lectures);
+        return Objects.hash(id, fullCapacity, name, buildingName, floor);
     }
 }

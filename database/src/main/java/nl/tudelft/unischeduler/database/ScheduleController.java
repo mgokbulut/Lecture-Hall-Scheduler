@@ -15,11 +15,11 @@ public class ScheduleController {
     @Autowired
     private transient LectureService lectureService;
 
-    @PutMapping(path = "/assignStudentToLecture/{studentId}/{lectureId}")
-    public @ResponseBody
-    void assignStudentToLecture(@PathVariable String studentId, @PathVariable Long lectureId){
-        User u = studentService.getUser(studentId);
-        Lecture l = lectureService.getLecture(lectureId);
-        u.getSchedule().getLectures().add(l);
-    }
+//    @PutMapping(path = "/assignStudentToLecture/{studentId}/{lectureId}")
+//    public @ResponseBody
+//    void assignStudentToLecture(@PathVariable String studentId, @PathVariable Long lectureId){
+//        User u = studentService.getUser(studentId);
+//        Lecture l = lectureService.getLecture(lectureId);
+//        u.getSchedule().getLectures().add(l);
+//    }
 }

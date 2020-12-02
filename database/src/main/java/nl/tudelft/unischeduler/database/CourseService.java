@@ -5,6 +5,8 @@ import nl.tudelft.unischeduler.database.repositories.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CourseService {
 
@@ -12,7 +14,7 @@ public class CourseService {
     //not sure if should be transient but checkstyle complaints without it...
     private transient CourseRepository courseRepository;
 
-    public Iterable<Course> getAllCourses() {
+    public List<Course> getAllCourses() {
         return courseRepository.findAll();
     }
 

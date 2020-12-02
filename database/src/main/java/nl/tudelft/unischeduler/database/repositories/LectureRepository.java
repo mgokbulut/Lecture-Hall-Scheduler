@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface LectureRepository extends JpaRepository<Lecture, Long> {
     Optional<Lecture> findById(Long id);
 
-    Iterable<Lecture> getLectureByClassroom_IdAndStartTimeDate(Long classroomId, Timestamp t);
+    //Iterable<Lecture> getLectureByClassroom_IdAndStartTimeDate(Long classroomId, Timestamp t);
 }

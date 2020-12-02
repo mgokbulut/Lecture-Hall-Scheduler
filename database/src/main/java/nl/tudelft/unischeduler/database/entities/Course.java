@@ -24,14 +24,14 @@ public class Course {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "courses")
-    //@JsonBackReference//courses works
-    @JsonManagedReference //users works
-    private Set<User> students;
+//    @ManyToMany(mappedBy = "courses")
+//    //@JsonBackReference//courses works
+//    @JsonManagedReference //users works
+//    private Set<User> students;
 
-    @OneToMany(mappedBy = "course")
-    @JsonBackReference //courses works
-    private Set<Lecture> lectures;
+//    @OneToMany(mappedBy = "course")
+//    @JsonBackReference //courses works
+//    private Set<Lecture> lectures;
 
     /**
      * This method initialises the course object.
@@ -51,8 +51,8 @@ public class Course {
     public Course(Long id, String name, Set<User> students, Set<Lecture> lectures) {
         this.id = id;
         this.name = name;
-        this.students = students;
-        this.lectures = lectures;
+        //this.students = students;
+        //this.lectures = lectures;
     }
 
     public Long getId() {
@@ -71,21 +71,21 @@ public class Course {
         this.name = name;
     }
 
-    public Set<User> getStudents() {
-        return students;
-    }
+//    public Set<User> getStudents() {
+//        return students;
+//    }
+//
+//    public void setStudents(Set<User> students) {
+//        this.students = students;
+//    }
 
-    public void setStudents(Set<User> students) {
-        this.students = students;
-    }
-
-    public Set<Lecture> getLectures() {
-        return lectures;
-    }
-
-    public void setLectures(Set<Lecture> lectures) {
-        this.lectures = lectures;
-    }
+//    public Set<Lecture> getLectures() {
+//        return lectures;
+//    }
+//
+//    public void setLectures(Set<Lecture> lectures) {
+//        this.lectures = lectures;
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -101,6 +101,6 @@ public class Course {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, students, lectures);
+        return Objects.hash(id, name);
     }
 }
