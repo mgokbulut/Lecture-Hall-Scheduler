@@ -1,20 +1,10 @@
 package nl.tudelft.unischeduler.database.Schedule;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import nl.tudelft.unischeduler.database.Lecture.Lecture;
-import nl.tudelft.unischeduler.database.User.User;
 
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 
 @Entity

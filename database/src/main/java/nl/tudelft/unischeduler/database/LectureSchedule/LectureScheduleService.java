@@ -1,14 +1,10 @@
 package nl.tudelft.unischeduler.database.LectureSchedule;
 
-import nl.tudelft.unischeduler.database.Lecture.Lecture;
-import nl.tudelft.unischeduler.database.Lecture.LectureRepository;
 import nl.tudelft.unischeduler.database.Schedule.Schedule;
 import nl.tudelft.unischeduler.database.Schedule.ScheduleRepository;
-import nl.tudelft.unischeduler.database.Schedule.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.Optional;
 
 @Service

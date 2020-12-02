@@ -1,16 +1,11 @@
 package nl.tudelft.unischeduler.database.User;
 
-import nl.tudelft.unischeduler.database.Course.Course;
-import nl.tudelft.unischeduler.database.Lecture.Lecture;
-import nl.tudelft.unischeduler.database.Schedule.Schedule;
-
-import java.util.Date;
-import java.util.Objects;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
+import java.util.Objects;
 
 
 @Entity
@@ -57,9 +52,6 @@ public class User {
      * @param type a
      * @param interested a
      * @param lastTimeOnCampus a
-     * @param schedule a
-     * @param courses a
-     * @param lectures a
      */
     public User(String netId, String type,
                 boolean interested, Date lastTimeOnCampus) {

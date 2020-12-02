@@ -1,11 +1,8 @@
 package nl.tudelft.unischeduler.database.Lecture;
 
-import nl.tudelft.unischeduler.database.Lecture.Lecture;
-import nl.tudelft.unischeduler.database.Lecture.LectureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.MessageDigest;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
@@ -22,10 +19,10 @@ public class LectureService {
 
     public List<Lecture> getLecturesInCourse(Long courseId, Timestamp ts, Time t) {
         List<Lecture> lectures =  lectureRepository.findAllByCourse(courseId);
-        Timestamp tsPlusDuration = new Timestamp(ts.getTime() + t.getTime());
         return lectures
                 .stream()
-                .filter(x->x.getStartTimeDate().after(ts) && x.getStartTimeDate().before(tsPlusDuration))
+                .filter(x->x.getStartTimeDate().after(ts)
+                        && x.getStartTimeDate().before(new Timestamp(ts.getTime() + t.getTime())))
                 .collect(Collectors.toList());
     }
 
