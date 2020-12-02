@@ -4,10 +4,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Application {
+public class SchedulegenerateApplication {
 
     public static void main(String[] args) {
-        Application.run(Application.class, args);
+
+        SpringApplication.run(SchedulegenerateApplication.class, args);
     }
 
 }
