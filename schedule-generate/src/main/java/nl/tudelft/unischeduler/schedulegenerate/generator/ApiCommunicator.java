@@ -2,9 +2,11 @@ package nl.tudelft.unischeduler.schedulegenerate.generator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import nl.tudelft.unischeduler.schedulegenerate.entities.*;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 @Service
 public class ApiCommunicator {
@@ -15,8 +17,8 @@ public class ApiCommunicator {
 //  returns a list of all courses
 //  the course id and the year num is required
 //      path = "/courses/all"
-  protected void getCourses() {
-    
+  protected ArrayList<Course> getCourses() {
+    return null;
   }
 
 //  getStudentsInCourse(Long courseId): //wait till the DB is changed
@@ -24,8 +26,8 @@ public class ApiCommunicator {
 //  along with the TimeStamp of their most recent Lecture
 //  students who are not interested are ignored
 //      path = "/userCourse/{courseId}"
-  protected void getStudentsInCourse(Long courseId) {
-
+  protected ArrayList<Student> getStudentsInCourse(Long courseId) {
+    return null;
   }
 //  getLecturesInCourse(Long courseId, Timestamp ts, Time t): //done
 //  //ts+t
@@ -33,15 +35,15 @@ public class ApiCommunicator {
 //  Timestamp ts is the current time, and Time t is the window of time in which
 //  lectures are being scheduled (e.g. when t = 2 only return the lectures that occur in the next 2 weeks)
 //  path = "/lectures/{courseId}/{ts}/{t}"
-  protected void getLecturesInCourse(Long courseId, Timestamp ts, Time t) {
-
+  protected ArrayList<Lecture> getLecturesInCourse(Long courseId, Timestamp ts, Time t) {
+    return null;
   }
 //  getRooms(): //done
 //  returns a list of all rooms.
 //  the attributes needed are max. capacity, classroom_id
 //      path = "/classrooms"
-  protected void getRooms() {
-
+  protected ArrayList<Room> getRooms() {
+    return null;
   }
 //  assignStudentToLecture(student_id, Lecture_id): //done
 //  Creates an entry in lecture_schedule with the given student id
