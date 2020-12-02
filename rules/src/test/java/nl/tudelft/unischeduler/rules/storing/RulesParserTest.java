@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import nl.tudelft.unischeduler.rules.Ruleset;
+import nl.tudelft.unischeduler.rules.entities.Ruleset;
 import org.junit.Test;
 
 
