@@ -1,4 +1,4 @@
-package nl.tudelft.unischeduler.rules;
+package nl.tudelft.unischeduler.rules.entities;
 
 import java.util.Arrays;
 import java.util.Objects;
