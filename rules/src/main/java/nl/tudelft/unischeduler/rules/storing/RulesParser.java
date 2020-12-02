@@ -10,31 +10,18 @@ import nl.tudelft.unischeduler.rules.Ruleset;
  * Reads the rules from file and returns a rules entity.
  */
 public class RulesParser {
-    private String fileName = "test/resources/rules.json";
+    private static final String STANDARD_FILE_NAME = "test/resources/rules.json";
     private File rulesFile;
     private final ObjectMapper mapper;
 
     /**
      * Only used for testing the class make sure that fileName points to the same file as rulesFile.
      *
-     * @param fileName The name of the file where the rules are stored.
      * @param rulesFile The file located at the rulesFile location.
      */
-    public RulesParser(String fileName, File rulesFile, ObjectMapper mapper) {
-        this.fileName = fileName;
+    public RulesParser(File rulesFile, ObjectMapper mapper) {
         this.rulesFile = rulesFile;
         this.mapper = mapper;
-    }
-
-    /**
-     * Used to use a different file as the rules file.
-     *
-     * @param rulesFileName The name of the file to use.
-     */
-    public RulesParser(String rulesFileName, ObjectMapper objectMapper) {
-        this.fileName = rulesFileName;
-        this.rulesFile = new File(rulesFileName);
-        this.mapper =  objectMapper;
     }
 
     /**
@@ -42,20 +29,12 @@ public class RulesParser {
      * <p>Uses the standard fileName which is "rules.json"</p>
      */
     public RulesParser(ObjectMapper objectMapper) {
-        this.rulesFile = new File(this.fileName);
+        this.rulesFile = new File(STANDARD_FILE_NAME);
         this.mapper = objectMapper;
-    }
-
-    public String getFileName() {
-        return fileName;
     }
 
     public File getRulesFile() {
         return rulesFile;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
     }
 
     public void setRulesFile(File rulesFile) {
@@ -66,8 +45,12 @@ public class RulesParser {
         return mapper;
     }
 
-    public Ruleset parseRules() throws IOException {
+    public synchronized Ruleset parseRules() throws IOException {
         JsonNode jsonNode = mapper.readTree(rulesFile);
         return mapper.treeToValue(jsonNode, Ruleset.class);
+    }
+
+    public synchronized void writeRules(Ruleset newRuleset) throws IOException {
+        mapper.writeValue(rulesFile, newRuleset);
     }
 }

@@ -65,13 +65,22 @@ public class Ruleset {
         Ruleset ruleset = (Ruleset) o;
         return breakTime == ruleset.breakTime
                 && maxDays == ruleset.maxDays
-                && Arrays.equals(thresholds, ruleset.thresholds);
+                && Arrays.deepEquals(thresholds, ruleset.thresholds);
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hash(breakTime, maxDays);
-        result = 31 * result + Arrays.hashCode(thresholds);
+        result = 31 * result + Arrays.deepHashCode(thresholds);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Ruleset{"
+                + "thresholds=" + Arrays.deepToString(thresholds)
+                + ", breakTime=" + breakTime
+                + ", maxDays=" + maxDays
+                + '}';
     }
 }
