@@ -18,8 +18,9 @@ public class CourseController {
 
     @GetMapping(path = "/courses/all")
     public @ResponseBody
-    List<Long> getAllCoursesIds() {
-        return courseService.getAllCourses().stream().mapToLong(Course::getId).boxed().collect(Collectors.toList());
+    List<Course> getAllCoursesIds() {
+        //return courseService.getAllCourses().stream().mapToLong(Course::getId).boxed().collect(Collectors.toList());
+        return courseService.getAllCourses();
     }
 
     @GetMapping(path = "/courses/{course_id}")

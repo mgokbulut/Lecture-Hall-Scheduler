@@ -1,5 +1,6 @@
 package nl.tudelft.unischeduler.database.Lecture;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,13 +21,19 @@ public class LectureController {
     @Autowired
     private transient ScheduleService scheduleService;
 
-    @GetMapping(path = "/lectures/{classroomId}/{date}")
+//    @GetMapping(path = "/lectures/{classroomId}/{date}")
+//    public @ResponseBody
+//    List<Lecture> getLecturesInRoomOnDay(@PathVariable Long classroomId, @PathVariable Date date) {
+//        SimpleDateFormat format = new SimpleDateFormat("yyyMMdd");
+//        //date comparison
+//        List<Lecture> lectures = lectureService.getLecturesInRoomOnDay(classroomId);
+//        return lectures.stream().filter(x-> new Date(x.getStartTimeDate().getTime()).equals(date)).collect(Collectors.toList());
+//    }
+
+    @GetMapping(path = "/lectures/{courseId}/{ts}/{t}")
     public @ResponseBody
-    List<Lecture> getLecturesInRoomOnDay(@PathVariable Long classroomId, @PathVariable Date date) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyMMdd");
-        //date comparison
-        List<Lecture> lectures = lectureService.getLecturesInRoomOnDay(classroomId);
-        return lectures.stream().filter(x-> new Date(x.getStartTimeDate().getTime()).equals(date)).collect(Collectors.toList());
+    List<Lecture> getLecturesInCourse(@PathVariable Long courseId, @PathVariable Timestamp ts, @PathVariable Time t){
+        return lectureService.getLecturesInCourse(courseId, ts, t);
     }
 
     @PutMapping(path = "/lectures/setTime/{lectureId}/{t}")

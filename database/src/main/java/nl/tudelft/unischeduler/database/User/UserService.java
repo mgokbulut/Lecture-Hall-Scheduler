@@ -14,10 +14,6 @@ public class UserService {
     //not sure if should be transient but checkstyle complaints without it...
     private transient UserRepository userRepository;
 
-    public User getUser(String id){
-        return userRepository.findByNetId(id).get();
-    }
-
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }

@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -18,12 +20,13 @@ public class LectureService {
     //not sure if should be transient but checkstyle complaints without it...
     private transient LectureRepository lectureRepository;
 
-//    public Lecture getLecture(Long id){
-//        return lectureRepository.findById(id).get();
-//    }
-
-    public List<Lecture> getLecturesInRoomOnDay(Long classroomId) {
-        return lectureRepository.findAllByClassroom(classroomId);
+    public List<Lecture> getLecturesInCourse(Long courseId, Timestamp ts, Time t) {
+        List<Lecture> lectures =  lectureRepository.findAllByCourse(courseId);
+        Timestamp tsPlusDuration = new Timestamp(ts.getTime() + t.getTime());
+        return lectures
+                .stream()
+                .filter(x->x.getStartTimeDate().after(ts) && x.getStartTimeDate().before(tsPlusDuration))
+                .collect(Collectors.toList());
     }
 
     public String setTime(Long lectureId, Timestamp t){

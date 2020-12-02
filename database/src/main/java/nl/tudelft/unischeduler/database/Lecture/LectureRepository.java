@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LectureRepository extends JpaRepository<Lecture, Long> {
-    //Optional<Lecture> findById(Long id);
-
+    Optional<Lecture> findById(Long id);
     List<Lecture> findAllByClassroom(Long classroomId);
+    List<Lecture> findAllByCourse(Long Course);
 }
