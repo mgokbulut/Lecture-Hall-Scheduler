@@ -44,6 +44,9 @@ public class RulesModule {
 
     public void setRules(Ruleset rules) {
         this.rules = rules;
+        setBreakTime(rules.getBreakTime());
+        setMaxDays(rules.getMaxDays());
+        setThresholds(rules.getThresholds());
     }
 
     /*
@@ -64,12 +67,16 @@ public class RulesModule {
     public int getCapacity(int init) {
 
         int index = 0;
-        for (; index < thresholds[0].length; index++) {
+        while (index < thresholds.length) {
 
             if (init < thresholds[index][0]) {
+                index --;
                 break;
             }
-
+            if(index + 1 >= thresholds.length) {
+                break;
+            }
+            index++;
         }
 
         return (init * thresholds[index][1] / 100);
@@ -115,7 +122,7 @@ public class RulesModule {
         long start2 = l2.getStartTime().getTime();
 
         return (start1 < start2 && getNextStartTime(l1).getTime() > start2)
-                || (start1 > start2 && getNextStartTime(l2).getTime() < start1)
+                || (start1 > start2 && getNextStartTime(l2).getTime() > start1)
                 || (start1 == start2);
     }
 
@@ -145,7 +152,7 @@ public class RulesModule {
      * @param lectures list of all lectures
      * @return whether or not any lectures violated the rules.
      */
-    public boolean verifyCapacities(Lecture[] lectures) {
+    public boolean verifySchedule(Lecture[] lectures) {
         boolean ret = true;
         Arrays.sort(lectures);
         for (int i = 0; i < lectures.length; i++) {
@@ -153,9 +160,11 @@ public class RulesModule {
                 continue;
             }
             int attendance = lectures[i].getAttendance();
-            int capacity = getCapacity(lectures[i].getRoom().getCapacity());
-            if (attendance > capacity
-                    || overlap(lectures[i], lectures[(i + 1) % lectures.length])) {
+            boolean overCapacity = (lectures[i].getRoom() != null)
+                    && (getCapacity(lectures[i].getRoom().getCapacity()) <attendance);
+            if (overCapacity
+                    || (lectures[i].getRoom().equals(lectures[(i + 1) % lectures.length].getRoom())
+                    && overlap(lectures[i], lectures[(i + 1) % lectures.length]))) {
                 ret &= false;
                 //remove building from lecture
                 //remove lecture from schedule
