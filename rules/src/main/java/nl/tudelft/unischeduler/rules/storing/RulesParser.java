@@ -12,7 +12,7 @@ import nl.tudelft.unischeduler.rules.Ruleset;
 public class RulesParser {
     private static final String STANDARD_FILE_NAME = "test/resources/rules.json";
     private File rulesFile;
-    private final ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     /**
      * Only used for testing the class make sure that fileName points to the same file as rulesFile.
@@ -45,6 +45,10 @@ public class RulesParser {
 
     public ObjectMapper getMapper() {
         return mapper;
+    }
+
+    public void setMapper(ObjectMapper mapper) {
+        this.mapper = mapper;
     }
 
     /**
