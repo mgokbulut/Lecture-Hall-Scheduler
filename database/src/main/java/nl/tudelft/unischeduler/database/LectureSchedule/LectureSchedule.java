@@ -31,19 +31,19 @@ public class LectureSchedule {
         this.scheduleId = schedule_id;
     }
 
-    public Long getLecture_id() {
+    public Long getLectureId() {
         return lectureId;
     }
 
-    public void setLecture_id(Long lecture_id) {
+    public void setLectureId(Long lecture_id) {
         this.lectureId = lecture_id;
     }
 
-    public Long getSchedule_id() {
+    public Long getScheduleId() {
         return scheduleId;
     }
 
-    public void setSchedule_id(Long schedule_id) {
+    public void setScheduleId(Long schedule_id) {
         this.scheduleId = schedule_id;
     }
 

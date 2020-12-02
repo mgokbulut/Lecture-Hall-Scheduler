@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
     List<User> findAll();
+    //List<User> findAllByNetId(List<String> netIds);
 
     Optional<User> findByNetId(String netId);
 }
