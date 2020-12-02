@@ -1,6 +1,7 @@
 package nl.tudelft.unischeduler.database;
 
 import nl.tudelft.unischeduler.database.entities.Course;
+import nl.tudelft.unischeduler.database.entities.Lecture;
 import nl.tudelft.unischeduler.database.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,5 +28,9 @@ public class CourseController {
         return c.getStudents();
     }
 
-
+    @GetMapping(path = "/lecturesInCourse/{lectureId}")
+    public Iterable<Lecture> getLecturesInCourse(@PathVariable Long courseId) {
+        Course c = courseService.getCourse(courseId);
+        return c.getLectures();
+    }
 }
