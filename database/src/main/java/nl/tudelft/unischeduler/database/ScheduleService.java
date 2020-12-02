@@ -8,5 +8,5 @@ import org.springframework.stereotype.Service;
 public class ScheduleService {
 
     @Autowired
-    private ScheduleRepository scheduleRepository;
+    private transient ScheduleRepository scheduleRepository;
 }

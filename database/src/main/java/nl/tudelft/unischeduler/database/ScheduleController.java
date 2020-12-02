@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.*;
 public class ScheduleController {
 
     @Autowired
-    private ScheduleService scheduleService;
+    private transient ScheduleService scheduleService;
     @Autowired
-    private UserService studentService;
+    private transient UserService studentService;
     @Autowired
-    private LectureService lectureService;
+    private transient LectureService lectureService;
 
     @PutMapping(path = "/assignStudentToLecture/{studentId}/{lectureId}")
     public @ResponseBody
