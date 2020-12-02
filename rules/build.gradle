@@ -27,6 +27,8 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// https://mvnrepository.com/artifact/org.json/json
+	implementation 'org.openidentityplatform.commons.json-ref:jackson:2.0.9'
 }
 
 test {

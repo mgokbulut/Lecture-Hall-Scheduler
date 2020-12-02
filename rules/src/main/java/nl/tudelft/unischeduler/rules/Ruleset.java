@@ -1,5 +1,8 @@
 package nl.tudelft.unischeduler.rules;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class Ruleset {
 
     private int[][] thresholds;
@@ -51,4 +54,33 @@ public class Ruleset {
         this.maxDays = maxDays;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Ruleset ruleset = (Ruleset) o;
+        return breakTime == ruleset.breakTime
+                && maxDays == ruleset.maxDays
+                && Arrays.deepEquals(thresholds, ruleset.thresholds);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(breakTime, maxDays);
+        result = 31 * result + Arrays.deepHashCode(thresholds);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Ruleset{"
+                + "thresholds=" + Arrays.deepToString(thresholds)
+                + ", breakTime=" + breakTime
+                + ", maxDays=" + maxDays
+                + '}';
+    }
 }
