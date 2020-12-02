@@ -1,9 +1,10 @@
 package nl.tudelft.unischeduler.rules.core;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.List;
 import nl.tudelft.unischeduler.rules.entities.Lecture;
-import nl.tudelft.unischeduler.rules.entities.Room;
 import nl.tudelft.unischeduler.rules.entities.Ruleset;
 
 public class RulesModule {
@@ -175,4 +176,16 @@ public class RulesModule {
 
     }
 
+    public boolean overlap(Lecture lecture) {
+        //TODO: call to database for all lectures on that day in a room.
+        List<Lecture> lectures = Arrays.asList(
+                new Lecture(0, 50, Timestamp.valueOf("2020-12-1 9:00:00"), Time.valueOf("1:00:00")),
+                new Lecture(0, 50, Timestamp.valueOf("2020-12-1 9:00:00"), Time.valueOf("1:00:00")));
+        for(Lecture lectureOnDay : lectures) {
+            if (overlap(lecture, lectureOnDay)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

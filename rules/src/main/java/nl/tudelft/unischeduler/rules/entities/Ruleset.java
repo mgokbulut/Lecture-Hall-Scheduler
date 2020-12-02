@@ -56,12 +56,16 @@ public class Ruleset {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Ruleset ruleset = (Ruleset) o;
-        return breakTime == ruleset.breakTime &&
-                maxDays == ruleset.maxDays &&
-                Arrays.deepEquals(thresholds, ruleset.thresholds);
+        return breakTime == ruleset.breakTime
+                && maxDays == ruleset.maxDays
+                && Arrays.deepEquals(thresholds, ruleset.thresholds);
     }
 
     @Override
@@ -73,10 +77,10 @@ public class Ruleset {
 
     @Override
     public String toString() {
-        return "Ruleset{" +
-                "thresholds=" + Arrays.deepToString(thresholds) +
-                ", breakTime=" + breakTime +
-                ", maxDays=" + maxDays +
-                '}';
+        return "Ruleset{"
+                + "thresholds=" + Arrays.deepToString(thresholds)
+                + ", breakTime=" + breakTime
+                + ", maxDays=" + maxDays
+                + '}';
     }
 }
