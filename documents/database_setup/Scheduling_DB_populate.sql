@@ -44,6 +44,10 @@ INSERT INTO classroom
 VALUES (1, 100, 'Boole Hall', 'EWI', 2);
 INSERT INTO classroom
 VALUES (2, 250, 'Pi Hall', 'EWI', 1);
+INSERT INTO classroom
+VALUES (-1, 0, 'EMPTY', 'EMPTY', 0);
+INSERT INTO classroom
+VALUES (-2, 0, 'ONLINE', 'ONLINE', 0);
 
 INSERT INTO course
 VALUES (0, 'ADS', 1);
