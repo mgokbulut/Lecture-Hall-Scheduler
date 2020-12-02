@@ -21,6 +21,7 @@ CREATE TABLE classroom (
 CREATE TABLE course (
     id int NOT NULL,
     name varchar(255) NOT NULL,
+    year int NOT NULL,
     CONSTRAINT course_pk PRIMARY KEY (id)
 );
 

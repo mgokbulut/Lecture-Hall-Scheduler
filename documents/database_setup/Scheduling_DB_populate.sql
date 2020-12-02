@@ -46,15 +46,15 @@ INSERT INTO classroom
 VALUES (2, 250, 'Pi Hall', 'EWI', 1);
 
 INSERT INTO course
-VALUES (0, 'ADS');
+VALUES (0, 'ADS', 1);
 INSERT INTO course
-VALUES (1, 'SEM');
+VALUES (1, 'SEM', 2);
 INSERT INTO course
-VALUES (2, 'AD');
+VALUES (2, 'AD', 2);
 INSERT INTO course
-VALUES (3, 'ML');
+VALUES (3, 'ML', 1);
 INSERT INTO course
-VALUES (4, 'CG');
+VALUES (4, 'CG', 2);
 
 INSERT INTO lecture
 VALUES (0, 0, 0, 'sanders@tudelft.nl', '2020-12-10 09:00:00', '02:00:00', false);
