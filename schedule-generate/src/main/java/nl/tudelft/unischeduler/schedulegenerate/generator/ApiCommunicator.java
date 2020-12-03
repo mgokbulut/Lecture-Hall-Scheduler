@@ -35,7 +35,7 @@ public class ApiCommunicator {
 //  Timestamp ts is the current time, and Time t is the window of time in which
 //  lectures are being scheduled (e.g. when t = 2 only return the lectures that occur in the next 2 weeks)
 //  path = "/lectures/{courseId}/{ts}/{t}"
-  protected ArrayList<Lecture> getLecturesInCourse(Long courseId, Timestamp ts, Time t) {
+  protected ArrayList<Lecture> getLecturesInCourse(Long courseId, Timestamp ts, int t) {
     return null;
   }
 //  getRooms(): //done
