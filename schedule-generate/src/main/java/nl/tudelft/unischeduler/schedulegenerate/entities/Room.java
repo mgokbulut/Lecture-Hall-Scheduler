@@ -4,7 +4,7 @@ import java.util.Objects;
 import javax.persistence.Entity;
 
 @Entity
-public class Room {
+public class Room implements Comparable<Room> {
   private int id;
   private int capacity;
   private String name;
@@ -60,6 +60,11 @@ public class Room {
     return getId() == room.getId()
         && getCapacity() == room.getCapacity()
         && Objects.equals(getName(), room.getName());
+  }
+
+  @Override // we want them ordered by capacity
+  public int compareTo(Room otherRoom) {
+    return Integer.compare(getCapacity(), otherRoom.getCapacity());
   }
 
   @Override
