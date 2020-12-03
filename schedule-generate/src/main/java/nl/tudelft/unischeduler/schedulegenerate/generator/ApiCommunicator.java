@@ -59,7 +59,7 @@ public class ApiCommunicator {
   //  and Lecture_id
   //  path = "/lectureSchedule/{net_id}/{lectureId}"
 
-  protected void assignStudentToLecture(String studentId, String lectureId) {
+  protected void assignStudentToLecture(String studentId, int lectureId) {
 
   }
 
@@ -67,7 +67,7 @@ public class ApiCommunicator {
   //  Sets the classroom_id of the given lecture to the given classroom_id
   //      path = "/lectures/setClassroom/{lectureId}/{classroomId}"
 
-  protected void assignRoomToLecture(String lectureId, String classroomId) {
+  protected void assignRoomToLecture(int lectureId, int classroomId) {
 
   }
 
@@ -75,7 +75,7 @@ public class ApiCommunicator {
   //  sets the start time of the given lecture to t
   //  path = "/lectures/setTime/{lectureId}/{t}
 
-  protected void setLectureTime(String lectureId, Timestamp timeStamp) {
+  protected void setLectureTime(int lectureId, Timestamp timeStamp) {
 
   }
 }
