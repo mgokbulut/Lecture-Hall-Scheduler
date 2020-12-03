@@ -26,24 +26,33 @@ public class Generator {
    */
   public void scheduleGenerate(Timestamp currentTime) {
 
-    int nOfDays = 10; // placeholder
+    int numOfDays = 10; // placeholder
     ArrayList<Course> courses = apiCommunicator.getCourses();
-    ArrayList<Lecture> lectures = new ArrayList<Lecture>();
+    ArrayList<Lecture> lectures = new ArrayList<>();
+
     // populate the lectures array
-    for(int i = 0; i < courses.size(); i++) {
+    for (int i = 0; i < courses.size(); i++) {
       Course course = courses.get(i);
       ArrayList<Lecture> toAdd =
-          apiCommunicator.getLecturesInCourse(course.getId(), currentTime, window);
+          apiCommunicator.getLecturesInCourse(course.getId(), currentTime, numOfDays);
       lectures.addAll(toAdd);
     }
-  }
-  private void createTimeTable() { // lectures
-    
+
+    // sort by end time
+    Collections.sort(lectures);
+
+    // Now we need to know which lectures are on which days in an
+    // easy-to-access datastructure.
+    List<List<Lecture>> timeTable = createTimeTable(lectures, currentTime, numOfDays);
+
+    scheduling(lectures, timeTable);
   }
 
   private List<List<Lecture>> createTimeTable(ArrayList<Lecture> lectures,
-                                                   Timestamp currentTime, int nOfDays) { // lectures
-    List<List<Lecture>> timeTable = new ArrayList<>(nOfDays);
+                                              Timestamp currentTime,
+                                              int numOfDays) {
+
+    List<List<Lecture>> timeTable = new ArrayList<>(numOfDays);
     // initialize
     for (int i = 0; i < timeTable.size(); i++) {
       timeTable.add(new ArrayList<Lecture>());
@@ -57,6 +66,7 @@ public class Generator {
     }
     return timeTable;
   }
+
   /**
    * Calculates the distance in days between two dates excluding
    * weekends.
@@ -74,17 +84,17 @@ public class Generator {
     cal1.setTimeInMillis(long1);
     cal2.setTimeInMillis(long2);
 
-    int nDays = 0;
+    int numDays = 0;
 
     while (cal1.before(cal2)) {
       if ((Calendar.SATURDAY != cal1.get(Calendar.DAY_OF_WEEK))
-          &&(Calendar.SUNDAY != cal1.get(Calendar.DAY_OF_WEEK))) {
-        nDays++;
+          && (Calendar.SUNDAY != cal1.get(Calendar.DAY_OF_WEEK))) {
+        numDays++;
       }
       cal1.add(Calendar.DATE,1);
     }
 
-    return nDays;
+    return numDays;
   }
 
   private void scheduling() { // lectures, timetable
