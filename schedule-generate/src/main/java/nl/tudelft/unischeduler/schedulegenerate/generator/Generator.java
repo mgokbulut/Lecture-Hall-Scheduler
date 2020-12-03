@@ -31,6 +31,22 @@ public class Generator {
     
   }
 
+  private List<List<Lecture>> createTimeTable(ArrayList<Lecture> lectures,
+                                                   Timestamp currentTime, int nOfDays) { // lectures
+    List<List<Lecture>> timeTable = new ArrayList<>(nOfDays);
+    // initialize
+    for (int i = 0; i < timeTable.size(); i++) {
+      timeTable.add(new ArrayList<Lecture>());
+    }
+    // distribute the lectures
+    for (int i = 0; i < lectures.size(); i++) {
+      Lecture l = lectures.get(i);
+      // now get which day compared to currentTime, as an int
+      int lecDay = calDistance(l.getStartTime(), currentTime);
+      timeTable.get(lecDay).add(l);
+    }
+    return timeTable;
+  }
   /**
    * Calculates the distance in days between two dates excluding
    * weekends.
