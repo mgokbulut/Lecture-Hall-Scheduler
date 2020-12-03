@@ -266,7 +266,7 @@ public class Generator {
 
         for (int i = 0; i < lectures.size(); i++) {
             Lecture l = lectures.get(i);
-            if ((apiCommunicator.overlap(lecture, l) && l.getRoom().equals(room))
+            if ((overlap(lecture, l) && l.getRoom().equals(room))
                 || l.getYear() == lecture.getYear()) {
                 return new Timestamp(l.getStartTime().getTime() + l.getDuration().getTime());
             }
@@ -278,6 +278,11 @@ public class Generator {
         // TODO make an API call here to find out the rule for capacity
         // for now we don't take the rules into account
         return room.getCapacity();
+    }
+
+    protected boolean overlap(Lecture l1, Lecture l2) {
+        // TODO implement
+        return false;
     }
 
 

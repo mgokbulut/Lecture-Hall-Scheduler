@@ -76,10 +76,5 @@ public class ApiCommunicator {
     protected void setLectureTime(int lectureId, Timestamp timeStamp) {
 
     }
-
-    protected boolean overlap(Lecture l1, Lecture l2) {
-        // TODO implement
-        return false;
-    }
 }
 
