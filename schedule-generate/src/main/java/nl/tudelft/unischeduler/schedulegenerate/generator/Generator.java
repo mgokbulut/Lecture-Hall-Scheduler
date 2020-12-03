@@ -45,7 +45,7 @@ public class Generator {
     // easy-to-access datastructure.
     List<List<Lecture>> timeTable = createTimeTable(lectures, currentTime, numOfDays);
 
-    scheduling(lectures, timeTable);
+    scheduling(lectures, timeTable, currentTime);
   }
 
   private List<List<Lecture>> createTimeTable(ArrayList<Lecture> lectures,
@@ -97,12 +97,49 @@ public class Generator {
     return numDays;
   }
 
-  private void scheduling() { // lectures, timetable
+  /**
+   * assigns and schedules courses that are not assigned yet
+   * this is tested based on whether they are assigned a room or not
+   * @param lectures
+   * @param timeTable
+   */
+  private void scheduling(ArrayList<Lecture> lectures, List<List<Lecture>> timeTable, Timestamp currentTime) {
+    // get all the rooms available on campus
+    ArrayList<Room> rooms = apiCommunicator.getRooms();
 
-  }
+    // get all the courses
+    ArrayList<Course> courses = apiCommunicator.getCourses();
+    // and separate them per year
+    List<List<Course>> coursesPerYear = new ArrayList<>();
+    for (int i = 0; i < courses.size(); i++) {
+      Course c = courses.get(i);
+      coursesPerYear.get(c.getYear()).add(c);
+    }
 
-  private void findRoom() { // rooms, date, numStudents, lecture, timeTable
+    // for every uni year
+    for (int i = 0; i < coursesPerYear.size(); i++) {
+      // for each of its courses
+      List<Course> coursesIthYear = coursesPerYear.get(i);
+      for (int j = 0; j < coursesIthYear.size(); i++) {
+        Course c = coursesIthYear.get(j);
+        // get its students
+        Set<Student> courseStudents = c.getStudents();
+        // sort them per when they were last on campus in a priority queue
+        PriorityQueue<Student> studentsQueue = new PriorityQueue<>();
+        studentsQueue.addAll(courseStudents);
 
+        // for each lecture in the course
+        ArrayList<Lecture> lecturesCurrentCourse = new ArrayList<Lecture>(c.getLectures());
+        for (int k = 0; k < lecturesCurrentCourse.size(); k++) {
+          Lecture l = lecturesCurrentCourse.get(k);
+          // if it's not assigned in the schedule yet
+          if(l.getRoom() == null && !(l.getIsOnline())) {
+            // then we want to assign it a room
+            Room room = findRoom(rooms, currentTime, l, timeTable);
+          }
+        }
+      }
+    }
   }
 
   private Room findRoom(ArrayList<Room> rooms, Timestamp date,
