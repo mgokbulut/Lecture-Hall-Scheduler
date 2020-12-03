@@ -1,10 +1,7 @@
 package nl.tudelft.unischeduler.database.LectureSchedule;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class LectureScheduleController {
@@ -17,4 +14,11 @@ public class LectureScheduleController {
     String assignStudentToLecture(@PathVariable String net_id, @PathVariable Long lectureId){
         return lectureScheduleService.assignLectureToSchedule(lectureId, net_id);
     }
+
+    @DeleteMapping(path = "/lectureSchedule/remove/{lectureId}")
+    public @ResponseBody
+    String removeLectureFromSchedule(@PathVariable Long lectureId){
+        return lectureScheduleService.removeLectureFromSchedule(lectureId);
+    }
+
 }

@@ -90,4 +90,9 @@ public class Course {
     public int hashCode() {
         return Objects.hash(id, name, year);
     }
+
+    @Override
+    public String toString(){
+        return String.format("{\"id\":%d,\"name\":%s,\"year\":%d}", id, name, year);
+    }
 }

@@ -2,6 +2,7 @@ package nl.tudelft.unischeduler.database.Classroom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,5 +19,11 @@ public class ClassroomController {
     public @ResponseBody
     List<Classroom> getAllClassrooms() {
         return classroomService.getAllClassrooms();
+    }
+
+    @GetMapping(path = "/classroom/{classroomId}")
+    public @ResponseBody
+    Classroom getClassroom(@PathVariable Long classroomId) {
+        return classroomService.getClassroom(classroomId);
     }
 }

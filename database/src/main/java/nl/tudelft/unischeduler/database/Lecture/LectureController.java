@@ -16,19 +16,31 @@ public class LectureController {
     @Autowired
     private transient ScheduleService scheduleService;
 
-//    @GetMapping(path = "/lectures/{classroomId}/{date}")
-//    public @ResponseBody
-//    List<Lecture> getLecturesInRoomOnDay(@PathVariable Long classroomId, @PathVariable Date date) {
-//        SimpleDateFormat format = new SimpleDateFormat("yyyMMdd");
-//        //date comparison
-//        List<Lecture> lectures = lectureService.getLecturesInRoomOnDay(classroomId);
-//        return lectures.stream().filter(x-> new Date(x.getStartTimeDate().getTime()).equals(date)).collect(Collectors.toList());
-//    }
+    @Autowired
+    private transient LectureRepository lectureRepository;
+
+    @GetMapping(path = "/lectures")
+    public @ResponseBody
+    List<Lecture> getLectures(){
+        return lectureRepository.findAll();
+    }
+
+    @GetMapping(path = "/lectures/courses")
+    public @ResponseBody
+    List<String> getLecturesInCourse(){
+        return lectureService.getLecturesWithCourses();
+    }
 
     @GetMapping(path = "/lectures/{courseId}/{ts}/{t}")
     public @ResponseBody
     List<Lecture> getLecturesInCourse(@PathVariable Long courseId, @PathVariable Timestamp ts, @PathVariable Time t){
         return lectureService.getLecturesInCourse(courseId, ts, t);
+    }
+
+    @PutMapping(path = "/lectures/setClassroomToEmpty/{lectureId}")
+    public @ResponseBody
+    String setClassroomToEmpty(@PathVariable Long lectureId){
+        return lectureService.setClassroomToEmpty(lectureId);
     }
 
     @PutMapping(path = "/lectures/setTime/{lectureId}/{t}")
@@ -49,5 +61,14 @@ public class LectureController {
 //        Schedule schedule = scheduleService.getScheduleOfUser(netId);
 //
 //
+//    }
+
+    //    @GetMapping(path = "/lectures/{classroomId}/{date}")
+//    public @ResponseBody
+//    List<Lecture> getLecturesInRoomOnDay(@PathVariable Long classroomId, @PathVariable Date date) {
+//        SimpleDateFormat format = new SimpleDateFormat("yyyMMdd");
+//        //date comparison
+//        List<Lecture> lectures = lectureService.getLecturesInRoomOnDay(classroomId);
+//        return lectures.stream().filter(x-> new Date(x.getStartTimeDate().getTime()).equals(date)).collect(Collectors.toList());
 //    }
 }

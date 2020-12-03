@@ -13,11 +13,6 @@ public class ScheduleService {
     private transient ScheduleRepository scheduleRepository;
 
     public Schedule getScheduleOfUser(String user) {
-        Optional<Schedule> temp = scheduleRepository.findByUser(user);
-        if(temp.isEmpty()){
-            System.out.println("No schedule for such user exists");
-            return null;
-        }
-        return temp.get();
+        return scheduleRepository.findByUser(user).orElseThrow(() -> new IllegalArgumentException("No such object in DB"));
     }
 }

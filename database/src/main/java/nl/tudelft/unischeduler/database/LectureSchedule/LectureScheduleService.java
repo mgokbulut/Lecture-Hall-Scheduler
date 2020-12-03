@@ -16,6 +16,17 @@ public class LectureScheduleService {
     @Autowired
     private transient ScheduleRepository scheduleRepository;
 
+    public String removeLectureFromSchedule(Long lectureId){
+        try{
+            lectureScheduleRepository.deleteLectureSchedulesByLectureId(lectureId);
+            return "Lecture successfully deleted from all the schedules";
+        }
+        catch (Exception a){
+            a.printStackTrace();
+            return "Issue with deletion of a lecture from schedules";
+        }
+    }
+
     public String assignLectureToSchedule(Long lectureId, String netId){
         Optional<Schedule> sTemp = scheduleRepository.findByUser(netId);
         if (sTemp.isEmpty()) {

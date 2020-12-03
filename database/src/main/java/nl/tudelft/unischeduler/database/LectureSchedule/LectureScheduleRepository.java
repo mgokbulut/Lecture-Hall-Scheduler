@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface LectureScheduleRepository extends JpaRepository<LectureSchedule, LectureScheduleId> {
 
     Optional<LectureSchedule> findByLectureIdAndScheduleId(Long lectureId, Long scheduleId);
+    void deleteLectureSchedulesByLectureId(Long lectureId);
 }

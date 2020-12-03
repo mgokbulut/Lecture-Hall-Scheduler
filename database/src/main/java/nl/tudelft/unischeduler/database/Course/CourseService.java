@@ -18,11 +18,6 @@ public class CourseService {
     }
 
     public Course getCourse(Long courseId) {
-        Optional<Course> temp = courseRepository.findById(courseId);
-        if(temp.isEmpty()){
-            System.out.println("No course with such Id exists");
-            return null;
-        }
-        return temp.get();
+        return courseRepository.findById(courseId).orElseThrow(() -> new IllegalArgumentException("No such object in DB"));
     }
 }

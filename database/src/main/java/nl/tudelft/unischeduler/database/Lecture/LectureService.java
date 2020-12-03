@@ -1,10 +1,12 @@
 package nl.tudelft.unischeduler.database.Lecture;
 
+import nl.tudelft.unischeduler.database.Course.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,6 +18,34 @@ public class LectureService {
     @Autowired
     //not sure if should be transient but checkstyle complaints without it...
     private transient LectureRepository lectureRepository;
+
+    @Autowired
+    private transient CourseRepository courseRepository;
+
+    public List<String> getLecturesWithCourses(){
+        var lectures = lectureRepository.findAll();
+        List<String> lecturesWithCourses = new ArrayList<>();
+        lectures.forEach(x-> lecturesWithCourses.add(x + ", " + courseRepository.findById(x.getCourse())));
+        return lecturesWithCourses;
+    }
+
+    public String setClassroomToEmpty(Long lectureId){
+        Optional<Lecture> temp = lectureRepository.findById(lectureId);
+        if (temp.isEmpty()) {
+            return "{message:\"LectureID not present in the DB\"}";
+        }
+        else {
+            try {
+                Lecture lecture = temp.get();
+                lecture.setClassroom(-1L);
+                lectureRepository.save(lecture);
+            } catch (Exception e) {
+                System.out.println("Something went wrong in setClassroomToEmpty method");
+                return null;
+            }
+            return "{message:\"Success!\"}";
+        }
+    }
 
     public List<Lecture> getLecturesInCourse(Long courseId, Timestamp ts, Time t) {
         List<Lecture> lectures =  lectureRepository.findAllByCourse(courseId);
