@@ -15,7 +15,6 @@ import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Room;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Student;
-import nl.tudelft.unischeduler.schedulegenerate.generator.ApiCommunicator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class Generator {
 
   @Autowired
-  private ApiCommunicator apiCommunicator;
+  private transient ApiCommunicator apiCommunicator;
 
   /**
    * Generates a full schedule by adding it to the database using API calls.
@@ -83,6 +82,7 @@ public class Generator {
    * @return the number of days difference between them
    */
   private int calDistance(Timestamp c1, Timestamp c2) {
+    int maxIterations = 100; // just to never get stuck in the while loop
     long long1 = c1.getTime();
     long long2 = c2.getTime();
     Calendar cal1 = Calendar.getInstance();
@@ -92,13 +92,14 @@ public class Generator {
     cal2.setTimeInMillis(long2);
 
     int numDays = 0;
-
-    while (cal1.before(cal2)) {
+    int iteration = 0;
+    while (cal1.before(cal2) && iteration < maxIterations) {
       if ((Calendar.SATURDAY != cal1.get(Calendar.DAY_OF_WEEK))
           && (Calendar.SUNDAY != cal1.get(Calendar.DAY_OF_WEEK))) {
-        numDays++;
+        numDays = numDays + 1;
       }
       cal1.add(Calendar.DATE,1);
+      iteration++;
     }
 
     return numDays;
@@ -132,7 +133,7 @@ public class Generator {
     for (int i = 0; i < coursesPerYear.size(); i++) {
       // for each of its courses
       List<Course> coursesIthYear = coursesPerYear.get(i);
-      for (int j = 0; j < coursesIthYear.size(); i++) {
+      for (int j = 0; j < coursesIthYear.size(); j++) {
         Course c = coursesIthYear.get(j);
         // get its students
         Set<Student> courseStudents = c.getStudents();
@@ -167,7 +168,6 @@ public class Generator {
             // first we have to figure out which students to add, without duplicates
             Set<Student> studentsToAdd = new HashSet<>();
             List<Student> notSelected = new ArrayList<>();
-            int numOfStudentsAdded = 0;
             int iteration = 0;
             while (studentsToAdd.size() < capacity
                 && iteration < maxIterationMultiplier * capacity) {
