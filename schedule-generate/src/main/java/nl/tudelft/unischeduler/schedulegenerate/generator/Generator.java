@@ -28,7 +28,37 @@ public class Generator {
     }
   }
   private void createTimeTable() { // lectures
+    
+  }
 
+  /**
+   * Calculates the distance in days between two dates excluding
+   * weekends.
+   *
+   * @param c1 the timestamp of the first date
+   * @param c2 the timestamp of the second date
+   * @return the number of days difference between them
+   */
+  private int calDistance(Timestamp c1, Timestamp c2) {
+    long long1 = c1.getTime();
+    long long2 = c2.getTime();
+    Calendar cal1 = Calendar.getInstance();
+    Calendar cal2 = Calendar.getInstance();
+
+    cal1.setTimeInMillis(long1);
+    cal2.setTimeInMillis(long2);
+
+    int nDays = 0;
+
+    while (cal1.before(cal2)) {
+      if ((Calendar.SATURDAY != cal1.get(Calendar.DAY_OF_WEEK))
+          &&(Calendar.SUNDAY != cal1.get(Calendar.DAY_OF_WEEK))) {
+        nDays++;
+      }
+      cal1.add(Calendar.DATE,1);
+    }
+
+    return nDays;
   }
 
   private void scheduling() { // lectures, timetable
