@@ -15,8 +15,14 @@ public class Generator {
   @Autowired
   private ApiCommunicator apiCommunicator;
 
+  /**
+   * Generates a full schedule by adding it to the database using API calls.
+   *
+   * @param currentTime Time at which to start scheduling
+   */
   public void scheduleGenerate(Timestamp currentTime) {
-    Time window = new Time(24 * 10, 0, 0); // placeholder
+
+    int nOfDays = 10; // placeholder
     ArrayList<Course> courses = apiCommunicator.getCourses();
     ArrayList<Lecture> lectures = new ArrayList<Lecture>();
     // populate the lectures array
