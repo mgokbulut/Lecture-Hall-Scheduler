@@ -110,6 +110,10 @@ public class Generator {
    */
   private void scheduling(ArrayList<Lecture> lectures,
                           List<List<Lecture>> timeTable, Timestamp currentTime) {
+    // TODO change this to a proper template online room, ask Kuba
+    Room onlineRoom = new Room(0, Integer.MAX_VALUE, "online_room");
+    // this value is placeholder until we find a better solution, should work
+    int MAX_ITERATION_MULTIPLIER = 2;
     // get all the rooms available on campus
     ArrayList<Room> rooms = apiCommunicator.getRooms();
 
@@ -138,14 +142,60 @@ public class Generator {
         ArrayList<Lecture> lecturesCurrentCourse = new ArrayList<Lecture>(c.getLectures());
         for (int k = 0; k < lecturesCurrentCourse.size(); k++) {
           Lecture l = lecturesCurrentCourse.get(k);
-          // if it's not assigned in the schedule yet
+          // if the lecture is not assigned in the schedule yet
           if (l.getRoom() == null && !(l.getIsOnline())) {
             // then we want to assign it a room
             Room room = findRoom(rooms, currentTime, l, timeTable);
             // if no room was found (no space or bug)
             if (room == null) {
               // then we want to move it online
-              
+              // so we set its time, its room, and its isOnline
+              l.setStartTime(getEarliestTime(room, l, timeTable));
+              l.setRoom(onlineRoom);
+              l.setIsOnline(true);
+              continue;
+            }
+            // if a room was found
+            // we assign it
+            int capacity = getCapacity(room);
+            apiCommunicator.assignRoomToLecture(l.getId(), room.getId());
+            apiCommunicator.setLectureTime(l.getId(), l.getStartTime());
+
+            // then we want to add students to it
+            // first we have to figure out which students to add, without duplicates
+            Set<Student> studentsToAdd = new HashSet<>();
+            List<Student> notSelected = new ArrayList<>();
+            int numOfStudentsAdded = 0;
+            int iteration = 0;
+            while(studentsToAdd.size() < capacity &&
+                iteration < MAX_ITERATION_MULTIPLIER * capacity) {
+              try {
+                Student prioStudent = studentsQueue.remove();
+                // if student wasn't added already, add him
+                if (!studentsToAdd.contains(prioStudent)) {
+                  studentsToAdd.add(prioStudent);
+                  prioStudent.setLastTimeOnCampus(new Date(l.getStartTime().getTime()));
+                }
+                else {
+                  notSelected.add(prioStudent);
+                }
+              }
+              catch (Exception e) {
+                System.out.println("there was an error scheduling students to lectures...");
+                System.out.println(e.toString());
+              }
+              iteration++;
+            }
+            // we add back the ones that weren't selected
+            studentsQueue.addAll(notSelected);
+
+            // now we can add the students that were selected
+            List<Student> addTheseStudents = new ArrayList<>(studentsToAdd);
+            for (int a = 0; a < addTheseStudents.size(); a++) {
+              Student s = addTheseStudents.get(a);
+              apiCommunicator.assignStudentToLecture(s.getNetId(), l.getId());
+              s.setLastTimeOnCampus(l.getStartTime());
+              studentsQueue.add(s);
             }
           }
         }
