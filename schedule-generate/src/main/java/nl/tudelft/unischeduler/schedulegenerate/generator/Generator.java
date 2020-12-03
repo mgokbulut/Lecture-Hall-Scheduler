@@ -3,6 +3,7 @@ package nl.tudelft.unischeduler.schedulegenerate.generator;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -148,7 +149,7 @@ public class Generator {
           // if the lecture is not assigned in the schedule yet
           if (l.getRoom() == null && !(l.getIsOnline())) {
             // then we want to assign it a room
-            Room room = findRoom(rooms, currentTime, l, timeTable);
+            Room room = findRoom(rooms, currentTime, l, timeTable, currentTime);
             // if no room was found (no space or bug)
             if (room == null) {
               // then we want to move it online
@@ -204,7 +205,27 @@ public class Generator {
   }
 
   private Room findRoom(ArrayList<Room> rooms, Timestamp date,
-                        Lecture lecture, List<List<Lecture>> timeTable) {
+                        Lecture lecture, List<List<Lecture>> timeTable,
+                        Timestamp currentTime) {
+    // sort in descending order
+    Collections.sort(rooms);
+    Collections.reverse(rooms);
+    // for each room
+    for (int i = 0; i < rooms.size(); i++) {
+      Room currRoom = rooms.get(i);
+      // get their latest available time
+      Timestamp time = getEarliestTime(currRoom, lecture, timeTable);
+      // if there is none, return null
+      if (time == null) {
+        continue;
+      }
+      // otherwise update the relevant values
+      lecture.setStartTime(time);
+      lecture.setRoom(currRoom);
+      int day = calDistance(currentTime, time);
+      timeTable.get(day).add(lecture);
+      return currRoom;
+    }
     return null;
   }
 
