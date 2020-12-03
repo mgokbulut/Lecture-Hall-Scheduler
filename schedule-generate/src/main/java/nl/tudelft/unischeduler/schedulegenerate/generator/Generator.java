@@ -105,12 +105,17 @@ public class Generator {
 
   }
 
-  private void getEarliestTime() { // room, lecture, timeTable
-
+  private Room findRoom(ArrayList<Room> rooms, Timestamp date,
+                        Lecture lecture, List<List<Lecture>> timeTable) {
+    return null;
   }
 
-  private void isFree() { // timeslot, room, lecture, timeTable
+  private Timestamp getEarliestTime() { // room, lecture, timeTable
+    return null;
+  }
 
+  private Timestamp isFree() { // timeslot, room, lecture, timeTable
+    return null;
   }
 
 
