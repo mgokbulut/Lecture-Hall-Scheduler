@@ -1,13 +1,17 @@
 package nl.tudelft.unischeduler.schedulegenerate.generator;
 
-import nl.tudelft.unischeduler.schedulegenerate.entities.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import nl.tudelft.unischeduler.schedulegenerate.generator.ApiCommunicator;
-
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.*;
+
+import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
+import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
+import nl.tudelft.unischeduler.schedulegenerate.entities.Room;
+import nl.tudelft.unischeduler.schedulegenerate.entities.Student;
+import nl.tudelft.unischeduler.schedulegenerate.generator.ApiCommunicator;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class Generator {
