@@ -1,4 +1,4 @@
-package nl.tudelft.unischeduler.schedulegenerate.generator;
+package nl.tudelft.unischeduler.schedulegenerate.api;
 
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -20,7 +20,7 @@ public class ApiCommunicator {
     //  the course id and the year num is required
     //      path = "/courses/all"
 
-    protected ArrayList<Course> getCourses() {
+    public ArrayList<Course> getCourses() {
         return null;
     }
 
@@ -29,7 +29,7 @@ public class ApiCommunicator {
     //  along with the TimeStamp of their most recent Lecture
     //  students who are not interested are ignored
     //      path = "/userCourse/{courseId}"
-    protected ArrayList<Student> getStudentsInCourse(Long courseId) {
+    public ArrayList<Student> getStudentsInCourse(Long courseId) {
         return null;
     }
     //  getLecturesInCourse(Long courseId, Timestamp ts, Time t): //done
@@ -40,7 +40,7 @@ public class ApiCommunicator {
     //  occur in the next 2 weeks)
     //  path = "/lectures/{courseId}/{ts}/{t}"
 
-    protected ArrayList<Lecture> getLecturesInCourse(Long courseId, Timestamp ts, int t) {
+    public ArrayList<Lecture> getLecturesInCourse(Long courseId, Timestamp ts, int t) {
         return null;
     }
     //  getRooms(): //done
@@ -48,7 +48,7 @@ public class ApiCommunicator {
     //  the attributes needed are max. capacity, classroom_id
     //      path = "/classrooms"
 
-    protected ArrayList<Room> getRooms() {
+    public ArrayList<Room> getRooms() {
         return null;
     }
 
@@ -57,7 +57,7 @@ public class ApiCommunicator {
     //  and Lecture_id
     //  path = "/lectureSchedule/{net_id}/{lectureId}"
 
-    protected void assignStudentToLecture(String studentId, int lectureId) {
+    public void assignStudentToLecture(String studentId, int lectureId) {
 
     }
 
@@ -65,7 +65,7 @@ public class ApiCommunicator {
     //  Sets the classroom_id of the given lecture to the given classroom_id
     //      path = "/lectures/setClassroom/{lectureId}/{classroomId}"
 
-    protected void assignRoomToLecture(int lectureId, int classroomId) {
+    public void assignRoomToLecture(int lectureId, int classroomId) {
 
     }
 
@@ -73,7 +73,7 @@ public class ApiCommunicator {
     //  sets the start time of the given lecture to t
     //  path = "/lectures/setTime/{lectureId}/{t}
 
-    protected void setLectureTime(int lectureId, Timestamp timeStamp) {
+    public void setLectureTime(int lectureId, Timestamp timeStamp) {
 
     }
 }
