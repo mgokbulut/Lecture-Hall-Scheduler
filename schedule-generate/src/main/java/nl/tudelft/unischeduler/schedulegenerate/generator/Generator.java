@@ -2,7 +2,12 @@ package nl.tudelft.unischeduler.schedulegenerate.generator;
 
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Set;
 
 import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
@@ -98,12 +103,13 @@ public class Generator {
   }
 
   /**
-   * assigns and schedules courses that are not assigned yet
-   * this is tested based on whether they are assigned a room or not
-   * @param lectures
-   * @param timeTable
+   * Assigns and schedules courses that are not assigned yet.
+   * This is tested based on whether they are assigned a room or not.
+   * @param lectures list containing every lecture there is
+   * @param timeTable list of lists containing all lectures, per day
    */
-  private void scheduling(ArrayList<Lecture> lectures, List<List<Lecture>> timeTable, Timestamp currentTime) {
+  private void scheduling(ArrayList<Lecture> lectures,
+                          List<List<Lecture>> timeTable, Timestamp currentTime) {
     // get all the rooms available on campus
     ArrayList<Room> rooms = apiCommunicator.getRooms();
 
@@ -133,9 +139,14 @@ public class Generator {
         for (int k = 0; k < lecturesCurrentCourse.size(); k++) {
           Lecture l = lecturesCurrentCourse.get(k);
           // if it's not assigned in the schedule yet
-          if(l.getRoom() == null && !(l.getIsOnline())) {
+          if (l.getRoom() == null && !(l.getIsOnline())) {
             // then we want to assign it a room
             Room room = findRoom(rooms, currentTime, l, timeTable);
+            // if no room was found (no space or bug)
+            if (room == null) {
+              // then we want to move it online
+              
+            }
           }
         }
       }
