@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-public class Student {
+public class Student implements Comparable<Student> {
 
   private String netId;
 
@@ -116,5 +116,11 @@ public class Student {
   @Override
   public int hashCode() {
     return Objects.hash(netId, type, interested, lastTimeOnCampus);
+  }
+
+  // custom behavior where students are compared based on the last time they were on campus
+  @Override
+  public int compareTo(Student otherStudent) {
+    return lastTimeOnCampus.compareTo(otherStudent.getLastTimeOnCampus());
   }
 }
