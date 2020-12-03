@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.HashSet;
 
 import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
@@ -115,7 +115,7 @@ public class Generator {
     // TODO change this to a proper template online room, ask Kuba
     Room onlineRoom = new Room(0, Integer.MAX_VALUE, "online_room");
     // this value is placeholder until we find a better solution, should work
-    int MAX_ITERATION_MULTIPLIER = 2;
+    int maxIterationMultiplier = 2;
     // get all the rooms available on campus
     ArrayList<Room> rooms = apiCommunicator.getRooms();
 
@@ -169,20 +169,18 @@ public class Generator {
             List<Student> notSelected = new ArrayList<>();
             int numOfStudentsAdded = 0;
             int iteration = 0;
-            while(studentsToAdd.size() < capacity &&
-                iteration < MAX_ITERATION_MULTIPLIER * capacity) {
+            while (studentsToAdd.size() < capacity
+                && iteration < maxIterationMultiplier * capacity) {
               try {
                 Student prioStudent = studentsQueue.remove();
                 // if student wasn't added already, add him
                 if (!studentsToAdd.contains(prioStudent)) {
                   studentsToAdd.add(prioStudent);
                   prioStudent.setLastTimeOnCampus(new Date(l.getStartTime().getTime()));
-                }
-                else {
+                } else {
                   notSelected.add(prioStudent);
                 }
-              }
-              catch (Exception e) {
+              } catch (Exception e) {
                 System.out.println("there was an error scheduling students to lectures...");
                 System.out.println(e.toString());
               }
