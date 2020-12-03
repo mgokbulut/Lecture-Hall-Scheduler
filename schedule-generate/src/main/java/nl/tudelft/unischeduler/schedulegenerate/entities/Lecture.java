@@ -12,6 +12,7 @@ public class Lecture implements Comparable<Lecture> {
   private Timestamp startTime;
   private Time duration;
   private Room room;
+  private boolean isOnline;
 
   /**
    * constructor for Lecture.
@@ -22,11 +23,12 @@ public class Lecture implements Comparable<Lecture> {
    *                  time of day can be set later
    * @param duration the duration of the lecture
    */
-  public Lecture(int id, int attendance, Timestamp startTime, Time duration) {
+  public Lecture(int id, int attendance, Timestamp startTime, Time duration, boolean isOnline) {
     this.id = id;
     this.attendance = attendance;
     this.startTime = startTime;
     this.duration = duration;
+    this.isOnline = isOnline;
   }
 
   public int getId() {
@@ -67,6 +69,14 @@ public class Lecture implements Comparable<Lecture> {
 
   public void setRoom(Room room) {
     this.room = room;
+  }
+
+  public boolean getIsOnline() {
+    return isOnline;
+  }
+
+  public void setIsOnline(boolean isOnline) {
+    this.isOnline = isOnline;
   }
 
   // Override method that compares based on the end time of the lecture;
