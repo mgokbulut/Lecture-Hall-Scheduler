@@ -1,8 +1,8 @@
 package nl.tudelft.unischeduler.schedulegenerate.entities;
 
-import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.Entity;
 
 @Entity
 public class Course {
@@ -71,9 +71,13 @@ public class Course {
     this.lectures = lectures;
   }
 
-  public void setYear(int year) { this.year = year; }
+  public void setYear(int year) {
+    this.year = year;
+  }
 
-  public int getYear() { return year; }
+  public int getYear() {
+    return year;
+  }
 
   @Override
   public boolean equals(Object o) {

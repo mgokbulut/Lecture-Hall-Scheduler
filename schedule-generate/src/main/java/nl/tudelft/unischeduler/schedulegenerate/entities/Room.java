@@ -1,7 +1,7 @@
 package nl.tudelft.unischeduler.schedulegenerate.entities;
 
-import javax.persistence.Entity;
 import java.util.Objects;
+import javax.persistence.Entity;
 
 @Entity
 public class Room {
