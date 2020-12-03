@@ -5,9 +5,11 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.HashSet;
 
 import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
@@ -208,12 +210,18 @@ public class Generator {
     return null;
   }
 
-  private Timestamp getEarliestTime() { // room, lecture, timeTable
+  private Timestamp getEarliestTime(Room room, Lecture lecture, List<List<Lecture>> timeTable) {
     return null;
   }
 
-  private Timestamp isFree() { // timeslot, room, lecture, timeTable
+  private Timestamp isFree(Timestamp timeslot, Room room,
+                           Lecture lecture, List<List<Lecture>> timeTable) {
     return null;
+  }
+
+  private int getCapacity(Room room) {
+    // TODO make an API call here to find out the rule for capacity
+    return room.getCapacity();
   }
 
 
