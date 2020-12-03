@@ -1,11 +1,11 @@
 package nl.tudelft.unischeduler.schedulegenerate.entities;
 
-import javax.persistence.Entity;
 import java.sql.Time;
 import java.sql.Timestamp;
+import javax.persistence.Entity;
 
 @Entity
-public class Lecture {
+public class Lecture implements Comparable<Lecture> {
 
   private int id;
   private int attendance;
@@ -69,8 +69,13 @@ public class Lecture {
     this.room = room;
   }
 
-//  @Override
-  public int compareTo(Object o) {
-    return this.startTime.compareTo(((Lecture) o).startTime);
+  // Override method that compares based on the end time of the lecture;
+  // this is needed for the generator algorithm.
+  @Override
+  public int compareTo(Lecture otherLecture) {
+    Timestamp t1 = new Timestamp(this.startTime.getTime() + duration.getTime());
+    Timestamp t2 = new Timestamp(otherLecture.getStartTime().getTime()
+                                  + otherLecture.getDuration().getTime());
+    return t1.compareTo(t2);
   }
 }
