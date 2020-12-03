@@ -14,6 +14,8 @@ public class Course {
 
   private Set<Lecture> lectures;
 
+  private int year;
+
   /**
    * This method initialises the course object.
    */
@@ -29,11 +31,12 @@ public class Course {
    * @param students a
    * @param lectures a
    */
-  public Course(Long id, String name, Set<Student> students, Set<Lecture> lectures) {
+  public Course(Long id, String name, Set<Student> students, Set<Lecture> lectures, int year) {
     this.id = id;
     this.name = name;
     this.students = students;
     this.lectures = lectures;
+    this.year = year;
   }
 
   public Long getId() {
@@ -67,6 +70,10 @@ public class Course {
   public void setLectures(Set<Lecture> lectures) {
     this.lectures = lectures;
   }
+
+  public void setYear(int year) { this.year = year; }
+
+  public int getYear() { return year; }
 
   @Override
   public boolean equals(Object o) {
