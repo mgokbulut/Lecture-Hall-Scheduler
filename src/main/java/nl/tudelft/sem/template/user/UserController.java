@@ -14,6 +14,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    //registeration
     @PostMapping(path = "/register")
     public String register(@RequestBody User user) {
         return userService.register(user);
