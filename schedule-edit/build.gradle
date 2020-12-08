@@ -15,7 +15,7 @@ plugins {
 	id 'info.solidsoft.pitest' version '1.5.2'
 }
 
-group = 'nl.tudelft.sem59'
+group = 'nl.tudelft.unischeduler'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 11
 targetCompatibility = 11
@@ -27,6 +27,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 }
 
 test {
