@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ScheduleGenerateApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(ScheduleGenerateApplication.class, args);
     }
 
