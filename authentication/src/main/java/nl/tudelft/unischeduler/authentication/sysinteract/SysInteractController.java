@@ -1,11 +1,14 @@
 package nl.tudelft.unischeduler.authentication.sysinteract;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class TrialController {
+public class SysInteractController {
 
   @Autowired
   private SysInteractor sysInteractor;

@@ -1,5 +1,8 @@
 package nl.tudelft.unischeduler.authentication.sysinteract;
 
+import nl.tudelft.unischeduler.authentication.user.User;
+
+import javax.persistence.Entity;
 import java.util.Objects;
 
 /**
@@ -19,14 +22,14 @@ public class SysInteract {
   /***
    * <p>This method initialises the SysInteract object.</p>
    *
-   * @param netId the net id of the SysInteract
-   * @param password the password of the SysInteract
-   * @param type the type of the SysInteract
+   * @param action the name of the action the user wants to perform
+   * @param hashCode the session hashcode
+   * @param user the user who is doing the action
    */
   public SysInteract(String action, int hashCode, User user) {
     this.action = action;
 
-    this.hash = hashCode;
+    this.hashCode = hashCode;
 
     this.user = user;
   }
@@ -40,11 +43,11 @@ public class SysInteract {
 
   public String getAction() { return action; }
 
-  public String getHashCode() {
+  public int getHashCode() {
     return hashCode;
   }
 
-  public String getUser() {
+  public User getUser() {
     return user;
   }
 
@@ -54,11 +57,11 @@ public class SysInteract {
    * @return returns a string role.
    */
   public String authenticationRole() {
-    if (this.user.type.equals("STUDENT")) {
+    if (this.user.getType().equals("STUDENT")) {
       return "ROLE_STUDENT";
-    } else if (this.user.type.equals("TEACHER")) {
+    } else if (this.user.getType().equals("TEACHER")) {
       return "ROLE_TEACHER";
-    } else if (this.user.type.equals("FACULTY_MEMBER")) {
+    } else if (this.user.getType().equals("FACULTY_MEMBER")) {
       return "ROLE_ADMIN";
     }
     return null;
