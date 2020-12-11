@@ -1,7 +1,7 @@
 package nl.tudelft.unischeduler.authentication.utilentities;
 
-import javax.persistence.Entity;
 import java.util.Objects;
+import javax.persistence.Entity;
 
 @Entity
 public class Room implements Comparable<Room> {
@@ -24,6 +24,14 @@ public class Room implements Comparable<Room> {
         this.name = name;
     }
 
+    /**
+     * Constructor for a room without an id, useful i.e.
+     * for when adding a new room that doesn't yet have
+     * an id.
+     *
+     * @param capacity the capacity of the room
+     * @param name the name of the room
+     */
     public Room(int capacity, String name) {
         this.capacity = capacity;
         this.name = name;

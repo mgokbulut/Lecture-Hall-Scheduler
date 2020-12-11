@@ -1,11 +1,10 @@
 package nl.tudelft.unischeduler.authentication.utilentities;
 
-import nl.tudelft.unischeduler.authentication.user.User;
-
-import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.Entity;
+import nl.tudelft.unischeduler.authentication.user.User;
 
 @Entity
 public class Course {
@@ -27,7 +26,7 @@ public class Course {
     }
 
     /**
-     * Constructors for the Course class
+     * Constructors for the Course class.
      *
      * @param id a
      * @param name a
@@ -41,8 +40,15 @@ public class Course {
         this.classesPerWeek = classesPerWeek;
     }
 
-    public Course(Long id, String name, int year, int classesPerWeek) {
-        this.id = id;
+    /**
+     * Constructor with less parameters for when
+     * we are adding a new course.
+     *
+     * @param name the name of the course
+     * @param year the year of the course in the study programme
+     * @param classesPerWeek how many lectures per week
+     */
+    public Course(String name, int year, int classesPerWeek) {
         this.name = name;
         this.year = year;
         this.students = new HashSet<User>();
@@ -81,9 +87,13 @@ public class Course {
         return this.year;
     }
 
-    public int getClassesPerWeek() { return this.classesPerWeek; }
+    public int getClassesPerWeek() {
+        return this.classesPerWeek;
+    }
 
-    public void setClassesPerWeek(int classesPerWeek) { this.classesPerWeek = classesPerWeek; }
+    public void setClassesPerWeek(int classesPerWeek) {
+        this.classesPerWeek = classesPerWeek;
+    }
 
     @Override
     public boolean equals(Object o) {

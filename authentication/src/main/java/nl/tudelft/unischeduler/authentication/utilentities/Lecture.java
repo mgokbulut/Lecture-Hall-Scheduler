@@ -1,8 +1,8 @@
 package nl.tudelft.unischeduler.authentication.utilentities;
 
-import javax.persistence.Entity;
 import java.sql.Time;
 import java.sql.Timestamp;
+import javax.persistence.Entity;
 
 @Entity
 public class Lecture implements Comparable<Lecture> {
