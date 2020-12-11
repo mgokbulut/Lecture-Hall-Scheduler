@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 public class LectureService {
 
     @Autowired
-    //not sure if should be transient but checkstyle complaints without it...
     private transient LectureRepository lectureRepository;
 
     @Autowired

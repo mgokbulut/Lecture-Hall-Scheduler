@@ -15,26 +15,12 @@ public class Lecture {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-
-//    @ManyToMany(mappedBy = "lectures")
-//    //@JsonBackReference//
-//    private Set<Schedule> schedules;
-
-//    @ManyToOne
-//    @JoinColumn(name = "classroom_id", nullable = false)
-//    //@JsonManagedReference//
     @Column(name = "classroom_id")
     private Long classroom;
 
-//    @ManyToOne
-//    @JoinColumn(name = "course_id", nullable = false)
-//    @JsonManagedReference//courses works
     @Column(name = "course_id")
     private Long course;
 
-//    @ManyToOne
-//    @JoinColumn(name = "teacher", nullable = false)
-//    @JsonManagedReference//
     @Column(name = "teacher")
     private String teacher;
 

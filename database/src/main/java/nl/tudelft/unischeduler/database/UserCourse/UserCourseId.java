@@ -6,6 +6,7 @@ import java.util.Objects;
 public class UserCourseId implements Serializable {
     private String netId;
     private Long courseId;
+
     //the only reason this is here is because of PMD rule violation
     public static final long serialVersionUID = 4328743;
 

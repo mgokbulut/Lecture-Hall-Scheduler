@@ -9,7 +9,6 @@ import java.util.Optional;
 public class ScheduleService {
 
     @Autowired
-    //not sure if should be transient but checkstyle complaints without it...
     private transient ScheduleRepository scheduleRepository;
 
     public Schedule getScheduleOfUser(String user) {

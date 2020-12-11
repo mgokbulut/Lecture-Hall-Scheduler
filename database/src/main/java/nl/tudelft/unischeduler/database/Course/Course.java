@@ -25,15 +25,6 @@ public class Course {
     @Column(name = "year")
     private int year;
 
-//    @ManyToMany(mappedBy = "courses")
-//    //@JsonBackReference//courses works
-//    @JsonManagedReference //users works
-//    private Set<User> students;
-
-//    @OneToMany(mappedBy = "course")
-//    @JsonBackReference //courses works
-//    private Set<Lecture> lectures;
-
     /**
      * This method initialises the course object.
      */
@@ -89,10 +80,5 @@ public class Course {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, year);
-    }
-
-    @Override
-    public String toString(){
-        return String.format("{\"id\":%d,\"name\":%s,\"year\":%d}", id, name, year);
     }
 }

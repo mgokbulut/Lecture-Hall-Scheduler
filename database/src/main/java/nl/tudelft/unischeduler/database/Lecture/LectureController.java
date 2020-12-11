@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 public class LectureController {
-    //not sure if should be transient but checkstyle complaints without it...
     @Autowired
     private transient LectureService lectureService;
     @Autowired

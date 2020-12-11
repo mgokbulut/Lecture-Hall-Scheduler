@@ -10,7 +10,6 @@ import java.util.Optional;
 public class CourseService {
 
     @Autowired
-    //not sure if should be transient but checkstyle complaints without it...
     private transient CourseRepository courseRepository;
 
     public List<Course> getAllCourses() {

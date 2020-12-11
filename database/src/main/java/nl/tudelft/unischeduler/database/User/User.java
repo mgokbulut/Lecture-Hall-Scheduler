@@ -21,23 +21,6 @@ public class User {
     @Column(name = "last_time_on_campus", nullable = false)
     private Date lastTimeOnCampus;
 
-//    @OneToOne(mappedBy = "user")
-//    @JsonBackReference//
-//    private Schedule schedule;
-
-//    @ManyToMany
-//    @JoinTable(name = "user_course",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "course_id"))
-    //@JsonManagedReference//courses works
-    //@JsonBackReference //users works
-
-    //private Set<Long> courses;
-
-//    @OneToMany(mappedBy = "teacher")
-//    @JsonBackReference//
-//    private Set<Lecture> lectures;
-
     /**
      * This method initialises the user object.
      */

@@ -15,18 +15,8 @@ public class Schedule {
     @Column(name = "id")
     private Long id;
 
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "app_user", referencedColumnName = "net_id")
-//    //@JsonManagedReference//
     @Column(name = "app_user")
     private String user;
-
-//    @ManyToMany
-//    @JoinTable(name = "lecture_schedule",
-//            joinColumns = @JoinColumn(name = "schedule_id"),
-//            inverseJoinColumns = @JoinColumn(name = "lecture_id"))
-//    //@JsonManagedReference//
-//    private Set<Lecture> lectures;
 
     /**
      * This method initialises the schedule object.
@@ -40,12 +30,10 @@ public class Schedule {
      *
      * @param id a
      * @param user a
-     * @param lectures a
      */
-    public Schedule(Long id, String user, Set<Lecture> lectures) {
+    public Schedule(Long id, String user) {
         this.id = id;
         this.user = user;
-        //this.lectures = lectures;
     }
 
     public Long getId() {

@@ -13,7 +13,6 @@ import java.util.List;
 public class ClassroomController {
 
     @Autowired
-    //not sure if should be transient but checkstyle complaints without it...
     private transient ClassroomService classroomService;
 
     @GetMapping(path = "/classrooms")

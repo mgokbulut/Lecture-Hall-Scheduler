@@ -12,7 +12,6 @@ import java.util.List;
 public class CourseController {
 
     @Autowired
-    //not sure if should be transient but checkstyle complaints without it...
     private transient CourseService courseService;
 
     @GetMapping(path = "/courses/all")

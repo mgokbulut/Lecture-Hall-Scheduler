@@ -22,6 +22,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -32,17 +33,17 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 public class ClassroomControllerTest {
 
     @Autowired
-    WebApplicationContext webApplicationContext;
+    transient WebApplicationContext webApplicationContext;
 
     @Autowired
     @MockBean
-    private ClassroomService classroomService;
+    private transient ClassroomService classroomService;
 
-    ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    //ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-    private MockMvc mockMvc;
+    private transient MockMvc mockMvc;
 
-    private List<Classroom> classrooms = new ArrayList<>(
+    private transient List<Classroom> classrooms = new ArrayList<>(
             List.of(
                     new Classroom(0L, 50, "Amper Hall", "EWI", 1),
                     new Classroom(1L, 100, "Boole Hall", "EWI", 2),
@@ -64,15 +65,38 @@ public class ClassroomControllerTest {
                 .andExpect(jsonPath("$[0].name", is("Amper Hall")))
                 .andExpect(jsonPath("$[0].buildingName", is("EWI")))
                 .andExpect(jsonPath("$[0].floor", is(1)))
+                .andExpect(jsonPath("$[0].id", is(0)))
+                .andExpect(jsonPath("$[0].fullCapacity", is(50)))
                 .andExpect(jsonPath("$[1].name", is("Boole Hall")))
                 .andExpect(jsonPath("$[1].buildingName", is("EWI")))
                 .andExpect(jsonPath("$[1].floor", is(2)))
+                .andExpect(jsonPath("$[1].id", is(1)))
+                .andExpect(jsonPath("$[1].fullCapacity", is(100)))
                 .andExpect(jsonPath("$[2].name", is("Pi Hall")))
                 .andExpect(jsonPath("$[2].buildingName", is("EWI")))
                 .andExpect(jsonPath("$[2].floor", is(1)))
+                .andExpect(jsonPath("$[2].id", is(2)))
+                .andExpect(jsonPath("$[2].fullCapacity", is(250)))
                 .andExpect(status().isOk());
 
         verify(classroomService, times(1)).getAllClassrooms();
+        verifyNoMoreInteractions(classroomService);
+    }
+
+    @Test
+    public void getClassroomByIdTest() throws Exception {
+        when(classroomService.getClassroom(1L)).thenReturn(classrooms.get(1));
+        String uri = "/classroom/1";
+
+        mockMvc.perform(get(uri).contentType(APPLICATION_JSON_VALUE))
+                //.andDo(print())
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$.name", is("Boole Hall")))
+                .andExpect(jsonPath("$.buildingName", is("EWI")))
+                .andExpect(jsonPath("$.floor", is(2)))
+                .andExpect(status().isOk());
+
+        verify(classroomService, times(1)).getClassroom(1L);
         verifyNoMoreInteractions(classroomService);
     }
 }
