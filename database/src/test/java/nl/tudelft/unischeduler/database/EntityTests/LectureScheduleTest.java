@@ -1,4 +1,4 @@
-package nl.tudelft.unischeduler.database;
+package nl.tudelft.unischeduler.database.EntityTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -18,5 +18,17 @@ public class LectureScheduleTest {
 
     @Test
     public void saveAndRetrieve() {
+        LectureSchedule lectureSchedule = new LectureSchedule(1, 1);
+        lectureScheduleRepository.save(lectureSchedule);
+        LectureSchedule test = lectureScheduleRepository
+                .findByLectureIdAndScheduleId(lectureSchedule.getLectureId(), lectureSchedule.getScheduleId()).get();
+        assertEquals(lectureSchedule, test);
+    }
+
+    @Test
+    public void equals() {
+        LectureSchedule lectureSchedule = new LectureSchedule(1, 1);
+        LectureSchedule test = new LectureSchedule(1, 1);
+        assertEquals(lectureSchedule, test);
     }
 }
