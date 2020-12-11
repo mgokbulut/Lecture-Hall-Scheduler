@@ -1,9 +1,11 @@
 package nl.tudelft.unischeduler.authentication.sysinteract;
 
-import nl.tudelft.unischeduler.authentication.user.User;
+import java.util.Objects;
 
 import javax.persistence.Entity;
-import java.util.Objects;
+
+import nl.tudelft.unischeduler.authentication.user.User;
+import nl.tudelft.unischeduler.authentication.utilentities.Course;
 
 /**
  * This object models an interaction between the user and the rest of the system.
@@ -41,7 +43,9 @@ public class SysInteract {
 
   }
 
-  public String getAction() { return action; }
+  public String getAction() {
+    return action;
+  }
 
   public int getHashCode() {
     return hashCode;
@@ -50,6 +54,7 @@ public class SysInteract {
   public User getUser() {
     return user;
   }
+
 
   /***
    * <p>This method return the role of the user for authetication purposes.</p>
@@ -67,23 +72,8 @@ public class SysInteract {
     return null;
   }
 
-//  @Override
-//  public boolean equals(Object o) {
-//    if (this == o) {
-//      return true;
-//    }
-//    if (o == null || getClass() != o.getClass()) {
-//      return false;
-//    }
-//    User user = (User) o;
-//    return Objects.equals(netId, user.netId)
-//        && Objects.equals(password, user.password)
-//        && Objects.equals(type, user.type);
-//
-//  }
-//
-//  @Override
-//  public int hashCode() {
-//    return Objects.hash(netId, password, type);
-//  }
+  @Override
+  public int hashCode() {
+    return Objects.hash(action, hashCode, user);
+  }
 }
