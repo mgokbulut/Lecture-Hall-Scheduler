@@ -1,4 +1,4 @@
-package nl.tudelft.unischeduler.authentication;
+package nl.tudelft.unischeduler.authentication.authentication;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
