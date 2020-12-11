@@ -27,10 +27,6 @@ public class Classroom {
     @Column(name = "floor", nullable = false)
     private int floor;
 
-//    @OneToMany(mappedBy = "classroom")
-//    //@JsonBackReference//
-//    private Set<Lecture> lectures;
-
     /**
      * This method initialises the classroom object.
      */
@@ -46,17 +42,15 @@ public class Classroom {
      * @param name a
      * @param buildingName a
      * @param floor a
-     * @param lectures a
      */
     public Classroom(Long id, int fullCapacity,
                      String name, String buildingName,
-                     int floor, Set<Lecture> lectures) {
+                     int floor) {
         this.id = id;
         this.fullCapacity = fullCapacity;
         this.name = name;
         this.buildingName = buildingName;
         this.floor = floor;
-        //this.lectures = lectures;
     }
 
     public Long getId() {
@@ -98,14 +92,6 @@ public class Classroom {
     public void setFloor(int floor) {
         this.floor = floor;
     }
-
-//    public Set<Lecture> getLectures() {
-//        return lectures;
-//    }
-//
-//    public void setLectures(Set<Lecture> lectures) {
-//        this.lectures = lectures;
-//    }
 
     @Override
     public boolean equals(Object o) {
