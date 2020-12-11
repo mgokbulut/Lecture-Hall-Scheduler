@@ -1,0 +1,29 @@
+image: gradle:6.7-jdk11
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+stages:
+  - build
+  - staticAnalysis
+  - test
+
+rules-build:
+  stage: build
+  script:
+    gradle --build-cache :rules:assemble
+
+rules-checkStyle:
+  stage: staticAnalysis
+  script:
+    gradle :rules:checkstyleMain :rules:checkStyleTest
+
+rules-PMD:
+  stage: staticAnalysis
+  script:
+    gradle :rules:pmdMain :rules:pmdTest
+
+rules-test:
+  stage: test
+  script:
+    gradle :rules:test

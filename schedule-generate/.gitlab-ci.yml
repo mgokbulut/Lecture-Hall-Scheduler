@@ -1,0 +1,29 @@
+image: gradle:6.7-jdk11
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+  -
+stages:
+  - build
+  - staticAnalysis
+  - test
+
+schedule-generate-build:
+  stage: build
+  script:
+    gradle --build-cache :schedule-generate:assemble
+
+schedule-generate-checkStyle:
+  stage: staticAnalysis
+  script:
+    gradle :schedule-generate:checkstyleMain :schedule-generate:checkStyleTest
+
+schedule-generate-PMD:
+  stage: staticAnalysis
+  script:
+    gradle :schedule-generate:pmdMain :schedule-generate:pmdTest
+
+schedule-generate-test:
+  stage: test
+  script:
+    gradle :schedule-generate:test
