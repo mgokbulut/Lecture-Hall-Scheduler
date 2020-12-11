@@ -2,7 +2,7 @@ package nl.tudelft.unischeduler.authentication.user;
 
 import java.security.MessageDigest;
 import java.util.Optional;
-import nl.tudelft.unischeduler.authentication.AuthenticationService;
+import nl.tudelft.unischeduler.authentication.authentication.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
