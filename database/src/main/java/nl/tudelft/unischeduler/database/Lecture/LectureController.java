@@ -26,7 +26,7 @@ public class LectureController {
 
     @GetMapping(path = "/lectures/courses")
     public @ResponseBody
-    List<String> getLecturesInCourse(){
+    List<Object []>  getLecturesInCourse(){
         return lectureService.getLecturesWithCourses();
     }
 

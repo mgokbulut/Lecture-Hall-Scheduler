@@ -21,10 +21,13 @@ public class LectureService {
     @Autowired
     private transient CourseRepository courseRepository;
 
-    public List<String> getLecturesWithCourses(){
+    public List<Object []>  getLecturesWithCourses(){
         var lectures = lectureRepository.findAll();
-        List<String> lecturesWithCourses = new ArrayList<>();
-        lectures.forEach(x-> lecturesWithCourses.add(x + ", " + courseRepository.findById(x.getCourse())));
+        List<Object []> lecturesWithCourses = new ArrayList<>();
+        for(Lecture lecture : lectures){
+            Object [] obj = {lecture,  courseRepository.findById(lecture.getCourse())};
+            lecturesWithCourses.add(obj);
+        }
         return lecturesWithCourses;
     }
 

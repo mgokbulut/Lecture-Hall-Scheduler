@@ -34,13 +34,13 @@ import org.springframework.web.context.WebApplicationContext;
 @WebMvcTest
 public class UserControllerTest {
     @Autowired
-    WebApplicationContext webApplicationContext;
+    private transient WebApplicationContext webApplicationContext;
 
     @MockBean
-    private UserRepository userRepository;
+    private transient UserRepository userRepository;
 
     ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-    private MockMvc mockMvc;
+    private transient MockMvc mockMvc;
 
     User user = new User();
 

@@ -34,13 +34,13 @@ import org.springframework.web.context.WebApplicationContext;
 @WebMvcTest
 public class LectureScheduleControllerTest {
     @Autowired
-    WebApplicationContext webApplicationContext;
+    private transient WebApplicationContext webApplicationContext;
 
     @MockBean
-    private LectureScheduleRepository lectureScheduleRepository;
+    private transient LectureScheduleRepository lectureScheduleRepository;
 
     ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-    private MockMvc mockMvc;
+    private transient MockMvc mockMvc;
 
     LectureSchedule lectureSchedule = new LectureSchedule();
 
