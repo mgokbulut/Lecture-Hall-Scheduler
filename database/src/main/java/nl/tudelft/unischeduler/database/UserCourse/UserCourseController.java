@@ -15,7 +15,7 @@ public class UserCourseController {
     @Autowired
     private transient UserCourseService userCourseService;
 
-    @GetMapping(path = "/userCourse/{courseId}")
+    @GetMapping(path = "/userCourses/{courseId}")
     public @ResponseBody
     List<User> getStudentsInCourse(@PathVariable Long courseId){
         //edit for "along with the TimeStamp of their most recent Lecture"

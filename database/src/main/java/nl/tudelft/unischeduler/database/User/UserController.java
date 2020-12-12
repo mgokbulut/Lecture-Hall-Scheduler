@@ -14,10 +14,7 @@ public class UserController {
     @Autowired
     private transient UserService userService;
 
-    @Autowired
-    private transient CourseService courseService;
-
-    @GetMapping(path = "/users")
+    @GetMapping(path = "/users/all")
     public @ResponseBody
     List<User> getAllUsers() {
         return userService.getAllUsers();

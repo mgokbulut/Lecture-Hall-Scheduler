@@ -49,7 +49,7 @@ public class LectureControllerTest {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
     }
 
-    @Test
-    public void getList() throws Exception {
-    }
+//    @Test
+//    public void getList() throws Exception {
+//    }
 }

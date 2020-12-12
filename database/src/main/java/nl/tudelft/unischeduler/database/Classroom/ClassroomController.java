@@ -15,7 +15,7 @@ public class ClassroomController {
     @Autowired
     private transient ClassroomService classroomService;
 
-    @GetMapping(path = "/classrooms")
+    @GetMapping(path = "/classrooms/all")
     public @ResponseBody
     List<Classroom> getAllClassrooms() {
         return classroomService.getAllClassrooms();
@@ -27,7 +27,7 @@ public class ClassroomController {
 //        return ResponseEntity.ok(classroomService.getAllClassrooms());
 //    }
 
-    @GetMapping(path = "/classroom/{classroomId}")
+    @GetMapping(path = "/classrooms/{classroomId}")
     public @ResponseBody
     Classroom getClassroom(@PathVariable Long classroomId) {
         return classroomService.getClassroom(classroomId);

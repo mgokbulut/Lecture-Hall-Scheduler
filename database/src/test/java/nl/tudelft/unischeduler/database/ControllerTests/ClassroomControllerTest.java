@@ -59,7 +59,7 @@ public class ClassroomControllerTest {
     @Test
     public void getAllClassroomsTest() throws Exception {
         when(classroomService.getAllClassrooms()).thenReturn(classrooms);
-        String uri = "/classrooms";
+        String uri = "/classrooms/all";
 
         mockMvc.perform(get(uri).contentType(APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$").exists())
@@ -87,7 +87,7 @@ public class ClassroomControllerTest {
     @Test
     public void getClassroomByIdTest() throws Exception {
         when(classroomService.getClassroom(1L)).thenReturn(classrooms.get(1));
-        String uri = "/classroom/1";
+        String uri = "/classrooms/1";
 
         mockMvc.perform(get(uri).contentType(APPLICATION_JSON_VALUE))
                 //.andDo(print())
@@ -95,6 +95,8 @@ public class ClassroomControllerTest {
                 .andExpect(jsonPath("$.name", is("Boole Hall")))
                 .andExpect(jsonPath("$.buildingName", is("EWI")))
                 .andExpect(jsonPath("$.floor", is(2)))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.fullCapacity", is(100)))
                 .andExpect(status().isOk());
 
         verify(classroomService, times(1)).getClassroom(1L);

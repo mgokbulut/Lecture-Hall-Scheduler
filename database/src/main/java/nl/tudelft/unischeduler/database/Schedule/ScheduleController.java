@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ScheduleController {
 
-    @Autowired
-    private transient ScheduleService scheduleService;
-    @Autowired
-    private transient UserService studentService;
-    @Autowired
-    private transient LectureService lectureService;
+//    @Autowired
+//    private transient ScheduleService scheduleService;
+//    @Autowired
+//    private transient UserService studentService;
+//    @Autowired
+//    private transient LectureService lectureService;
 
 //    @PutMapping(path = "/assignStudentToLecture/{studentId}/{lectureId}")
 //    public @ResponseBody
