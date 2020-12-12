@@ -40,6 +40,7 @@ public class LectureService {
             try {
                 Lecture lecture = temp.get();
                 lecture.setClassroom(-1L);
+                lecture.setMovedOnline(true);
                 lectureRepository.save(lecture);
             } catch (Exception e) {
                 System.out.println("Something went wrong in setClassroomToEmpty method");

@@ -12,23 +12,24 @@ import java.util.List;
 public class LectureController {
     @Autowired
     private transient LectureService lectureService;
-    @Autowired
-    private transient ScheduleService scheduleService;
-
-    @Autowired
-    private transient LectureRepository lectureRepository;
-
-    @GetMapping(path = "/lectures")
-    public @ResponseBody
-    List<Lecture> getLectures(){
-        return lectureRepository.findAll();
-    }
+//    @Autowired
+//    private transient ScheduleService scheduleService;
+//
+//    @Autowired
+//    private transient LectureRepository lectureRepository;
+//
+//    @GetMapping(path = "/lectures/all")
+//    public @ResponseBody
+//    List<Lecture> getLectures(){
+//        return lectureRepository.findAll();
+//    }
 
     @GetMapping(path = "/lectures/courses")
     public @ResponseBody
     List<Object []>  getLecturesInCourse(){
         return lectureService.getLecturesWithCourses();
     }
+    //doesn't lecture contain course Id anyway??
 
     @GetMapping(path = "/lectures/{courseId}/{ts}/{t}")
     public @ResponseBody
