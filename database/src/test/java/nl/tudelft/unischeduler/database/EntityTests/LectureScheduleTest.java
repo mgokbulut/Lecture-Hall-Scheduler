@@ -21,7 +21,8 @@
 //        LectureSchedule lectureSchedule = new LectureSchedule(1, 1);
 //        lectureScheduleRepository.save(lectureSchedule);
 //        LectureSchedule test = lectureScheduleRepository
-//                .findByLectureIdAndScheduleId(lectureSchedule.getLectureId(), lectureSchedule.getScheduleId()).get();
+//                .findByLectureIdAndScheduleId(lectureSchedule.getLectureId(),
+//                lectureSchedule.getScheduleId()).get();
 //        assertEquals(lectureSchedule, test);
 //    }
 //
