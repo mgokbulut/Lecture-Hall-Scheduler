@@ -13,9 +13,9 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 import java.util.ArrayList;
 import java.util.List;
-import nl.tudelft.unischeduler.database.Course.Course;
-import nl.tudelft.unischeduler.database.Course.CourseController;
-import nl.tudelft.unischeduler.database.Course.CourseService;
+import nl.tudelft.unischeduler.database.course.Course;
+import nl.tudelft.unischeduler.database.course.CourseController;
+import nl.tudelft.unischeduler.database.course.CourseService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
