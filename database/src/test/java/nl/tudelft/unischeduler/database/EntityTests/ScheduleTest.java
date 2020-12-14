@@ -15,11 +15,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.Set;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ScheduleTest {
     @Autowired
-    private ScheduleRepository scheduleRepository;
+    private transient ScheduleRepository scheduleRepository;
 
     @Test
     public void saveAndRetrieve() {

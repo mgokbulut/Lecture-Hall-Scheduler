@@ -12,11 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class CourseTest {
     @Autowired
-    private CourseRepository courseRepository;
+    private transient CourseRepository courseRepository;
 
     @Test
     public void saveAndRetrieve() {
