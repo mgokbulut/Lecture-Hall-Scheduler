@@ -1,4 +1,4 @@
-package nl.tudelft.unischeduler.authentication;
+package nl.tudelft.unischeduler.authentication.authentication;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,4 +1,4 @@
-package nl.tudelft.unischeduler.authentication;
+package nl.tudelft.unischeduler.authentication.authentication;
 
 import java.io.IOException;
 import javax.servlet.FilterChain;

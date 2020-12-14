@@ -17,6 +17,10 @@ public class User {
     @Column(name = "type")
     private String type;
 
+    public static String ROLE_STUDENT = "STUDENT";
+    public static String ROLE_TEACHER = "TEACHER";
+    public static String ROLE_FAC_MEMBER = "FACULTY_MEMBER";
+
     /***
      * <p>This method initialises the user object.</p>
      *
@@ -62,7 +66,7 @@ public class User {
     }
 
     /***
-     * <p>This method return the role of the user for authetication purposes.</p>
+     * <p>This method return the role of the user for authentication purposes.</p>
      *
      * @return returns a string role.
      */

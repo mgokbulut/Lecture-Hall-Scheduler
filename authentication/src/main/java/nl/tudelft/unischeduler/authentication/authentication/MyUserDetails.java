@@ -1,4 +1,4 @@
-package nl.tudelft.unischeduler.authentication;
+package nl.tudelft.unischeduler.authentication.authentication;
 
 import java.util.Arrays;
 import java.util.Collection;
