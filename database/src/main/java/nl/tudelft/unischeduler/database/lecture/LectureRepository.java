@@ -1,5 +1,6 @@
 package nl.tudelft.unischeduler.database.lecture;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,6 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
     List<Lecture> findAllByCourse(Long course);
 
     List<Lecture> findAll();
+
+    List<Lecture> findAllByStartTimeDateBetween(Timestamp start, Timestamp end);
 }
