@@ -10,7 +10,7 @@ import nl.tudelft.unischeduler.rules.entities.Ruleset;
  * Reads the rules from file and returns a rules entity.
  */
 public class RulesParser {
-    private static final String STANDARD_FILE_NAME = "test/resources/rules.json";
+    private static final String STANDARD_FILE_NAME = "rules.json";
     private File rulesFile;
     private ObjectMapper mapper;
 
