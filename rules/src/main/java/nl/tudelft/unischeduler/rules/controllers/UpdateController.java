@@ -46,15 +46,26 @@ public class UpdateController {
     public void updateRules(@RequestBody Ruleset newRules) throws IOException {
         parser.writeRules(newRules);
         module.setRules(newRules);
-        Lecture[] lect = getLectures();
-        module.verifySchedule(lect);
+
+        verifyLectures();
+
         System.out.println("updated the rules: \n" + newRules);
     }
 
-    public Lecture[] getLectures() {
-        Lecture[] ret = new Lecture[1];
-        ret[0] = new Lecture(1, 1, null, null);
-        return ret;
+    public boolean verifyLectures() {
+        DatabaseController dat = new DatabaseController(parser, module);
+
+        Lecture[] lectures = dat.getLectures();
+        Lecture[] toRemove = module.verifyLectures(lectures);
+
+        for(int i = 0; i < toRemove.length; i++) {
+            dat.removeLectureFromSchedule(toRemove[i].getId());
+            dat.removeRoomFromLecture(toRemove[i].getId());
+        }
+        return toRemove.length == 0;
     }
 
+
+
 }
+
