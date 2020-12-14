@@ -1,9 +1,6 @@
 package nl.tudelft.unischeduler.database.EntityTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import nl.tudelft.unischeduler.database.lectureschedule.LectureSchedule;
 import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleRepository;
