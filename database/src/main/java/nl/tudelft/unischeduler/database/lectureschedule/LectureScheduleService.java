@@ -1,6 +1,7 @@
 package nl.tudelft.unischeduler.database.lectureschedule;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -9,6 +10,8 @@ import nl.tudelft.unischeduler.database.lecture.Lecture;
 import nl.tudelft.unischeduler.database.lecture.LectureRepository;
 import nl.tudelft.unischeduler.database.schedule.Schedule;
 import nl.tudelft.unischeduler.database.schedule.ScheduleRepository;
+import nl.tudelft.unischeduler.database.user.UserRepository;
+import nl.tudelft.unischeduler.database.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,12 @@ public class LectureScheduleService {
 
     @Autowired
     private transient LectureRepository lectureRepository;
+
+    @Autowired
+    private transient UserRepository userRepository;
+
+    @Autowired
+    private transient UserService userService;
 
     /**
      *  Removes the Lecture from all the LectureSchedules
@@ -133,5 +142,46 @@ public class LectureScheduleService {
                         .findById(x.getLectureId())
                         .get())
                 .collect(Collectors.toList());
+    }
+
+    public List<Object[]> getStudentsInLecture(Long lectureId){
+        try{
+            var lectureSchedules = lectureScheduleRepository
+                    .findAllByLectureId(lectureId)
+                    .stream()
+                    .map(x->scheduleRepository
+                            .findById(x.getScheduleId())
+                            .get())
+                    .map(x->userRepository
+                            .findByNetId(x.getUser())
+                            .get()
+                            .getNetId())
+                    .collect(Collectors.toList());
+            List<Object []> ans = new ArrayList<>();
+            for(String netId : lectureSchedules){
+                ans.add(userService.getUser(netId));
+            }
+            return ans;
+
+        } catch (Exception a){
+            a.printStackTrace();
+            return null;
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<?> removeStudentFromLecture(String netId, Long lectureId) {
+        try {
+            Optional<Schedule> schedule = scheduleRepository.findByUser(netId);
+            if (schedule.isEmpty()) {
+                System.out.println("Schedule with such netId does not exist");
+                return ResponseEntity.noContent().build();
+            }
+            lectureScheduleRepository.deleteByLectureIdAndScheduleId(lectureId, schedule.get().getId());
+            return ResponseEntity.ok().build();
+        } catch (Exception a) {
+            a.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

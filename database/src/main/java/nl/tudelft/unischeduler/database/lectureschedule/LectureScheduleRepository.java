@@ -18,5 +18,7 @@ public interface LectureScheduleRepository
 
     List<LectureSchedule> findAllByScheduleId(Long scheduleId);
 
+    List<LectureSchedule> findAllByLectureId(Long lectureId);
+
     void deleteByLectureIdAndScheduleId(Long lectureId, Long scheduleId);
 }

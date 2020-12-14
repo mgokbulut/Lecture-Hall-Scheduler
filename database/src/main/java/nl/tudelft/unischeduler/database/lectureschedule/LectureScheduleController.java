@@ -40,4 +40,17 @@ public class LectureScheduleController {
         return lectureScheduleService.getStudentSchedule(netId);
     }
 
+    @GetMapping(path = "/lectureSchedules/students/{lectureId}")
+    public @ResponseBody
+    List<Object []> getStudentsInLecture(@PathVariable Long lectureId){
+        return lectureScheduleService.getStudentsInLecture(lectureId);
+    }
+
+    @DeleteMapping(path = "/lectureSchedules/remove/{netId}/{lectureId}")
+    public @ResponseBody
+    ResponseEntity<?> removeStudentFromLecture(@PathVariable String netId,
+                                              @PathVariable Long lectureId) {
+        return lectureScheduleService.removeStudentFromLecture(netId, lectureId);
+    }
+
 }

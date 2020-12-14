@@ -11,5 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     Optional<Schedule> findByUser(String user);
+
     Optional<Schedule> findById(Long id);
 }
