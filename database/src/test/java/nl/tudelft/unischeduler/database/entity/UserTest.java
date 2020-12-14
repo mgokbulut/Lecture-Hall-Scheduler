@@ -1,17 +1,16 @@
-package nl.tudelft.unischeduler.database.EntityTests;
+package nl.tudelft.unischeduler.database.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import java.util.Date;
 import nl.tudelft.unischeduler.database.user.User;
 import nl.tudelft.unischeduler.database.user.UserRepository;
-import java.util.Date;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 @DataJpaTest
@@ -21,7 +20,7 @@ public class UserTest {
     private transient UserRepository userRepository;
 
     @Test
-    public void saveAndRetrieve() {
+    public void saveAndRetrieveTest() {
         User user = new User("Test", "Test", true, new Date());
         userRepository.save(user);
         User test = userRepository.findByNetId(user.getNetId()).get();
@@ -29,7 +28,7 @@ public class UserTest {
     }
 
     @Test
-    public void equals() {
+    public void equalsTest() {
         User user = new User("Test", "Test", true, new Date());
         User test = new User("Test", "Test", true, new Date());
         assertEquals(user, test);

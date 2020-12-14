@@ -1,9 +1,6 @@
-package nl.tudelft.unischeduler.database.EntityTests;
+package nl.tudelft.unischeduler.database.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import nl.tudelft.unischeduler.database.usercourse.UserCourse;
 import nl.tudelft.unischeduler.database.usercourse.UserCourseId;
@@ -13,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -21,7 +19,7 @@ public class UserCourseTest {
     private transient UserCourseRepository userCourseRepository;
 
     @Test
-    public void saveAndRetrieve() {
+    public void saveAndRetrieveTest() {
         UserCourse userCourse = new UserCourse("Test", 1L);
         userCourseRepository.save(userCourse);
         UserCourse test = userCourseRepository
@@ -30,7 +28,7 @@ public class UserCourseTest {
     }
 
     @Test
-    public void equals() {
+    public void equalsTest() {
         UserCourse userCourse = new UserCourse("Test", 1L);
         UserCourse test = new UserCourse("Test", 1L);
         assertEquals(userCourse, test);

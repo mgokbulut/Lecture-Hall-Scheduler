@@ -1,9 +1,6 @@
-package nl.tudelft.unischeduler.database.EntityTests;
+package nl.tudelft.unischeduler.database.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import nl.tudelft.unischeduler.database.lectureschedule.LectureSchedule;
 import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleRepository;
@@ -11,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 @DataJpaTest
@@ -20,7 +18,7 @@ public class LectureScheduleTest {
     private transient LectureScheduleRepository lectureScheduleRepository;
 
     @Test
-    public void saveAndRetrieve() {
+    public void saveAndRetrieveTest() {
         LectureSchedule lectureSchedule = new LectureSchedule(1L, 1L);
         lectureScheduleRepository.save(lectureSchedule);
         LectureSchedule test = lectureScheduleRepository
@@ -30,7 +28,7 @@ public class LectureScheduleTest {
     }
 
     @Test
-    public void equals() {
+    public void equalsTest() {
         LectureSchedule lectureSchedule = new LectureSchedule(1L, 1L);
         LectureSchedule test = new LectureSchedule(1L, 1L);
         assertEquals(lectureSchedule, test);
