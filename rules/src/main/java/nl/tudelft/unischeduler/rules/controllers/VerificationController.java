@@ -25,12 +25,10 @@ public class VerificationController {
         this.parser = parser;
         this.module = module;
         try {
-            try {
-                this.module.setRules(parser.parseRules());
-            } catch (FileNotFoundException e) {
-                System.err.println("no rulesConfiguration file found,"
-                        + " please create one with the appropriate api call");
-            }
+            this.module.setRules(parser.parseRules());
+        } catch (FileNotFoundException e) {
+            System.err.println("no rulesConfiguration file found,"
+                    + " please create one with the appropriate api call");
         } catch (IOException e) {
             e.printStackTrace();
             //TODO: stop server
