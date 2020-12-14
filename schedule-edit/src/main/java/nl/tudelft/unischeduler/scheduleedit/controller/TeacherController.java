@@ -3,6 +3,7 @@ package nl.tudelft.unischeduler.scheduleedit.controller;
 import java.time.LocalDate;
 import nl.tudelft.unischeduler.scheduleedit.core.ScheduleEditModule;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,9 @@ public class TeacherController {
         this.core = core;
     }
 
+    public TeacherController(@Autowired ScheduleEditModule core) {
+        this.core = core;
+    }
 
     /**
      * Sets all the lectures until the until date to no longer being on campus.

@@ -2,22 +2,24 @@ package nl.tudelft.unischeduler.scheduleedit.core;
 
 import java.io.IOException;
 import java.time.Clock;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
 import nl.tudelft.unischeduler.scheduleedit.exception.IllegalDateException;
 import nl.tudelft.unischeduler.scheduleedit.services.DataBaseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ScheduleEditModule {
 
     private Clock clock;
     private DataBaseService dataBaseService;
 
-    public ScheduleEditModule(Clock clock) {
+    public ScheduleEditModule(@Autowired Clock clock, @Autowired DataBaseService dataBaseService) {
         this.clock = clock;
+        this.dataBaseService = dataBaseService;
     }
 
     public Clock getClock() {
