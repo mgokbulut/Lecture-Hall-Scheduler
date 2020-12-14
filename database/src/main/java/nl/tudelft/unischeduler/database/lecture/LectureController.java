@@ -61,6 +61,19 @@ public class LectureController {
         return lectureService.setClassroom(lectureId, classroomId);
     }
 
+    @PutMapping(path = "/lectures/setToOnline/{teacherId}/{start}/{end}/{updateOnline}")
+    public @ResponseBody
+    ResponseEntity<?> setLectureToOnline(@PathVariable String teacherId,
+                                         @PathVariable Timestamp start, @PathVariable Timestamp end, @PathVariable boolean updateOnline) {
+        return lectureService.setLectureToOnline(teacherId, start, end, updateOnline);
+    }
+
+    @PutMapping(path = "/lectures/setToOnline/{lectureId}/{updateOnline}")
+    public @ResponseBody
+    ResponseEntity<?> setLectureToOnline(@PathVariable Long lectureId, @PathVariable boolean updateOnline) {
+        return lectureService.setLectureToOnline(lectureId, updateOnline);
+    }
+
     //    @PutMapping(path = "/lectures/assignStudent/{netId}/{lectureId}")
     //    public @ResponseBody
     //    void assignStudentToLecture(@PathVariable String netId, @PathVariable Long lectureId){

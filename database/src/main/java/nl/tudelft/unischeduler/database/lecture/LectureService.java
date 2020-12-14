@@ -130,4 +130,43 @@ public class LectureService {
             return ResponseEntity.ok().build();
         }
     }
+
+    public ResponseEntity<?> setLectureToOnline(String teacherId, Timestamp start, Timestamp end, boolean updateOnline){
+        try{
+            List<Lecture> lectures = lectureRepository
+                    .findAllByTeacherAndStartTimeDateBetween(teacherId,start,end);
+            for(Lecture lecture : lectures){
+                lecture.setMovedOnline(true);
+                if(updateOnline){
+                    lecture.setClassroom(-2L);
+                }
+                lectureRepository.save(lecture);
+            }
+            return ResponseEntity.ok().build();
+        } catch (Exception a){
+            a.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    public ResponseEntity<?> setLectureToOnline(Long lectureId, boolean updateOnline){
+        Optional<Lecture> optionalLecture = lectureRepository.findById(lectureId);
+        if (optionalLecture.isEmpty()) {
+            System.out.println("LectureID not present in the DB");
+            return ResponseEntity.notFound().build();
+        } else {
+            try {
+                var lecture = optionalLecture.get();
+                lecture.setMovedOnline(true);
+                if(updateOnline){
+                    lecture.setClassroom(-2L);
+                }
+                lectureRepository.save(lecture);
+                return ResponseEntity.ok().build();
+            } catch (Exception a) {
+                a.printStackTrace();
+                return ResponseEntity.badRequest().build();
+            }
+        }
+    }
 }

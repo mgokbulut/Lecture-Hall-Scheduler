@@ -17,4 +17,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
     List<Lecture> findAll();
 
     List<Lecture> findAllByStartTimeDateBetween(Timestamp start, Timestamp end);
+
+    List<Lecture> findAllByTeacherAndStartTimeDateBetween(String teacherId, Timestamp start, Timestamp end);
+
 }
