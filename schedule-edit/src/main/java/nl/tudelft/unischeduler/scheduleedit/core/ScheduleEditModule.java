@@ -5,6 +5,8 @@ import java.time.Clock;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
 import nl.tudelft.unischeduler.scheduleedit.exception.IllegalDateException;
 import nl.tudelft.unischeduler.scheduleedit.services.DataBaseService;
@@ -40,7 +42,7 @@ public class ScheduleEditModule {
      * @param teacherNetId The netId of the teacher that is sick.
      * @param until The LocalDate until the teacher is sick (inclusive).
      */
-    public void reportTeacherSick(int teacherNetId, LocalDate until)
+    public void reportTeacherSick(String teacherNetId, LocalDate until)
             throws IllegalDateException, ConnectionException {
         LocalDate now = LocalDate.now(clock);
         if (until.isBefore(now)) {
@@ -52,5 +54,10 @@ public class ScheduleEditModule {
         } catch (IOException e) {
             throw new ConnectionException("The connection with the database failed", e);
         }
+    }
+
+    public void reportTeacherSick(String teacherNetId) throws ConnectionException {
+        LocalDate until = LocalDate.now(clock).plus(2, ChronoUnit.WEEKS);
+        reportTeacherSick(teacherNetId, until);
     }
 }
