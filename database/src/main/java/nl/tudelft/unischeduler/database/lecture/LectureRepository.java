@@ -20,4 +20,6 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
 
     List<Lecture> findAllByTeacherAndStartTimeDateBetween(String teacherId, Timestamp start, Timestamp end);
 
+    List<Lecture> findAllByTeacherAndStartTimeDateGreaterThanEqual(String teachId, Timestamp start);
+
 }

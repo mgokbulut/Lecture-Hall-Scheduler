@@ -74,6 +74,18 @@ public class LectureController {
         return lectureService.setLectureToOnline(lectureId, updateOnline);
     }
 
+    @PutMapping(path = "/lectures/setToOffline/{teacherId}/{start}")
+    public @ResponseBody
+    ResponseEntity<?> setLectureToOffline(@PathVariable String teacherId, @PathVariable Timestamp start) {
+        return lectureService.setLectureToOffline(teacherId, start);
+    }
+
+    @PutMapping(path = "/lectures/setToOffline/{lectureId}")
+    public @ResponseBody
+    ResponseEntity<?> setLectureToOffline(@PathVariable Long lectureId) {
+        return lectureService.setLectureToOffline(lectureId);
+    }
+
     //    @PutMapping(path = "/lectures/assignStudent/{netId}/{lectureId}")
     //    public @ResponseBody
     //    void assignStudentToLecture(@PathVariable String netId, @PathVariable Long lectureId){

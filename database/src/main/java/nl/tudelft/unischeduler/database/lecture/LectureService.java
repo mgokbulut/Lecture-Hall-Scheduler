@@ -10,6 +10,7 @@ import nl.tudelft.unischeduler.database.course.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 @Service
@@ -162,6 +163,44 @@ public class LectureService {
                     lecture.setClassroom(-2L);
                 }
                 lectureRepository.save(lecture);
+                return ResponseEntity.ok().build();
+            } catch (Exception a) {
+                a.printStackTrace();
+                return ResponseEntity.badRequest().build();
+            }
+        }
+    }
+
+    public ResponseEntity<?> setLectureToOffline(String teacherId, Timestamp start){
+        try{
+            List<Lecture> lectures = lectureRepository
+                    .findAllByTeacherAndStartTimeDateGreaterThanEqual(teacherId,start);
+
+            for(Lecture lecture : lectures){
+                if(lecture.getClassroom() > -2L){
+                    lecture.setMovedOnline(false);
+                    lectureRepository.save(lecture);
+                }
+            }
+            return ResponseEntity.ok().build();
+        } catch (Exception a){
+            a.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    public ResponseEntity<?> setLectureToOffline(Long lectureId){
+        Optional<Lecture> optionalLecture = lectureRepository.findById(lectureId);
+        if (optionalLecture.isEmpty()) {
+            System.out.println("LectureID not present in the DB");
+            return ResponseEntity.notFound().build();
+        } else {
+            try {
+                var lecture = optionalLecture.get();
+                if(lecture.getClassroom() > -2L){
+                    lecture.setMovedOnline(false);
+                    lectureRepository.save(lecture);
+                }
                 return ResponseEntity.ok().build();
             } catch (Exception a) {
                 a.printStackTrace();
