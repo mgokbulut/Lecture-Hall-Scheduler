@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import nl.tudelft.unischeduler.database.course.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -40,12 +41,13 @@ public class LectureService {
      * Sets the classroom of a lecture to EMPTY.
      *
      * @param lectureId lecture ID
-     * @return String with result of the operation
+     * @return ResponseEntity with result of the operation
      */
-    public String setClassroomToEmpty(Long lectureId) {
+    public ResponseEntity<?> setClassroomToEmpty(Long lectureId) {
         Optional<Lecture> temp = lectureRepository.findById(lectureId);
         if (temp.isEmpty()) {
-            return "{message:\"LectureID not present in the DB\"}";
+            System.out.println("LectureID not present in the DB");
+            return ResponseEntity.notFound().build();
         } else {
             try {
                 Lecture lecture = temp.get();
@@ -55,9 +57,9 @@ public class LectureService {
             } catch (Exception e) {
                 System.out.println("Something went wrong in setClassroomToEmpty method");
                 e.printStackTrace();
-                return null;
+                return ResponseEntity.notFound().build();
             }
-            return "{message:\"Success!\"}";
+            return ResponseEntity.ok().build();
         }
     }
 
@@ -84,12 +86,13 @@ public class LectureService {
      *
      * @param lectureId lecture ID
      * @param t Time
-     * @return String with result of the operation
+     * @return ResponseEntity with result of the operation
      */
-    public String setTime(Long lectureId, Timestamp t) {
+    public ResponseEntity<?> setTime(Long lectureId, Timestamp t) {
         Optional<Lecture> temp = lectureRepository.findById(lectureId);
         if (temp.isEmpty()) {
-            return "{message:\"LectureID not present in the DB\"}";
+            System.out.println("LectureID not present in the DB");
+            return ResponseEntity.notFound().build();
         } else {
             try {
                 Lecture lecture = temp.get();
@@ -97,9 +100,9 @@ public class LectureService {
                 lectureRepository.save(lecture);
             } catch (Exception e) {
                 System.out.println("Something went wrong in getLecturesInRoomOnDay method");
-                return null;
+                return ResponseEntity.notFound().build();
             }
-            return "{message:\"Success!\"}";
+            return ResponseEntity.ok().build();
         }
     }
 
@@ -108,12 +111,13 @@ public class LectureService {
      *
      * @param lectureId lecture ID
      * @param classroomId classroom ID
-     * @return String with result of the operation
+     * @return ResponseEntity with result of the operation
      */
-    public String setClassroom(Long lectureId, Long classroomId) {
+    public ResponseEntity<?> setClassroom(Long lectureId, Long classroomId) {
         Optional<Lecture> temp = lectureRepository.findById(lectureId);
         if (temp.isEmpty()) {
-            return "{message:\"LectureID not present in the DB\"}";
+            System.out.println("LectureID not present in the DB");
+            return ResponseEntity.notFound().build();
         } else {
             try {
                 Lecture lecture = temp.get();
@@ -121,9 +125,9 @@ public class LectureService {
                 lectureRepository.save(lecture);
             } catch (Exception e) {
                 System.out.println("Something went wrong in assignRoomToLecture method");
-                return null;
+                return ResponseEntity.notFound().build();
             }
-            return "{message:\"Success!\"}";
+            return ResponseEntity.ok().build();
         }
     }
 }

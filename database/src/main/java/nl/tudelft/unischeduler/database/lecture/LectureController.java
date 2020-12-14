@@ -4,6 +4,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -30,7 +31,7 @@ public class LectureController {
 
     @GetMapping(path = "/lectures/courses")
     public @ResponseBody
-    List<Object []>  getLecturesInCourse() {
+    List<Object []>  getLecturesWithCourses() {
         return lectureService.getLecturesWithCourses();
     }
     //doesn't lecture contain course Id anyway??
@@ -44,19 +45,19 @@ public class LectureController {
 
     @PutMapping(path = "/lectures/setClassroomToEmpty/{lectureId}")
     public @ResponseBody
-    String setClassroomToEmpty(@PathVariable Long lectureId) {
+    ResponseEntity<?> setClassroomToEmpty(@PathVariable Long lectureId) {
         return lectureService.setClassroomToEmpty(lectureId);
     }
 
     @PutMapping(path = "/lectures/setTime/{lectureId}/{t}")
     public @ResponseBody
-    String setLectureTime(@PathVariable Long lectureId, @PathVariable Timestamp t) {
+    ResponseEntity<?> setLectureTime(@PathVariable Long lectureId, @PathVariable Timestamp t) {
         return lectureService.setTime(lectureId, t);
     }
 
     @PutMapping(path = "/lectures/setClassroom/{lectureId}/{classroomId}")
     public @ResponseBody
-    String assignRoomToLecture(@PathVariable Long lectureId, @PathVariable Long classroomId) {
+    ResponseEntity<?> assignRoomToLecture(@PathVariable Long lectureId, @PathVariable Long classroomId) {
         return lectureService.setClassroom(lectureId, classroomId);
     }
 
