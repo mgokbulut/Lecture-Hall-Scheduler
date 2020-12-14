@@ -1,0 +1,30 @@
+image: gradle:6.7-jdk11
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+  -
+stages:
+  - build
+  - staticAnalysis
+  - test
+
+discovery-server-build:
+  stage: build
+  script:
+    gradle --build-cache :discovery-server:assemble
+
+discovery-server-checkStyle:
+  stage: staticAnalysis
+  script:
+    gradle :discovery-server:checkstyleMain :discovery-server:checkStyleTest
+
+discovery-server-PMD:
+  stage: staticAnalysis
+  script:
+    gradle :discovery-server:pmdMain :discovery-server:pmdTest
+
+discovery-server-test:
+  stage: test
+  script:
+    gradle :discovery-server:test
+
