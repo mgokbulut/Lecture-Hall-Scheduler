@@ -1,5 +1,6 @@
 package nl.tudelft.unischeduler.scheduleedit.services;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Date;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
@@ -18,7 +19,7 @@ public class StudentService {
      * @param startDate The date for which the student should be marked sick.
      * @throws ConnectionException When the connection to the database service fails.
      */
-    public void setUserSick(String netId, LocalDate startDate) throws ConnectionException {
+    public void setUserSick(String netId, LocalDate startDate) throws IOException {
         //TODO: this is a stub, and in the future should actually send the data.
     }
 
@@ -32,7 +33,7 @@ public class StudentService {
      * @throws ConnectionException When the connection to the database service fails.
      */
     public void cancelStudentAttendance(String studentNetId, LocalDate start, LocalDate end)
-            throws ConnectionException {
+            throws IOException {
         //TODO: this is a stub, and in the future should actually send the data.
     }
 }

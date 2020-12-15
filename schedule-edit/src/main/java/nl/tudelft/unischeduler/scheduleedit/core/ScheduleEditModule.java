@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import nl.tudelft.unischeduler.scheduleedit.controller.StudentController;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
 import nl.tudelft.unischeduler.scheduleedit.exception.IllegalDateException;
 import nl.tudelft.unischeduler.scheduleedit.services.StudentService;

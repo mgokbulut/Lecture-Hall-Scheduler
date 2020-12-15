@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.internal.matchers.Null;
 
 public class ScheduleEditModuleTests {
 
@@ -117,7 +116,7 @@ public class ScheduleEditModuleTests {
     }
 
     @Test
-    public void nullTeacherDateTest() throws  ConnectionException {
+    public void nullTeacherDateTest() throws IOException {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
                 studentService);
@@ -131,7 +130,20 @@ public class ScheduleEditModuleTests {
     }
 
     @Test
-    public void reportStudentTest() throws ConnectionException {
+    public void databaseTeacherThrowsTest() throws IOException {
+        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
+                teacherService,
+                studentService);
+        Mockito.doThrow(new IOException())
+                .when(teacherService).cancelLectures(any(), any(), any());
+
+        Assertions.assertThrows(ConnectionException.class, () -> {
+            module.reportTeacherSick(testId);
+        });
+    }
+
+    @Test
+    public void reportStudentTest() throws IOException {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
                 studentService);
@@ -144,7 +156,7 @@ public class ScheduleEditModuleTests {
     }
 
     @Test
-    public void studentPastTest() throws ConnectionException {
+    public void studentPastTest() throws IOException {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
                 studentService);
@@ -158,7 +170,7 @@ public class ScheduleEditModuleTests {
     }
 
     @Test
-    public void singleDayStudentTest() throws ConnectionException {
+    public void singleDayStudentTest() throws IOException {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
                 studentService);
@@ -171,7 +183,7 @@ public class ScheduleEditModuleTests {
     }
 
     @Test
-    public void nullStudentDateTest() throws  ConnectionException {
+    public void nullStudentDateTest() throws IOException {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
                 studentService);
@@ -182,5 +194,19 @@ public class ScheduleEditModuleTests {
         });
 
         verify(studentService, never()).cancelStudentAttendance(any(), any(), any());
+    }
+
+    @Test
+    public void databaseStudentThrowsTest() throws IOException {
+        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
+                teacherService,
+                studentService);
+
+        Mockito.doThrow(new IOException())
+                .when(studentService).cancelStudentAttendance(any(), any(), any());
+
+        Assertions.assertThrows(ConnectionException.class, () -> {
+            module.reportStudentSick(testId);
+        });
     }
 }
