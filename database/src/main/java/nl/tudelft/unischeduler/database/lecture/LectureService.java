@@ -54,6 +54,7 @@ public class LectureService {
                 lectureRepository.save(lecture);
             } catch (Exception e) {
                 System.out.println("Something went wrong in setClassroomToEmpty method");
+                e.printStackTrace();
                 return null;
             }
             return "{message:\"Success!\"}";
