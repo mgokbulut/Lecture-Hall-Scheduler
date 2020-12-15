@@ -1,10 +1,12 @@
 package nl.tudelft.unischeduler.database.usercourse;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import nl.tudelft.unischeduler.database.user.User;
 import nl.tudelft.unischeduler.database.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -34,6 +36,24 @@ public class UserCourseService {
                 .stream()
                 .filter(User::isInterested)
                 .collect(Collectors.toList());
+    }
+
+    public ResponseEntity<?> addStudentToCourse(List<String> netIds, Long courseId) {
+        try {
+            List<UserCourse> userCourses = new ArrayList<>();
+            for(String netId : netIds){
+                if(userCourseRepository.findByCourseIdAndNetId(courseId, netId).isPresent()){
+                    return ResponseEntity.notFound().build();
+                }
+                UserCourse userCourse = new UserCourse(netId, courseId);
+                userCourseRepository.save(userCourse);
+                userCourses.add(userCourse);
+            }
+            return ResponseEntity.ok(userCourses);
+        } catch (Exception a) {
+            a.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }
