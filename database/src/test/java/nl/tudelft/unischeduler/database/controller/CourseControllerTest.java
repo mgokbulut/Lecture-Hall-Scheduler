@@ -43,9 +43,9 @@ public class CourseControllerTest {
 
     private transient List<Course> courses = new ArrayList<>(
             List.of(
-                    new Course(0L, "ADS", 1),
-                    new Course(1L, "SEM", 2),
-                    new Course(2L, "AD", 2)
+                    new Course("ADS", 1),
+                    new Course("SEM", 2),
+                    new Course("AD", 2)
             ));
 
     @BeforeEach

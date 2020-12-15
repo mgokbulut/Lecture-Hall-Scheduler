@@ -16,7 +16,7 @@ import javax.persistence.Table;
 public class Lecture {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "classroom_id")
@@ -47,7 +47,6 @@ public class Lecture {
     /**
      * This method initialises the Lecture object with specified parameters.
      *
-     * @param id lecture ID
      * @param classroom classroom ID
      * @param course course ID
      * @param teacher user ID of the teacher
@@ -55,9 +54,8 @@ public class Lecture {
      * @param duration duration of the lecture
      * @param movedOnline is the lecture moved online
      */
-    public Lecture(Long id, Long classroom, Long course, String teacher,
+    public Lecture(Long classroom, Long course, String teacher,
                    Timestamp startTimeDate, Time duration, boolean movedOnline) {
-        this.id = id;
         this.classroom = classroom;
         this.course = course;
         this.teacher = teacher;

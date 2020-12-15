@@ -58,12 +58,12 @@ public class LectureControllerTest {
 
     private transient List<Lecture> lectures = new ArrayList<>(
             List.of(
-                    new Lecture(0L, 0L, 0L, "sanders@tudelft.nl",
+                    new Lecture(0L, 0L, "sanders@tudelft.nl",
                             timestamp,  new Time(7200000),  false),
-                    new Lecture(1L, 1L, 1L, "sanders@tudelft.nl",
+                    new Lecture(1L, 1L, "sanders@tudelft.nl",
                             new Timestamp(timestamp.getTime() + 10800000),
                             new Time(7200000), false),
-                    new Lecture(2L, 2L, 2L, "sanders@tudelft.nl",
+                    new Lecture(2L, 2L, "sanders@tudelft.nl",
                             new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false)
             ));
 
@@ -77,7 +77,7 @@ public class LectureControllerTest {
     @Test
     public void setClassroomTest() throws Exception {
         String uri = "/lectures/setClassroom/2/1";
-        Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
+        Lecture lecture = new Lecture(1L, 2L, "sanders@tudelft.nl",
                 new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
         mockMvc.perform(put(uri).contentType(APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(lecture)))
@@ -87,7 +87,7 @@ public class LectureControllerTest {
     @Test
     public void setLectureTimeTest() throws Exception {
         String uri = "/lectures/setTime/2/2020-12-11 00:00:00";
-        Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
+        Lecture lecture = new Lecture(1L, 2L, "sanders@tudelft.nl",
                 new Timestamp(timestamp.getTime() + 86400000), new Time(7200000), false);
         mockMvc.perform(put(uri).contentType(APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(lecture)))
@@ -97,7 +97,7 @@ public class LectureControllerTest {
     @Test
     public void setClassroomToEmpty() throws Exception {
         String uri = "/lectures/setClassroomToEmpty/2";
-        Lecture lecture = new Lecture(2L, -1L, 2L, "sanders@tudelft.nl",
+        Lecture lecture = new Lecture(-1L, 2L, "sanders@tudelft.nl",
                 new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
         mockMvc.perform(put(uri).contentType(APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(lecture)))
@@ -142,8 +142,8 @@ public class LectureControllerTest {
 
     @Test
     public void getLecturesInCourseTest() throws Exception {
-        Object[] a = {new Lecture(0L, 0L, 0L, "sanders@tudelft.nl",
-                timestamp,  new Time(7200000),  false), new Course(0L, "AD", 2)};
+        Object[] a = {new Lecture(0L, 0L, "sanders@tudelft.nl",
+                timestamp,  new Time(7200000),  false), new Course("AD", 2)};
         List<Object []> object = new ArrayList<>(List.<Object[]>of(a));
 
         when(lectureService.getLecturesWithCourses()).thenReturn(object);

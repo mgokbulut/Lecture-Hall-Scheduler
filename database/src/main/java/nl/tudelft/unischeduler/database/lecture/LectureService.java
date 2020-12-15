@@ -209,4 +209,34 @@ public class LectureService {
             }
         }
     }
+
+    /**
+     * Creates a new lecture with given attributes.
+     *
+     * @param courseId course of this lecture
+     * @param teacher a teacher of that lecture
+     * @param startTime starting of the lecture
+     * @param duration duration of it
+     * @param movedOnline is this lecture online?
+     * @return ResponseEntity with result of the operation
+     */
+    public ResponseEntity<?> createLecture(Long courseId, String teacher,
+                                           Timestamp startTime,  Time duration, boolean movedOnline) {
+        try{
+            Optional<Lecture> lectureOptional = lectureRepository
+                    .findAllByClassroomAndCourseAndTeacherAndStartTimeDateAndDurationAndMovedOnline(
+                            -1L,courseId,teacher,startTime,duration,movedOnline);
+            if(lectureOptional.isPresent()){
+                return ResponseEntity.notFound().build();
+            }
+            Lecture lecture = new Lecture(-1L, courseId, teacher, startTime, duration, movedOnline);
+            System.out.println(lecture);
+            lectureRepository.save(lecture);
+        } catch (Exception e) {
+            System.out.println("Something went wrong in createLecture method");
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok().build();
+
+    }
 }

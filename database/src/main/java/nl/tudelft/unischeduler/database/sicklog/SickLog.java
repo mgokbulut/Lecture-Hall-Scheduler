@@ -15,7 +15,7 @@ import javax.persistence.Table;
 public class SickLog {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -38,13 +38,11 @@ public class SickLog {
     /**
      * This method initialises the SickLog object with specified parameters.
      *
-     * @param id sickLog Id
      * @param user user ID
      * @param reportSick the day user reported they were sick
      * @param finished is user no longer sick (for example user has tested negative)
      */
-    public SickLog(Long id, String user, Date reportSick, boolean finished) {
-        this.id = id;
+    public SickLog(String user, Date reportSick, boolean finished) {
         this.user = user;
         this.reportSick = reportSick;
         this.finished = finished;

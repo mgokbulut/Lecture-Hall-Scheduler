@@ -50,9 +50,9 @@ public class SickLogControllerTest {
 
     private transient List<SickLog> sickLogs = new ArrayList<>(
             List.of(
-                    new SickLog(0L, "test-user1", new Date(timestamp.getTime()), true),
-                    new SickLog(1L, "test-user2", new Date(timestamp.getTime() + 10000), true),
-                    new SickLog(2L, "test-user3", new Date(timestamp.getTime() + 100000000), true)
+                    new SickLog("test-user1", new Date(timestamp.getTime()), true),
+                    new SickLog("test-user2", new Date(timestamp.getTime() + 10000), true),
+                    new SickLog("test-user3", new Date(timestamp.getTime() + 100000000), true)
             ));
 
     @BeforeEach

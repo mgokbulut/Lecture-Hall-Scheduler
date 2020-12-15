@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Table(name = "classroom", schema = "schedulingDB")
 public class Classroom {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
     @Column(name = "full_capacity", nullable = false)
@@ -34,16 +34,14 @@ public class Classroom {
     /**
      * This method initialises the userCourse object with specified parameters.
      *
-     * @param id a
      * @param fullCapacity a
      * @param name a
      * @param buildingName a
      * @param floor a
      */
-    public Classroom(Long id, int fullCapacity,
+    public Classroom(int fullCapacity,
                      String name, String buildingName,
                      int floor) {
-        this.id = id;
         this.fullCapacity = fullCapacity;
         this.name = name;
         this.buildingName = buildingName;

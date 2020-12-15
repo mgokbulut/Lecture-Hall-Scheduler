@@ -19,7 +19,7 @@ public class ScheduleTest {
 
     @Test
     public void saveAndRetrieveTest() {
-        Schedule schedule = new Schedule(1L, "Test");
+        Schedule schedule = new Schedule("Test");
         scheduleRepository.save(schedule);
         Schedule test = scheduleRepository.findById(schedule.getId()).get();
         assertEquals(schedule, test);
@@ -27,8 +27,8 @@ public class ScheduleTest {
 
     @Test
     public void equalsTest() {
-        Schedule schedule = new Schedule(1L, "Test");
-        Schedule test = new Schedule(1L, "Test");
+        Schedule schedule = new Schedule("Test");
+        Schedule test = new Schedule("Test");
         assertEquals(schedule, test);
     }
 }

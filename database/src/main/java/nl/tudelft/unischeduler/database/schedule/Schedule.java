@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Table(name = "schedule", schema = "schedulingDB")
 public class Schedule {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -30,11 +30,9 @@ public class Schedule {
     /**
      * This method initialises the Schedule object with specified parameters.
      *
-     * @param id schedule ID
      * @param user user ID
      */
-    public Schedule(Long id, String user) {
-        this.id = id;
+    public Schedule(String user) {
         this.user = user;
     }
 
