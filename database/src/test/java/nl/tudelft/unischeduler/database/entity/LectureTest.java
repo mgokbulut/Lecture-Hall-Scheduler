@@ -22,7 +22,7 @@ public class LectureTest {
 
     @Test
     public void saveAndRetrieveTest() {
-        Lecture lecture = new Lecture(1L, 1L, "Test",
+        Lecture lecture = new Lecture(1L, 1L, 1L, "Test",
                 new Timestamp(10L), new Time(10L), true);
         lectureRepository.save(lecture);
         Lecture test = lectureRepository.findById(lecture.getId()).get();
@@ -31,9 +31,9 @@ public class LectureTest {
 
     @Test
     public void equalsTest() {
-        Lecture lecture = new Lecture(1L, 1L, "Test",
+        Lecture lecture = new Lecture(1L, 1L, 1L, "Test",
                 new Timestamp(10L), new Time(10L), true);
-        Lecture test = new Lecture(1L, 1L, "Test",
+        Lecture test = new Lecture(1L, 1L, 1L, "Test",
                 new Timestamp(10L), new Time(10L), true);
         assertEquals(lecture, test);
     }

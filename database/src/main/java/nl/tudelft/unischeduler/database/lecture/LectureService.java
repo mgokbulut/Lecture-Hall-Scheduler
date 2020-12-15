@@ -230,13 +230,11 @@ public class LectureService {
                 return ResponseEntity.notFound().build();
             }
             Lecture lecture = new Lecture(-1L, courseId, teacher, startTime, duration, movedOnline);
-            System.out.println(lecture);
             lectureRepository.save(lecture);
+            return ResponseEntity.ok(lecture);
         } catch (Exception e) {
             System.out.println("Something went wrong in createLecture method");
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok().build();
-
     }
 }

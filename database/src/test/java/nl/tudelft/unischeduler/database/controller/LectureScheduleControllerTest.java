@@ -66,7 +66,7 @@ public class LectureScheduleControllerTest {
     @Test
     public void assignStudentToLectureTest() throws Exception {
         String uri = "/lectureSchedules/a.kuba@student.tudelft.nl/0";
-        Optional<Schedule> schedule = Optional.of(new Schedule("a.kuba@student.tudelft.nl"));
+        Optional<Schedule> schedule = Optional.of(new Schedule(1L, "a.kuba@student.tudelft.nl"));
         Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
 
         when(scheduleRepository.findByUser("a.kuba@student.tudelft.nl"))

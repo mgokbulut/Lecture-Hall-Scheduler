@@ -47,9 +47,9 @@ public class ClassroomControllerTest {
 
     private transient List<Classroom> classrooms = new ArrayList<>(
             List.of(
-                    new Classroom(50, "Amper Hall", "EWI", 1),
-                    new Classroom(100, "Boole Hall", "EWI", 2),
-                    new Classroom(250, "Pi Hall", "EWI", 1)
+                    new Classroom(0L, 50, "Amper Hall", "EWI", 1),
+                    new Classroom(1L, 100, "Boole Hall", "EWI", 2),
+                    new Classroom(2L, 250, "Pi Hall", "EWI", 1)
             ));
 
     @BeforeEach
