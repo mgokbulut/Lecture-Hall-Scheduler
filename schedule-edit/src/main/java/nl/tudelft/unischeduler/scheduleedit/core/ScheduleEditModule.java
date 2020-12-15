@@ -50,9 +50,8 @@ public class ScheduleEditModule {
         if (until.isBefore(now)) {
             throw new IllegalDateException("the supplied date is before the current date");
         }
-        Period duration = now.until(until);
         try {
-            dataBaseService.cancelLectures(teacherNetId, duration);
+            dataBaseService.cancelLectures(teacherNetId, now, until);
         } catch (IOException e) {
             throw new ConnectionException("The connection with the database failed", e);
         }
@@ -62,4 +61,5 @@ public class ScheduleEditModule {
         LocalDate until = LocalDate.now(clock).plus(2, ChronoUnit.WEEKS);
         reportTeacherSick(teacherNetId, until);
     }
+
 }
