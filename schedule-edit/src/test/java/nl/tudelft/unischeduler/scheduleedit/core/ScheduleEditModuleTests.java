@@ -120,7 +120,6 @@ public class ScheduleEditModuleTests {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
                 studentService);
-        LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
 
         Assertions.assertThrows(IllegalDateException.class, () -> {
             module.reportTeacherSick(testId, null);
@@ -187,7 +186,6 @@ public class ScheduleEditModuleTests {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
                 studentService);
-        LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
 
         Assertions.assertThrows(IllegalDateException.class, () -> {
             module.reportStudentSick(testId, null);
