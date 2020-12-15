@@ -37,6 +37,17 @@ public class ScheduleEditModule {
         this.teacherService = teacherService;
     }
 
+    private LocalDate checkBeforeNow(LocalDate future) throws IllegalDateException {
+        if (future == null) {
+            throw new IllegalDateException("There was no date specified");
+        }
+        LocalDate now = LocalDate.now(clock);
+        if (future.isBefore(now)) {
+            throw new IllegalDateException("the supplied date is before the current date");
+        }
+        return now;
+    }
+
     /**
      * Reports the teacher sick and notifies the students that their class will be cancelled.
      *
@@ -45,10 +56,7 @@ public class ScheduleEditModule {
      */
     public void reportTeacherSick(String teacherNetId, LocalDate until)
             throws IllegalDateException, ConnectionException {
-        LocalDate now = LocalDate.now(clock);
-        if (until.isBefore(now)) {
-            throw new IllegalDateException("the supplied date is before the current date");
-        }
+        LocalDate now = checkBeforeNow(until);
         try {
             teacherService.cancelLectures(teacherNetId, now, until);
         } catch (IOException e) {
@@ -61,4 +69,24 @@ public class ScheduleEditModule {
         reportTeacherSick(teacherNetId, until);
     }
 
+    /**
+     * Reports the student sick and notifies reduces the amount of students attending the lecture.
+     *
+     * @param studentNetId The netId of the student that is sick.
+     * @param until The LocalDate until the teacher is sick (inclusive).
+     */
+    public void reportStudentSick(String studentNetId, LocalDate until)
+            throws IllegalDateException, ConnectionException {
+        LocalDate now = checkBeforeNow(until);
+        try {
+            teacherService.cancelLectures(studentNetId, now, until);
+        } catch (IOException e) {
+            throw new ConnectionException("The connection with the database failed", e);
+        }
+    }
+
+    public void reportStudentSick(String studentNetId) throws ConnectionException {
+        LocalDate until = LocalDate.now(clock).plus(2, ChronoUnit.WEEKS);
+        reportStudentSick(studentNetId, until);
+    }
 }
