@@ -2,6 +2,7 @@ package nl.tudelft.unischeduler.scheduleedit.core;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -10,6 +11,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
 import nl.tudelft.unischeduler.scheduleedit.exception.IllegalDateException;
 import nl.tudelft.unischeduler.scheduleedit.services.StudentService;
 import nl.tudelft.unischeduler.scheduleedit.services.TeacherService;
@@ -17,13 +19,19 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.mockito.internal.matchers.Null;
 
 public class ScheduleEditModuleTests {
 
+    private final String testId = "testId";
     Clock fixedClock;
     Instant instant;
     TeacherService teacherService;
     StudentService studentService;
+
+    public String getTestId() {
+        return testId;
+    }
 
     public Clock getFixedClock() {
         return fixedClock;
@@ -73,13 +81,12 @@ public class ScheduleEditModuleTests {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
                 studentService);
-        final String teacherNetiD = "testId";
         LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
-        LocalDate until = LocalDate.parse("2000-01-19");
+        LocalDate until = LocalDate.parse("2000-01-14");
 
-        module.reportTeacherSick(teacherNetiD, until);
+        module.reportTeacherSick(testId);
 
-        verify(teacherService, times(1)).cancelLectures(teacherNetiD, start, until);
+        verify(teacherService, times(1)).cancelLectures(testId, start, until);
     }
 
     @Test
@@ -87,11 +94,10 @@ public class ScheduleEditModuleTests {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
                 studentService);
-        final String teacherNetiD = "testId";
         LocalDate until = LocalDate.parse("1999-12-31");
 
         Assertions.assertThrows(IllegalDateException.class, () -> {
-            module.reportTeacherSick(teacherNetiD, until);
+            module.reportTeacherSick(testId, until);
         });
 
         verify(teacherService, Mockito.never()).cancelLectures(any(), any(), any());
@@ -102,12 +108,79 @@ public class ScheduleEditModuleTests {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
                 studentService);
-        final String teacherNetiD = "testId";
+        LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
+        LocalDate until = LocalDate.parse("2000-01-15");
+
+        module.reportTeacherSick(testId, until);
+
+        verify(teacherService, times(1)).cancelLectures(testId, start, until);
+    }
+
+    @Test
+    public void nullTeacherDateTest() throws  ConnectionException {
+        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
+                teacherService,
+                studentService);
+        LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
+
+        Assertions.assertThrows(IllegalDateException.class, () -> {
+            module.reportTeacherSick(testId, null);
+        });
+
+        verify(studentService, never()).cancelStudentAttendance(any(), any(), any());
+    }
+
+    @Test
+    public void reportStudentTest() throws ConnectionException {
+        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
+                teacherService,
+                studentService);
+        LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
+        LocalDate until = LocalDate.parse("2000-01-14");
+
+        module.reportStudentSick(testId);
+
+        verify(studentService, times(1)).cancelStudentAttendance(testId, start, until);
+    }
+
+    @Test
+    public void studentPastTest() throws ConnectionException {
+        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
+                teacherService,
+                studentService);
+        LocalDate until = LocalDate.parse("1999-12-31");
+
+        Assertions.assertThrows(IllegalDateException.class, () -> {
+            module.reportStudentSick(testId, until);
+        });
+
+        verify(studentService, Mockito.never()).cancelStudentAttendance(any(), any(), any());
+    }
+
+    @Test
+    public void singleDayStudentTest() throws ConnectionException {
+        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
+                teacherService,
+                studentService);
         LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
         LocalDate until = LocalDate.parse("2000-01-01");
 
-        module.reportTeacherSick(teacherNetiD, until);
+        module.reportStudentSick(testId, until);
 
-        verify(teacherService, times(1)).cancelLectures(teacherNetiD, start, until);
+        verify(studentService, times(1)).cancelStudentAttendance(testId, start, until);
+    }
+
+    @Test
+    public void nullStudentDateTest() throws  ConnectionException {
+        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
+                teacherService,
+                studentService);
+        LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
+
+        Assertions.assertThrows(IllegalDateException.class, () -> {
+            module.reportStudentSick(testId, null);
+        });
+
+        verify(studentService, never()).cancelStudentAttendance(any(), any(), any());
     }
 }

@@ -89,7 +89,7 @@ public class ScheduleEditModule {
     }
 
     public void reportTeacherSick(String teacherNetId) throws ConnectionException {
-        LocalDate until = LocalDate.now(clock).plus(2, ChronoUnit.WEEKS);
+        LocalDate until = LocalDate.now(clock).plus(13, ChronoUnit.DAYS);
         reportTeacherSick(teacherNetId, until);
     }
 
@@ -111,7 +111,7 @@ public class ScheduleEditModule {
     }
 
     public void reportStudentSick(String studentNetId) throws ConnectionException {
-        LocalDate until = LocalDate.now(clock).plus(2, ChronoUnit.WEEKS);
+        LocalDate until = LocalDate.now(clock).plus(13, ChronoUnit.DAYS);
         reportStudentSick(studentNetId, until);
     }
 }
