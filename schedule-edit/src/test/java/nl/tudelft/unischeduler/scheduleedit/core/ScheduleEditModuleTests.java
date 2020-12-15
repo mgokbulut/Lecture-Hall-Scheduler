@@ -11,7 +11,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import nl.tudelft.unischeduler.scheduleedit.exception.IllegalDateException;
-import nl.tudelft.unischeduler.scheduleedit.services.DataBaseService;
+import nl.tudelft.unischeduler.scheduleedit.services.TeacherService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,21 +46,21 @@ public class ScheduleEditModuleTests {
 
     @Test
     public void reportTeacherTest() throws IOException {
-        DataBaseService dataBaseService = mock(DataBaseService.class);
-        ScheduleEditModule module = new ScheduleEditModule(fixedClock, dataBaseService);
+        TeacherService teacherService = mock(TeacherService.class);
+        ScheduleEditModule module = new ScheduleEditModule(fixedClock, teacherService);
         final String teacherNetiD = "testId";
         LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
         LocalDate until = LocalDate.parse("2000-01-19");
 
         module.reportTeacherSick(teacherNetiD, until);
 
-        verify(dataBaseService, times(1)).cancelLectures(teacherNetiD, start, until);
+        verify(teacherService, times(1)).cancelLectures(teacherNetiD, start, until);
     }
 
     @Test
     public void cancelPastTest() throws IOException {
-        DataBaseService dataBaseService = mock(DataBaseService.class);
-        ScheduleEditModule module = new ScheduleEditModule(fixedClock, dataBaseService);
+        TeacherService teacherService = mock(TeacherService.class);
+        ScheduleEditModule module = new ScheduleEditModule(fixedClock, teacherService);
         final String teacherNetiD = "testId";
         LocalDate until = LocalDate.parse("1999-12-31");
 
@@ -68,19 +68,19 @@ public class ScheduleEditModuleTests {
             module.reportTeacherSick(teacherNetiD, until);
         });
 
-        verify(dataBaseService, Mockito.never()).cancelLectures(any(), any(), any());
+        verify(teacherService, Mockito.never()).cancelLectures(any(), any(), any());
     }
 
     @Test
     public void singleDayTest() throws IOException {
-        DataBaseService dataBaseService = mock(DataBaseService.class);
-        ScheduleEditModule module = new ScheduleEditModule(fixedClock, dataBaseService);
+        TeacherService teacherService = mock(TeacherService.class);
+        ScheduleEditModule module = new ScheduleEditModule(fixedClock, teacherService);
         final String teacherNetiD = "testId";
         LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
         LocalDate until = LocalDate.parse("2000-01-01");
 
         module.reportTeacherSick(teacherNetiD, until);
 
-        verify(dataBaseService, times(1)).cancelLectures(teacherNetiD, start, until);
+        verify(teacherService, times(1)).cancelLectures(teacherNetiD, start, until);
     }
 }

@@ -3,11 +3,10 @@ package nl.tudelft.unischeduler.scheduleedit.core;
 import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
 import nl.tudelft.unischeduler.scheduleedit.exception.IllegalDateException;
-import nl.tudelft.unischeduler.scheduleedit.services.DataBaseService;
+import nl.tudelft.unischeduler.scheduleedit.services.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,11 +14,11 @@ import org.springframework.stereotype.Component;
 public class ScheduleEditModule {
 
     private Clock clock;
-    private DataBaseService dataBaseService;
+    private TeacherService teacherService;
 
-    public ScheduleEditModule(@Autowired Clock clock, @Autowired DataBaseService dataBaseService) {
+    public ScheduleEditModule(@Autowired Clock clock, @Autowired TeacherService teacherService) {
         this.clock = clock;
-        this.dataBaseService = dataBaseService;
+        this.teacherService = teacherService;
     }
 
     public Clock getClock() {
@@ -30,12 +29,12 @@ public class ScheduleEditModule {
         this.clock = clock;
     }
 
-    public DataBaseService getDataBaseService() {
-        return dataBaseService;
+    public TeacherService getDataBaseService() {
+        return teacherService;
     }
 
-    public void setDataBaseService(DataBaseService dataBaseService) {
-        this.dataBaseService = dataBaseService;
+    public void setDataBaseService(TeacherService teacherService) {
+        this.teacherService = teacherService;
     }
 
     /**
@@ -51,7 +50,7 @@ public class ScheduleEditModule {
             throw new IllegalDateException("the supplied date is before the current date");
         }
         try {
-            dataBaseService.cancelLectures(teacherNetId, now, until);
+            teacherService.cancelLectures(teacherNetId, now, until);
         } catch (IOException e) {
             throw new ConnectionException("The connection with the database failed", e);
         }
