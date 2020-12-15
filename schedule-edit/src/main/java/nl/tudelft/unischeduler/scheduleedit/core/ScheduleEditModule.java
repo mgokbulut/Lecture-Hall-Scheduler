@@ -29,11 +29,11 @@ public class ScheduleEditModule {
         this.clock = clock;
     }
 
-    public TeacherService getDataBaseService() {
+    public TeacherService getTeacherService() {
         return teacherService;
     }
 
-    public void setDataBaseService(TeacherService teacherService) {
+    public void setTeacherService(TeacherService teacherService) {
         this.teacherService = teacherService;
     }
 
