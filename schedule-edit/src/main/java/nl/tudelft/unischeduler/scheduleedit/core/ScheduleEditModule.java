@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import nl.tudelft.unischeduler.scheduleedit.controller.StudentController;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
 import nl.tudelft.unischeduler.scheduleedit.exception.IllegalDateException;
+import nl.tudelft.unischeduler.scheduleedit.services.StudentService;
 import nl.tudelft.unischeduler.scheduleedit.services.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,10 +17,24 @@ public class ScheduleEditModule {
 
     private Clock clock;
     private TeacherService teacherService;
+    private StudentService studentService;
 
-    public ScheduleEditModule(@Autowired Clock clock, @Autowired TeacherService teacherService) {
+    /**
+     * Constructs a new ScheduleEditModule.
+     *
+     * @param clock The clock to use for retrieving the time.
+     *              For general purpose should be the system clock;
+     * @param teacherService The service to use for contacting the database
+     *                       for any teacher related events.
+     * @param studentService The service to use for contacting the database
+     *                       for any student related events.
+     */
+    public ScheduleEditModule(@Autowired Clock clock,
+                              @Autowired TeacherService teacherService,
+                              @Autowired StudentService studentService) {
         this.clock = clock;
         this.teacherService = teacherService;
+        this.studentService = studentService;
     }
 
     public Clock getClock() {
@@ -35,6 +51,14 @@ public class ScheduleEditModule {
 
     public void setTeacherService(TeacherService teacherService) {
         this.teacherService = teacherService;
+    }
+
+    public StudentService getStudentService() {
+        return studentService;
+    }
+
+    public void setStudentService(StudentService studentService) {
+        this.studentService = studentService;
     }
 
     private LocalDate checkBeforeNow(LocalDate future) throws IllegalDateException {
@@ -70,7 +94,7 @@ public class ScheduleEditModule {
     }
 
     /**
-     * Reports the student sick and notifies reduces the amount of students attending the lecture.
+     * Reports the student sick and reduces the amount of students attending the lecture.
      *
      * @param studentNetId The netId of the student that is sick.
      * @param until The LocalDate until the teacher is sick (inclusive).
@@ -79,7 +103,8 @@ public class ScheduleEditModule {
             throws IllegalDateException, ConnectionException {
         LocalDate now = checkBeforeNow(until);
         try {
-            teacherService.cancelLectures(studentNetId, now, until);
+            studentService.cancelStudentAttendance(studentNetId, now, until);
+            studentService.setUserSick(studentNetId, now);
         } catch (IOException e) {
             throw new ConnectionException("The connection with the database failed", e);
         }
