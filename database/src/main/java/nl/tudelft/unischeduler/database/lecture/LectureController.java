@@ -57,26 +57,31 @@ public class LectureController {
 
     @PutMapping(path = "/lectures/setClassroom/{lectureId}/{classroomId}")
     public @ResponseBody
-    ResponseEntity<?> assignRoomToLecture(@PathVariable Long lectureId, @PathVariable Long classroomId) {
+    ResponseEntity<?> assignRoomToLecture(@PathVariable Long lectureId,
+                                          @PathVariable Long classroomId) {
         return lectureService.setClassroom(lectureId, classroomId);
     }
 
     @PutMapping(path = "/lectures/setToOnline/{teacherId}/{start}/{end}/{updateOnline}")
     public @ResponseBody
     ResponseEntity<?> setLectureToOnline(@PathVariable String teacherId,
-                                         @PathVariable Timestamp start, @PathVariable Timestamp end, @PathVariable boolean updateOnline) {
+                                         @PathVariable Timestamp start,
+                                         @PathVariable Timestamp end,
+                                         @PathVariable boolean updateOnline) {
         return lectureService.setLectureToOnline(teacherId, start, end, updateOnline);
     }
 
     @PutMapping(path = "/lectures/setToOnline/{lectureId}/{updateOnline}")
     public @ResponseBody
-    ResponseEntity<?> setLectureToOnline(@PathVariable Long lectureId, @PathVariable boolean updateOnline) {
+    ResponseEntity<?> setLectureToOnline(@PathVariable Long lectureId,
+                                         @PathVariable boolean updateOnline) {
         return lectureService.setLectureToOnline(lectureId, updateOnline);
     }
 
     @PutMapping(path = "/lectures/setToOffline/{teacherId}/{start}")
     public @ResponseBody
-    ResponseEntity<?> setLectureToOffline(@PathVariable String teacherId, @PathVariable Timestamp start) {
+    ResponseEntity<?> setLectureToOffline(@PathVariable String teacherId,
+                                          @PathVariable Timestamp start) {
         return lectureService.setLectureToOffline(teacherId, start);
     }
 

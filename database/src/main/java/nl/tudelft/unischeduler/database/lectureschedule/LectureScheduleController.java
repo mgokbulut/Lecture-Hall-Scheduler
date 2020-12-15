@@ -1,12 +1,17 @@
 package nl.tudelft.unischeduler.database.lectureschedule;
 
+import java.sql.Timestamp;
+import java.util.List;
 import nl.tudelft.unischeduler.database.lecture.Lecture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.Timestamp;
-import java.util.List;
 
 @RestController
 public class LectureScheduleController {
@@ -30,19 +35,20 @@ public class LectureScheduleController {
     @DeleteMapping(path = "/lectureSchedules/remove/{netId}/{start}/{end}")
     public @ResponseBody
     ResponseEntity<?> cancelStudentAttendance(@PathVariable String netId,
-                                              @PathVariable Timestamp start, @PathVariable Timestamp end) {
+                                              @PathVariable Timestamp start,
+                                              @PathVariable Timestamp end) {
         return lectureScheduleService.cancelStudentAttendance(netId, start, end);
     }
 
     @GetMapping(path = "/lectureSchedules/{netId}")
     public @ResponseBody
-    List<Lecture> getStudentSchedule(@PathVariable String netId){
+    List<Lecture> getStudentSchedule(@PathVariable String netId) {
         return lectureScheduleService.getStudentSchedule(netId);
     }
 
     @GetMapping(path = "/lectureSchedules/students/{lectureId}")
     public @ResponseBody
-    List<Object []> getStudentsInLecture(@PathVariable Long lectureId){
+    List<Object []> getStudentsInLecture(@PathVariable Long lectureId) {
         return lectureScheduleService.getStudentsInLecture(lectureId);
     }
 

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 @Service
 public class LectureService {
 
@@ -58,7 +59,7 @@ public class LectureService {
             } catch (Exception e) {
                 System.out.println("Something went wrong in setClassroomToEmpty method");
                 e.printStackTrace();
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.badRequest().build();
             }
             return ResponseEntity.ok().build();
         }
@@ -101,7 +102,7 @@ public class LectureService {
                 lectureRepository.save(lecture);
             } catch (Exception e) {
                 System.out.println("Something went wrong in getLecturesInRoomOnDay method");
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.badRequest().build();
             }
             return ResponseEntity.ok().build();
         }
@@ -126,7 +127,7 @@ public class LectureService {
                 lectureRepository.save(lecture);
             } catch (Exception e) {
                 System.out.println("Something went wrong in assignRoomToLecture method");
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.badRequest().build();
             }
             return ResponseEntity.ok().build();
         }

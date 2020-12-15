@@ -45,14 +45,15 @@ public class LectureScheduleService {
      * @param lectureId lecture ID
      * @return Response Entity with result of this operation
      */
+    @Transactional
     public ResponseEntity<?> removeLectureFromSchedule(Long lectureId) {
         try {
             lectureScheduleRepository.deleteLectureSchedulesByLectureId(lectureId);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
             //return "Lecture successfully deleted from all the schedules";
         } catch (Exception a) {
             a.printStackTrace();
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().build();
             //return "Issue with deletion of a lecture from schedules";
         }
     }
@@ -84,7 +85,7 @@ public class LectureScheduleService {
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Something went wrong in assignLectureToSchedule method");
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.badRequest().build();
             }
         }
     }
@@ -104,7 +105,7 @@ public class LectureScheduleService {
             Optional<Schedule> schedule = scheduleRepository.findByUser(netId);
             if(schedule.isEmpty()){
                 System.out.println("Schedule with such netId does not exist");
-                return ResponseEntity.noContent().build();
+                return ResponseEntity.notFound().build();
             }
             List<Long> lectureIds = lectureRepository
                     .findAllByStartTimeDateBetween(start, end)
@@ -128,7 +129,7 @@ public class LectureScheduleService {
             return ResponseEntity.ok(lectureSchedulesToDelete);
         } catch (Exception a) {
             a.printStackTrace();
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().build();
         }
     }
 
