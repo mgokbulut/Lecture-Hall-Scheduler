@@ -1,6 +1,7 @@
 package nl.tudelft.unischeduler.database.controller;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -20,6 +21,7 @@ import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleService;
 import nl.tudelft.unischeduler.database.schedule.Schedule;
 import nl.tudelft.unischeduler.database.schedule.ScheduleRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -96,13 +98,25 @@ public class LectureScheduleControllerTest {
     //                .andExpect(status().isNoContent());
     //    }
 
+    @Disabled
     @Test
-    public void  cancelStudentAttendanceTest(String studentNetId, Timestamp start, Timestamp end){
+    public void  cancelStudentAttendanceTest(String studentNetId, Timestamp start, Timestamp end) throws Exception{
+        String uri = "/lectureSchedules/remove/{netId}/{start}/{end}";
+        Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
 
+        mockMvc.perform(put(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lectureSchedule)))
+                .andExpect(status().isOk());
     }
 
+    @Disabled
     @Test
-    public void getStudentScheduleTest(String net_id){
+    public void getStudentScheduleTest(String net_id) throws Exception{
+        String uri = "/lectureSchedules/{netId}";
+        Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
 
+        mockMvc.perform(put(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lectureSchedule)))
+                .andExpect(status().isOk());
     }
 }

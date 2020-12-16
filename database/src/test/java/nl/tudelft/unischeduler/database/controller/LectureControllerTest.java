@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.sql.Time;
@@ -167,29 +168,65 @@ public class LectureControllerTest {
         verifyNoMoreInteractions(lectureService);
     }
 
+    @Disabled
     @Test
-    public void setLectureToOnlineTest(String TeacherNetId, Timestamp start, Timestamp end, boolean updateClassroom){
+    public void setLectureToOnlineTest(String TeacherNetId, Timestamp start,
+                                       Timestamp end, boolean updateClassroom) throws Exception{
+        String uri =  "/lectures/setToOnline/{teacherId}/{start}/{end}/{updateOnline}";
+        Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
+                new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
 
+        mockMvc.perform(put(uri).contentType(APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lecture)))
+                .andExpect(status().isOk());
     }
 
+    @Disabled
     @Test
-    public void setLectureToOnlineTest(Long lectureId, boolean updateClassroom){
+    public void setLectureToOnlineTest(Long lectureId, boolean updateClassroom) throws Exception {
+        String uri = "/lectures/setToOnline/{lectureId}/{updateOnline}";
+        Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
+                new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
 
+        mockMvc.perform(put(uri).contentType(APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lecture)))
+                .andExpect(status().isOk());
     }
 
+    @Disabled
     @Test
-    public void setLectureToOfflineTest(String TeacherNetId, Timestamp start){
+    public void setLectureToOfflineTest(String TeacherNetId, Timestamp start) throws Exception {
+        String uri = "/lectures/setToOffline/{teacherId}/{start}";
+        Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
+                new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
 
+        mockMvc.perform(put(uri).contentType(APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lecture)))
+                .andExpect(status().isOk());
     }
 
+    @Disabled
     @Test
-    public void setLectureToOffline(Long lectureId){
+    public void setLectureToOffline(Long lectureId) throws Exception{
+        String uri = "/lectures/setToOffline/{lectureId}";
+        Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
+                new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
 
+        mockMvc.perform(put(uri).contentType(APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lecture)))
+                .andExpect(status().isOk());
     }
 
+    @Disabled
     @Test
     public void createLecture(Long course_id, String teacher,
-                              Timestamp startTime, Time duration, boolean moved_online){
+                              Timestamp startTime, Time duration, boolean moved_online) throws Exception{
+        String uri = "/lectures/create/{courseId}/{teacher}/{startTime}/{duration}/{movedOnline}";
+        Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
+                new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
 
+        mockMvc.perform(put(uri).contentType(APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lecture)))
+                .andExpect(status().isOk());
     }
 }
