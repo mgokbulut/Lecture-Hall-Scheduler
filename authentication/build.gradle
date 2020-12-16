@@ -127,6 +127,10 @@ jacocoTestCoverageVerification() {
 	}
 }
 
+jacoco {
+	toolVersion = "0.8.5"
+}
+
 checkstyle {
 	toolVersion "8.37"
 	configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
