@@ -18,6 +18,11 @@ public class Course {
         this.lectures = lectures;
     }
 
+    public Course(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }

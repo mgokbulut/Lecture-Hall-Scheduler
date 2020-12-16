@@ -14,6 +14,11 @@ public class Schedule {
         this.lectures = lectures;
     }
 
+    public Schedule(Long id, User user) {
+        this.id = id;
+        this.user = user;
+    }
+
     public Long getId() {
         return id;
     }

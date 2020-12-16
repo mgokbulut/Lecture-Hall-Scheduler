@@ -12,6 +12,13 @@ public class User {
     private Set<Lecture> lectures;
     private Set<Course> courses;
 
+    public User(String netId, String type, Date lastTimeOnCampus, Schedule schedule) {
+        this.netId = netId;
+        this.type = type;
+        this.lastTimeOnCampus = lastTimeOnCampus;
+        this.schedule = schedule;
+    }
+
     public User(String netId, String type, Date lastTimeOnCampus, Schedule schedule,
                 Set<Lecture> lectures, Set<Course> courses) {
         this.netId = netId;

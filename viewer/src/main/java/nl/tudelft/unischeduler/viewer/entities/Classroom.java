@@ -21,6 +21,14 @@ public class Classroom {
         this.lectures = lectures;
     }
 
+    public Classroom(Long id, int capacity, String name, String buildingName, int floor) {
+        this.id = id;
+        this.capacity = capacity;
+        this.name = name;
+        this.buildingName = buildingName;
+        this.floor = floor;
+    }
+
     public Long getId() {
         return id;
     }
