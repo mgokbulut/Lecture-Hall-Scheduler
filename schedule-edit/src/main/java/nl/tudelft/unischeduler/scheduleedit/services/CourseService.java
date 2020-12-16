@@ -1,5 +1,8 @@
 package nl.tudelft.unischeduler.scheduleedit.services;
 
+import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +19,20 @@ public class CourseService {
      * @param year The year the course is thought.
      * @return The generated id of the course.
      */
-    public long createCourse(String name, int year) {
+    public long createCourse(String name, int year) throws IOException {
         //TODO: this is a stub, and in the future should actually send the data.
         return -1;
     }
 
-    public long addStudentToCourse(List<String> netIdList, long courseId) {
+    public long createLecture(long course_id,
+                              String teacher,
+                              LocalDateTime startTime,
+                              Duration duration) {
+        //TODO: this is a stub, and in the future should actually send the data.
+        return -1;
+    }
+
+    public long addStudentToCourse(List<String> netIdList, long courseId) throws IOException {
         //TODO: this is a stub, and in the future should actually send the data.
         return -1;
     }
