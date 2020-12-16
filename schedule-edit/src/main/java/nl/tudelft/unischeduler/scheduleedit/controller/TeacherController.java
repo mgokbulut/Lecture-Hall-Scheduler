@@ -1,9 +1,10 @@
 package nl.tudelft.unischeduler.scheduleedit.controller;
 
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import nl.tudelft.unischeduler.scheduleedit.core.ScheduleEditModule;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,21 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/teacher/")
+@Data
+@AllArgsConstructor
 public class TeacherController {
 
     private ScheduleEditModule core;
-
-    public ScheduleEditModule getCore() {
-        return core;
-    }
-
-    public void setCore(ScheduleEditModule core) {
-        this.core = core;
-    }
-
-    public TeacherController(@Autowired ScheduleEditModule core) {
-        this.core = core;
-    }
 
     /**
      * Sets all the lectures until the until date to no longer being on campus.

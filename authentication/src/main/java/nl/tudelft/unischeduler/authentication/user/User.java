@@ -1,12 +1,15 @@
 package nl.tudelft.unischeduler.authentication.user;
 
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 @Entity
+@Data
+@AllArgsConstructor
 @Table(name = "app_user", schema = "loginDB")
 public class User {
     @Id
@@ -17,18 +20,9 @@ public class User {
     @Column(name = "type")
     private String type;
 
-    /***
-     * <p>This method initialises the user object.</p>
-     *
-     * @param netId the net id of the user
-     * @param password the password of the user
-     * @param type the type of the user
-     */
-    public User(String netId, String password, String type) {
-        this.netId = netId;
-        this.password = password;
-        this.type = type;
-    }
+    public static String ROLE_STUDENT = "STUDENT";
+    public static String ROLE_TEACHER = "TEACHER";
+    public static String ROLE_FAC_MEMBER = "FACULTY_MEMBER";
 
     /***
      * <p>This method initialises the user object.</p>
@@ -37,32 +31,8 @@ public class User {
 
     }
 
-    public String getNetId() {
-        return netId;
-    }
-
-    public void setNetId(String netId) {
-        this.netId = netId;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     /***
-     * <p>This method return the role of the user for authetication purposes.</p>
+     * <p>This method return the role of the user for authentication purposes.</p>
      *
      * @return returns a string role.
      */
@@ -75,25 +45,5 @@ public class User {
             return "ROLE_ADMIN";
         }
         return null;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        User user = (User) o;
-        return Objects.equals(netId, user.netId)
-            && Objects.equals(password, user.password)
-            && Objects.equals(type, user.type);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(netId, password, type);
     }
 }
