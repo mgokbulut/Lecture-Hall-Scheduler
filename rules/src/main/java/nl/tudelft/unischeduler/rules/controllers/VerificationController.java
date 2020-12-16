@@ -6,6 +6,7 @@ import nl.tudelft.unischeduler.rules.core.RulesModule;
 import nl.tudelft.unischeduler.rules.entities.Lecture;
 import nl.tudelft.unischeduler.rules.entities.Room;
 import nl.tudelft.unischeduler.rules.entities.Ruleset;
+import nl.tudelft.unischeduler.rules.entities.Student;
 import nl.tudelft.unischeduler.rules.storing.RulesParser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,8 +70,18 @@ public class VerificationController {
         return module.getCapacity(room.getCapacity());
     }
 
+    //TODO: add a mapping to this method
+    public boolean canBeScheduled(String studentId) {
+        //TODO: add a call to the database module to retrieve the correct student.
+        Student student = new Student("1", true, true);
+        return module.canBeScheduled(student);
+    }
+
     @PostMapping("/lecture/possible")
     public boolean checkLectureSlotAvailable(Lecture lecture) {
         return module.overlap(lecture);
     }
+
+
+
 }

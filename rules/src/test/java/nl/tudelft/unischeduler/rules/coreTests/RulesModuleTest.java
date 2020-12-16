@@ -186,7 +186,7 @@ class RulesModuleTest {
         l2.setRoom(room);
 
         boolean expected = true;
-        boolean actual = rs.verifySchedule(new Lecture[]{l1, l2});
+        boolean actual = rs.verifyLectures(new Lecture[]{l1, l2}).length == 0;
         assertEquals(expected, actual);
     }
 
@@ -205,7 +205,7 @@ class RulesModuleTest {
         l2.setRoom(room);
 
         boolean expected = false;
-        boolean actual = rs.verifySchedule(new Lecture[]{l1, l2});
+        boolean actual = rs.verifyLectures(new Lecture[]{l1, l2}).length == 0;
         assertEquals(expected, actual);
 
     }
@@ -225,7 +225,7 @@ class RulesModuleTest {
         l2.setRoom(room);
 
         boolean expected = false;
-        boolean actual = rs.verifySchedule(new Lecture[]{l1, l2});
+        boolean actual = rs.verifyLectures(new Lecture[]{l1, l2}).length == 0;
         assertEquals(expected, actual);
 
     }
@@ -245,7 +245,7 @@ class RulesModuleTest {
         l2.setRoom(room);
 
         boolean expected = false;
-        boolean actual = rs.verifySchedule(new Lecture[]{l1, l2});
+        boolean actual = rs.verifyLectures(new Lecture[]{l1, l2}).length == 0;
         assertEquals(expected, actual);
 
     }
@@ -265,7 +265,7 @@ class RulesModuleTest {
         l2.setRoom(room2);
 
         boolean expected = true;
-        boolean actual = rs.verifySchedule(new Lecture[]{l1, l2});
+        boolean actual = rs.verifyLectures(new Lecture[]{l1, l2}).length == 0;
         assertEquals(expected, actual);
 
     }
@@ -285,7 +285,7 @@ class RulesModuleTest {
         l2.setRoom(room2);
 
         boolean expected = false;
-        boolean actual = rs.verifySchedule(new Lecture[]{l1, l2});
+        boolean actual = rs.verifyLectures(new Lecture[]{l1, l2}).length == 0;
         assertEquals(expected, actual);
 
     }
@@ -305,7 +305,7 @@ class RulesModuleTest {
         l2.setRoom(room2);
 
         boolean expected = true;
-        boolean actual = rs.verifySchedule(new Lecture[]{l1, l2});
+        boolean actual = rs.verifyLectures(new Lecture[]{l1, l2}).length == 0;
         assertEquals(expected, actual);
 
     }
@@ -325,7 +325,7 @@ class RulesModuleTest {
         l2.setRoom(room2);
 
         boolean expected = false;
-        boolean actual = rs.verifySchedule(new Lecture[]{l1, l2});
+        boolean actual = rs.verifyLectures(new Lecture[]{l1, l2}).length == 0;
         assertEquals(expected, actual);
 
     }
