@@ -1,5 +1,6 @@
 package nl.tudelft.unischeduler.authentication.authentication;
 
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
+@Data
 public class AuthenticationService {
 
     @Autowired
@@ -39,31 +41,5 @@ public class AuthenticationService {
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
         return jwt;
-    }
-
-    public AuthenticationManager getAuthenticationManager() {
-        return authenticationManager;
-    }
-
-    public void setAuthenticationManager(
-        AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
-
-    public MyUserDetailsService getUserDetailsService() {
-        return userDetailsService;
-    }
-
-    public void setUserDetailsService(
-        MyUserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
-
-    public JwtUtil getJwtTokenUtil() {
-        return jwtTokenUtil;
-    }
-
-    public void setJwtTokenUtil(JwtUtil jwtTokenUtil) {
-        this.jwtTokenUtil = jwtTokenUtil;
     }
 }

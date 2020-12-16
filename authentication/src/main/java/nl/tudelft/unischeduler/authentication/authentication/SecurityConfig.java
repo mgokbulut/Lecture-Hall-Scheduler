@@ -1,5 +1,7 @@
 package nl.tudelft.unischeduler.authentication.authentication;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,9 +19,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Autowired
+    @Getter
+    @Setter
     MyUserDetailsService userDetailsService;
 
     @Autowired
+    @Getter
+    @Setter
     JwtRequestFilter jwtRequestFilter;
 
     @Override
@@ -52,22 +58,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         return NoOpPasswordEncoder.getInstance();
-    }
-
-    public MyUserDetailsService getUserDetailsService() {
-        return userDetailsService;
-    }
-
-    public void setUserDetailsService(
-        MyUserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
-
-    public JwtRequestFilter getJwtRequestFilter() {
-        return jwtRequestFilter;
-    }
-
-    public void setJwtRequestFilter(JwtRequestFilter jwtRequestFilter) {
-        this.jwtRequestFilter = jwtRequestFilter;
     }
 }
