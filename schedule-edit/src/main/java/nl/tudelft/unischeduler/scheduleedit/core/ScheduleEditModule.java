@@ -7,15 +7,14 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import java.util.List;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
 import nl.tudelft.unischeduler.scheduleedit.exception.IllegalDateException;
 import nl.tudelft.unischeduler.scheduleedit.services.CourseService;
 import nl.tudelft.unischeduler.scheduleedit.services.StudentService;
 import nl.tudelft.unischeduler.scheduleedit.services.TeacherService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -125,7 +124,12 @@ public class ScheduleEditModule {
      * @return The id of the new lecture.
      * @throws ConnectionException When the connection with the database fails.
      */
-    public long createLecture(long courseId, String teacherNetId, int year, int week, Duration duration) throws ConnectionException {
+    public long createLecture(long courseId,
+                              String teacherNetId,
+                              int year,
+                              int week,
+                              Duration duration)
+            throws ConnectionException {
         LocalDateTime startWeek = calculateStartOfWeek(year, week).atStartOfDay();
         try {
             return courseService.createLecture(courseId, teacherNetId, startWeek, duration);
@@ -141,7 +145,8 @@ public class ScheduleEditModule {
      * @param courseId The id of the course to add the students to.
      * @throws ConnectionException When the connection with the database fails.
      */
-    public void addStudentGroupLecture(List<String> students, long courseId) throws ConnectionException {
+    public void addStudentGroupLecture(List<String> students, long courseId)
+            throws ConnectionException {
         try {
             courseService.addStudentToCourse(students, courseId);
         } catch (IOException e) {

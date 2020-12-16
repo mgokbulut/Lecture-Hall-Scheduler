@@ -24,10 +24,10 @@ public class CourseService {
         return -1;
     }
 
-    public long createLecture(long course_id,
+    public long createLecture(long courseId,
                               String teacher,
                               LocalDateTime startTime,
-                              Duration duration) throws IOException{
+                              Duration duration) throws IOException {
         //TODO: this is a stub, and in the future should actually send the data.
         return -1;
     }
