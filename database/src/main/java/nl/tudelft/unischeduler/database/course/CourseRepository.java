@@ -11,4 +11,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findAll();
 
     Optional<Course> findById(Long courseId);
+
+    Optional<Course> findByAndNameAndYear(String name, Integer year);
 }
