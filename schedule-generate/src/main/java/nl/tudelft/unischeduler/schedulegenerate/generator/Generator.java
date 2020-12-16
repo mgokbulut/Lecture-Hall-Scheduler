@@ -35,8 +35,8 @@ public class Generator {
      * @param currentTime Time at which to start scheduling
      */
     public void scheduleGenerate(Timestamp currentTime) {
-
-        int numOfDays = 10; // placeholder
+        int RANGE = 10;
+        int numOfDays = RANGE; // placeholder
         ArrayList<Course> courses = apiCommunicator.getCourses();
         ArrayList<Lecture> lectures = new ArrayList<>();
 
@@ -55,7 +55,7 @@ public class Generator {
         // easy-to-access datastructure.
         List<List<Lecture>> timeTable = createTimeTable(lectures, currentTime, numOfDays);
 
-        scheduling(lectures, timeTable, currentTime);
+        scheduling(lectures, timeTable, currentTime, numOfDays);
     }
 
     private List<List<Lecture>> createTimeTable(ArrayList<Lecture> lectures,
@@ -138,7 +138,8 @@ public class Generator {
      * @param timeTable list of lists containing all lectures, per day
      */
     private void scheduling(ArrayList<Lecture> lectures,
-                            List<List<Lecture>> timeTable, Timestamp currentTime) {
+                            List<List<Lecture>> timeTable, Timestamp currentTime,
+                            int numOfDays) {
         // TODO change this to a proper template online room, ask Kuba
         Room onlineRoom = new Room(0, Integer.MAX_VALUE, "online_room");
         // this value is placeholder until we find a better solution, should work
