@@ -2,7 +2,7 @@ package nl.tudelft.unischeduler.authentication.user;
 
 import java.security.MessageDigest;
 import java.util.Optional;
-import nl.tudelft.unischeduler.authentication.AuthenticationService;
+import nl.tudelft.unischeduler.authentication.authentication.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +56,30 @@ public class UserService {
                 .createAuthenticationToken(user.getNetId(), user.getPassword());
             if (token == null) {
                 return "{message:\"Invalid credentials\"}";
+            }
+            return "{token:\"" + token + "\"}";
+        } catch (Exception e) {
+            System.out.println("There was a problem in login route in User Service");
+        }
+        return null;
+    }
+
+    /**
+     * Login user method as api.
+     *
+     * @param user the user supplied to this method
+     * @return returns error message or authentication token
+     */
+    public String loginApi(User user) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(user.getPassword().getBytes());
+            String stringHash = new String(messageDigest.digest());
+            user.setPassword(stringHash);
+            String token = authenticationService
+                    .createAuthenticationToken(user.getNetId(), user.getPassword());
+            if (token == null) {
+                return null;
             }
             return "{token:\"" + token + "\"}";
         } catch (Exception e) {
