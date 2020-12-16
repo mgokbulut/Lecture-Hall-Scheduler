@@ -27,13 +27,12 @@ public class CourseService {
     public long createLecture(long course_id,
                               String teacher,
                               LocalDateTime startTime,
-                              Duration duration) {
+                              Duration duration) throws IOException{
         //TODO: this is a stub, and in the future should actually send the data.
         return -1;
     }
 
-    public long addStudentToCourse(List<String> netIdList, long courseId) throws IOException {
+    public void addStudentToCourse(List<String> netIdList, long courseId) throws IOException {
         //TODO: this is a stub, and in the future should actually send the data.
-        return -1;
     }
 }
