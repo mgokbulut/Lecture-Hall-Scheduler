@@ -101,21 +101,9 @@ public class CourseControllerTest {
         verifyNoMoreInteractions(courseService);
     }
 
-    @Disabled
     @Test
-    public void createCourseTest(String name, int year) throws Exception {
-        String uri = "/courses/create/{name}/{year}";
-        Course course = new Course(0L, "ADS", 1);
-
-        mockMvc.perform(put(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(course)))
-                .andExpect(status().isOk());
-    }
-
-    @Disabled
-    @Test
-    public void addStudentToCourseTest(List<String> netIds, long courseId) throws Exception {
-        String uri = "/courses/assignStudents/{netIds}/{courseId}";
+    public void createCourseTest() throws Exception {
+        String uri = "/courses/create/ADS/1";
         Course course = new Course(0L, "ADS", 1);
 
         mockMvc.perform(put(uri).contentType(MediaType.APPLICATION_JSON_VALUE)

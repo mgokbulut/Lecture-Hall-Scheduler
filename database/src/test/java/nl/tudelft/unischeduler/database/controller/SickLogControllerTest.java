@@ -99,10 +99,9 @@ public class SickLogControllerTest {
         verifyNoMoreInteractions(sickLogService);
     }
 
-    @Disabled
     @Test
-    public void setUserSickTest(String netId, Timestamp report_sick) throws Exception {
-        String uri = "/sickLogs/new/{netId}/{reportSick}";
+    public void setUserSickTest() throws Exception {
+        String uri = "/sickLogs/new/test-user1/2020-12-11 00:00:00";
         SickLog sicklog = new SickLog(0L, "test-user1", new Date(timestamp.getTime()), true);
 
         mockMvc.perform(put(uri).contentType(MediaType.APPLICATION_JSON_VALUE)

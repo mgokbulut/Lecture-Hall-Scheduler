@@ -2,7 +2,7 @@ package nl.tudelft.unischeduler.database.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -98,24 +98,22 @@ public class LectureScheduleControllerTest {
     //                .andExpect(status().isNoContent());
     //    }
 
-    @Disabled
     @Test
-    public void  cancelStudentAttendanceTest(String studentNetId, Timestamp start, Timestamp end) throws Exception{
-        String uri = "/lectureSchedules/remove/{netId}/{start}/{end}";
+    public void  cancelStudentAttendanceTest() throws Exception{
+        String uri = "/lectureSchedules/remove/byarar/2020-12-11 00:00:00/2020-12-11 00:45:00";
         Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
 
-        mockMvc.perform(put(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(delete(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(lectureSchedule)))
                 .andExpect(status().isOk());
     }
 
-    @Disabled
     @Test
-    public void getStudentScheduleTest(String net_id) throws Exception{
-        String uri = "/lectureSchedules/{netId}";
+    public void getStudentScheduleTest() throws Exception{
+        String uri = "/lectureSchedules/byarar";
         Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
 
-        mockMvc.perform(put(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(lectureSchedule)))
                 .andExpect(status().isOk());
     }

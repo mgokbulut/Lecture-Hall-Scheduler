@@ -168,11 +168,9 @@ public class LectureControllerTest {
         verifyNoMoreInteractions(lectureService);
     }
 
-    @Disabled
     @Test
-    public void setLectureToOnlineTest(String TeacherNetId, Timestamp start,
-                                       Timestamp end, boolean updateClassroom) throws Exception{
-        String uri =  "/lectures/setToOnline/{teacherId}/{start}/{end}/{updateOnline}";
+    public void setLectureToOnlineTest() throws Exception{
+        String uri =  "/lectures/setToOnline/sanders@tudelft.nl/2020-12-11 00:00:00/2020-12-11 00:45:00/true";
         Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
                 new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
 
@@ -181,10 +179,9 @@ public class LectureControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Disabled
     @Test
-    public void setLectureToOnlineTest(Long lectureId, boolean updateClassroom) throws Exception {
-        String uri = "/lectures/setToOnline/{lectureId}/{updateOnline}";
+    public void setLectureToOnlineTest2() throws Exception {
+        String uri = "/lectures/setToOnline/2/true";
         Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
                 new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
 
@@ -193,10 +190,9 @@ public class LectureControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Disabled
     @Test
-    public void setLectureToOfflineTest(String TeacherNetId, Timestamp start) throws Exception {
-        String uri = "/lectures/setToOffline/{teacherId}/{start}";
+    public void setLectureToOfflineTest() throws Exception {
+        String uri = "/lectures/setToOffline/sanders@tudelft.nl/2020-12-11 00:00:00";
         Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
                 new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
 
@@ -205,10 +201,9 @@ public class LectureControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Disabled
     @Test
-    public void setLectureToOffline(Long lectureId) throws Exception{
-        String uri = "/lectures/setToOffline/{lectureId}";
+    public void setLectureToOfflineTest2() throws Exception{
+        String uri = "/lectures/setToOffline/2";
         Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
                 new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
 
@@ -217,11 +212,9 @@ public class LectureControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Disabled
     @Test
-    public void createLecture(Long course_id, String teacher,
-                              Timestamp startTime, Time duration, boolean moved_online) throws Exception{
-        String uri = "/lectures/create/{courseId}/{teacher}/{startTime}/{duration}/{movedOnline}";
+    public void createLectureTest() throws Exception{
+        String uri = "/lectures/create/2/sanders@tudelft.nl/2020-12-11 00:00:00/00:45:00/false";
         Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
                 new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
 
