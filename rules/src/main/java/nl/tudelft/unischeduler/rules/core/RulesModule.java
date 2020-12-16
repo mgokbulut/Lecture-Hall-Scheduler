@@ -2,10 +2,12 @@ package nl.tudelft.unischeduler.rules.core;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import nl.tudelft.unischeduler.rules.entities.Lecture;
 import nl.tudelft.unischeduler.rules.entities.Ruleset;
+import nl.tudelft.unischeduler.rules.entities.Student;
 
 public class RulesModule {
 
@@ -127,23 +129,9 @@ public class RulesModule {
                 || (start1 == start2);
     }
 
-    /**
-     * retrieves the nl.tudelft.unischeduler.rules.rules from the stored file
-     * and tells the scheduler that the nl.tudelft.unischeduler.rules.rules have changed.
-     */
-    public void getNewRules() {
-        this.rules = new Ruleset(); //rulesTable.getRulesFromDataBase();
-        //Tells the scheduler that the nl.tudelft.unischeduler.rules.rules have changed
-        // and should update the schedule when there is time.
-        //scheduler.reschedule();
+    public boolean canBeScheduled(Student student) {
+        return student.isInterested() && student.isRecovered();
     }
-
-    /*
-    public void updateRules() {
-        Ruleset nl.tudelft.unischeduler.rules.rules = new Ruleset(thresholds, breakTime, maxDays);
-        rulesTable.updateRules(nl.tudelft.unischeduler.rules.rules);
-    }
-    */
 
     /**
      * iterates through all lectures to ensure that the social distancing guidelines
@@ -153,26 +141,26 @@ public class RulesModule {
      * @param lectures list of all lectures
      * @return whether or not any lectures violated the rules.
      */
-    public boolean verifySchedule(Lecture[] lectures) {
-        boolean ret = true;
+    public Lecture[] verifyLectures(Lecture[] lectures) {
+        ArrayList<Lecture> ret = new ArrayList<>();
         Arrays.sort(lectures);
         for (int i = 0; i < lectures.length; i++) {
             if (lectures[i].getRoom() == null) {
                 continue;
             }
+
             int attendance = lectures[i].getAttendance();
-            boolean overCapacity = (lectures[i].getRoom() != null)
-                    && (getCapacity(lectures[i].getRoom().getCapacity()) <attendance);
+            boolean overCapacity = getCapacity(lectures[i].getRoom().getCapacity()) < attendance;
+            boolean overlapping = (lectures[i].getRoom().equals(lectures[(i + 1) % lectures.length].getRoom())
+                    && overlap(lectures[i], lectures[(i + 1) % lectures.length]));
             if (overCapacity
-                    || (lectures[i].getRoom().equals(lectures[(i + 1) % lectures.length].getRoom())
-                    && overlap(lectures[i], lectures[(i + 1) % lectures.length]))) {
-                ret &= false;
-                //remove building from lecture
-                //remove lecture from schedule
+                    || overlapping) {
+                ret.add(lectures[i]);
             }
         }
-
-        return ret;
+        Lecture[] ret2 = new Lecture[0];
+        ret2 = ret.toArray(ret2);
+        return ret2;
 
     }
 

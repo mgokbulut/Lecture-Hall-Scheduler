@@ -65,6 +65,30 @@ public class UserService {
     }
 
     /**
+     * Login user method as api.
+     *
+     * @param user the user supplied to this method
+     * @return returns error message or authentication token
+     */
+    public String loginApi(User user) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(user.getPassword().getBytes());
+            String stringHash = new String(messageDigest.digest());
+            user.setPassword(stringHash);
+            String token = authenticationService
+                    .createAuthenticationToken(user.getNetId(), user.getPassword());
+            if (token == null) {
+                return null;
+            }
+            return "{token:\"" + token + "\"}";
+        } catch (Exception e) {
+            System.out.println("There was a problem in login route in User Service");
+        }
+        return null;
+    }
+
+    /**
      * Get all users method.
      *
      * @return returns all users from database
