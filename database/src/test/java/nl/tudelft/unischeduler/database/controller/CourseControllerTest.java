@@ -90,4 +90,14 @@ public class CourseControllerTest {
         verify(courseService, times(1)).getCourse(1L);
         verifyNoMoreInteractions(courseService);
     }
+
+    @Test
+    public void createCourseTest(String name, int year){
+
+    }
+
+    @Test
+    public void addStudentToCourseTest(List<String> netIds, long courseId){
+
+    }
 }

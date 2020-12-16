@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -93,4 +95,14 @@ public class LectureScheduleControllerTest {
     //                .content(objectMapper.writeValueAsString(lectureSchedule)))
     //                .andExpect(status().isNoContent());
     //    }
+
+    @Test
+    public void  cancelStudentAttendanceTest(String studentNetId, Timestamp start, Timestamp end){
+
+    }
+
+    @Test
+    public void getStudentScheduleTest(String net_id){
+
+    }
 }

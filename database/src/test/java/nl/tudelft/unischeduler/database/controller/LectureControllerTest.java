@@ -166,4 +166,30 @@ public class LectureControllerTest {
         verify(lectureService, times(1)).getLecturesWithCourses();
         verifyNoMoreInteractions(lectureService);
     }
+
+    @Test
+    public void setLectureToOnlineTest(String TeacherNetId, Timestamp start, Timestamp end, boolean updateClassroom){
+
+    }
+
+    @Test
+    public void setLectureToOnlineTest(Long lectureId, boolean updateClassroom){
+
+    }
+
+    @Test
+    public void setLectureToOfflineTest(String TeacherNetId, Timestamp start){
+
+    }
+
+    @Test
+    public void setLectureToOffline(Long lectureId){
+
+    }
+
+    @Test
+    public void createLecture(Long course_id, String teacher,
+                              Timestamp startTime, Time duration, boolean moved_online){
+
+    }
 }

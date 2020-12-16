@@ -88,4 +88,9 @@ public class SickLogControllerTest {
         verify(sickLogService, times(1)).getAllSickLogs();
         verifyNoMoreInteractions(sickLogService);
     }
+
+    @Test
+    public void setUserSickTest(String netId, Timestamp report_sick){
+
+    }
 }
