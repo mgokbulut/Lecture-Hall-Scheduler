@@ -11,8 +11,10 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import lombok.Data;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
 import nl.tudelft.unischeduler.scheduleedit.exception.IllegalDateException;
+import nl.tudelft.unischeduler.scheduleedit.services.CourseService;
 import nl.tudelft.unischeduler.scheduleedit.services.StudentService;
 import nl.tudelft.unischeduler.scheduleedit.services.TeacherService;
 import org.junit.jupiter.api.Assertions;
@@ -20,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+@Data
 public class ScheduleEditModuleTests {
 
     private final String testId = "testId";
@@ -27,42 +30,9 @@ public class ScheduleEditModuleTests {
     Instant instant;
     TeacherService teacherService;
     StudentService studentService;
+    CourseService courseService;
+    ScheduleEditModule module;
 
-    public String getTestId() {
-        return testId;
-    }
-
-    public Clock getFixedClock() {
-        return fixedClock;
-    }
-
-    public void setFixedClock(Clock fixedClock) {
-        this.fixedClock = fixedClock;
-    }
-
-    public Instant getInstant() {
-        return instant;
-    }
-
-    public void setInstant(Instant instant) {
-        this.instant = instant;
-    }
-
-    public TeacherService getTeacherService() {
-        return teacherService;
-    }
-
-    public void setTeacherService(TeacherService teacherService) {
-        this.teacherService = teacherService;
-    }
-
-    public StudentService getStudentService() {
-        return studentService;
-    }
-
-    public void setStudentService(StudentService studentService) {
-        this.studentService = studentService;
-    }
 
     /**
      * sets up all the standard mocks and is run before every test.
@@ -73,13 +43,12 @@ public class ScheduleEditModuleTests {
         fixedClock = Clock.fixed(instant, ZoneId.systemDefault());
         teacherService = mock(TeacherService.class);
         studentService = mock(StudentService.class);
+        courseService = mock(CourseService.class);
+        module = new ScheduleEditModule(fixedClock, teacherService, studentService, courseService);
     }
 
     @Test
     public void reportTeacherTest() throws IOException {
-        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
-                teacherService,
-                studentService);
         LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
         LocalDate until = LocalDate.parse("2000-01-14");
 
@@ -90,9 +59,6 @@ public class ScheduleEditModuleTests {
 
     @Test
     public void cancelPastTest() throws IOException {
-        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
-                teacherService,
-                studentService);
         LocalDate until = LocalDate.parse("1999-12-31");
 
         Assertions.assertThrows(IllegalDateException.class, () -> {
@@ -104,9 +70,6 @@ public class ScheduleEditModuleTests {
 
     @Test
     public void singleDayTest() throws IOException {
-        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
-                teacherService,
-                studentService);
         LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
         LocalDate until = LocalDate.parse("2000-01-15");
 
@@ -117,10 +80,6 @@ public class ScheduleEditModuleTests {
 
     @Test
     public void nullTeacherDateTest() throws IOException {
-        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
-                teacherService,
-                studentService);
-
         Assertions.assertThrows(IllegalDateException.class, () -> {
             module.reportTeacherSick(testId, null);
         });
@@ -130,9 +89,6 @@ public class ScheduleEditModuleTests {
 
     @Test
     public void databaseTeacherThrowsTest() throws IOException {
-        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
-                teacherService,
-                studentService);
         Mockito.doThrow(new IOException())
                 .when(teacherService).cancelLectures(any(), any(), any());
 
@@ -143,9 +99,6 @@ public class ScheduleEditModuleTests {
 
     @Test
     public void reportStudentTest() throws IOException {
-        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
-                teacherService,
-                studentService);
         LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
         LocalDate until = LocalDate.parse("2000-01-14");
 
@@ -156,9 +109,6 @@ public class ScheduleEditModuleTests {
 
     @Test
     public void studentPastTest() throws IOException {
-        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
-                teacherService,
-                studentService);
         LocalDate until = LocalDate.parse("1999-12-31");
 
         Assertions.assertThrows(IllegalDateException.class, () -> {
@@ -170,9 +120,6 @@ public class ScheduleEditModuleTests {
 
     @Test
     public void singleDayStudentTest() throws IOException {
-        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
-                teacherService,
-                studentService);
         LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
         LocalDate until = LocalDate.parse("2000-01-01");
 
@@ -183,10 +130,6 @@ public class ScheduleEditModuleTests {
 
     @Test
     public void nullStudentDateTest() throws IOException {
-        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
-                teacherService,
-                studentService);
-
         Assertions.assertThrows(IllegalDateException.class, () -> {
             module.reportStudentSick(testId, null);
         });
@@ -196,10 +139,6 @@ public class ScheduleEditModuleTests {
 
     @Test
     public void databaseStudentThrowsTest() throws IOException {
-        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
-                teacherService,
-                studentService);
-
         Mockito.doThrow(new IOException())
                 .when(studentService).cancelStudentAttendance(any(), any(), any());
 
