@@ -7,11 +7,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
 public class JwtUtil {
+    @Getter
+    @Setter
     public String secretKey = "secret";
 
     public String extractUsername(String token) {
