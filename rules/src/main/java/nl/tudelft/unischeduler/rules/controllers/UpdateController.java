@@ -1,40 +1,25 @@
 package nl.tudelft.unischeduler.rules.controllers;
 
 import java.io.IOException;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NonNull;
 import nl.tudelft.unischeduler.rules.core.RulesModule;
 import nl.tudelft.unischeduler.rules.entities.Lecture;
 import nl.tudelft.unischeduler.rules.entities.Ruleset;
 import nl.tudelft.unischeduler.rules.storing.RulesParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Data
+@AllArgsConstructor
 @RestController
 public class UpdateController {
 
-    private RulesParser parser;
-    private RulesModule module;
-
-    public UpdateController(RulesParser parser, RulesModule module) {
-        this.parser = parser;
-        this.module = module;
-    }
-
-    public RulesParser getParser() {
-        return parser;
-    }
-
-    public void setParser(RulesParser parser) {
-        this.parser = parser;
-    }
-
-    public RulesModule getModule() {
-        return module;
-    }
-
-    public void setModule(RulesModule module) {
-        this.module = module;
-    }
+    @NonNull private RulesParser parser;
+    @NonNull private RulesModule module;
 
     /**
      * Updates the current rules file to the newRules passed by the body of the request.
@@ -64,8 +49,5 @@ public class UpdateController {
         }
         return toRemove.length == 0;
     }
-
-
-
 }
 
