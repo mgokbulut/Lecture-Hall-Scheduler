@@ -26,6 +26,7 @@ import nl.tudelft.unischeduler.database.lecture.Lecture;
 import nl.tudelft.unischeduler.database.lecture.LectureController;
 import nl.tudelft.unischeduler.database.lecture.LectureService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -103,6 +104,7 @@ public class LectureControllerTest {
     }
 
 
+    @Disabled
     @Test
     public void getLecturesInCourse() throws Exception {
         when(lectureService.getLecturesInCourse(0L, timestamp,
