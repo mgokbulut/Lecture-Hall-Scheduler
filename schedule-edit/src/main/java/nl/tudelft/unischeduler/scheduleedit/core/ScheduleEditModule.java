@@ -51,7 +51,7 @@ public class ScheduleEditModule {
         try {
             teacherService.cancelLectures(teacherNetId, now, until);
         } catch (IOException e) {
-            throw new ConnectionException("The connection with the database failed", e);
+            throw createException(e);
         }
     }
 
@@ -73,7 +73,7 @@ public class ScheduleEditModule {
             studentService.cancelStudentAttendance(studentNetId, now, until);
             studentService.setUserSick(studentNetId, now);
         } catch (IOException e) {
-            throw new ConnectionException("The connection with the database failed", e);
+            throw createException(e);
         }
     }
 
@@ -94,7 +94,7 @@ public class ScheduleEditModule {
         try {
             return courseService.createCourse(courseName, year);
         } catch (IOException e) {
-            throw new ConnectionException("The connection with the database failed", e);
+            throw createException(e);
         }
     }
 
@@ -134,7 +134,7 @@ public class ScheduleEditModule {
         try {
             return courseService.createLecture(courseId, teacherNetId, startWeek, duration);
         } catch (IOException e) {
-            throw new ConnectionException("The connection with the database failed", e);
+            throw createException(e);
         }
     }
 
@@ -150,7 +150,11 @@ public class ScheduleEditModule {
         try {
             courseService.addStudentToCourse(students, courseId);
         } catch (IOException e) {
-            throw new ConnectionException("The connection with the database failed", e);
+            throw createException(e);
         }
+    }
+
+    private ConnectionException createException(IOException exception) {
+        return new ConnectionException("The connection with the database failed", exception);
     }
 }
