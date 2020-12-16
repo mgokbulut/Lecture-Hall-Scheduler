@@ -38,11 +38,18 @@ public class UserCourseService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Adds all the users with specified netIds to the Course.
+     *
+     * @param netIds netIds of users
+     * @param courseId course they will be added to
+     * @return ResponseEntity with result of the operation
+     */
     public ResponseEntity<?> addStudentToCourse(List<String> netIds, Long courseId) {
         try {
             List<UserCourse> userCourses = new ArrayList<>();
-            for(String netId : netIds){
-                if(userCourseRepository.findByCourseIdAndNetId(courseId, netId).isPresent()){
+            for (String netId : netIds) {
+                if (userCourseRepository.findByCourseIdAndNetId(courseId, netId).isPresent()) {
                     return ResponseEntity.notFound().build();
                 }
                 UserCourse userCourse = new UserCourse(netId, courseId);

@@ -72,8 +72,6 @@ public class LectureControllerTest {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
     }
 
-    //TODO
-
     @Test
     public void setClassroomTest() throws Exception {
         String uri = "/lectures/setClassroom/2/1";
@@ -110,7 +108,7 @@ public class LectureControllerTest {
         when(lectureService.getLecturesInCourse(0L, timestamp,
                 new Time(82800000))).thenReturn(lectures);
         String uri = "/lectures/0/2020-12-10 00:00:00/24:00:00";
-        //http://localhost:8081/lectures/0/2020-12-10%2000:00:00/24:00:00
+        //http://localhost:8081/lectures/1/2020-12-10%2000:00:00/24:00:00
 
         mockMvc.perform(get(uri).contentType(APPLICATION_JSON_VALUE))
                 .andDo(print())

@@ -1,8 +1,6 @@
 package nl.tudelft.unischeduler.database.usercourse;
 
 import java.util.List;
-
-import nl.tudelft.unischeduler.database.course.Course;
 import nl.tudelft.unischeduler.database.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +26,8 @@ public class UserCourseController {
 
     @PutMapping(path = "/courses/assignStudents/{netIds}/{courseId}")
     public @ResponseBody
-    ResponseEntity<?> addStudentToCourse(@PathVariable List<String> netIds, @PathVariable Long courseId) {
+    ResponseEntity<?> addStudentToCourse(@PathVariable List<String> netIds,
+                                         @PathVariable Long courseId) {
         return userCourseService.addStudentToCourse(netIds, courseId);
     }
 }
