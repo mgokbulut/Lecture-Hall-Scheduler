@@ -1,6 +1,5 @@
 package nl.tudelft.unischeduler.schedulegenerate;
 
-import com.netflix.discovery.EurekaNamespace;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -20,7 +19,7 @@ public class ScheduleGenerateApplication {
 
     @Bean
     @LoadBalanced
-    public WebClient.Builder getWebClientBuilder(){
+    public WebClient.Builder getWebClientBuilder() {
         return WebClient.builder();
     }
 

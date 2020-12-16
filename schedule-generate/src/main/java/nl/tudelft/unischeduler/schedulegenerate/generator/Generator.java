@@ -1,16 +1,5 @@
 package nl.tudelft.unischeduler.schedulegenerate.generator;
 
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Set;
-
 import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
@@ -18,6 +7,18 @@ import nl.tudelft.unischeduler.schedulegenerate.entities.Room;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.PriorityQueue;
+import java.util.Date;
+import java.util.HashSet;
+
 
 // These were warnings on getEarliestTime(),
 // they signal an anomaly which is part of the way the method
@@ -44,7 +45,7 @@ public class Generator {
         for (int i = 0; i < courses.size(); i++) {
             Course course = courses.get(i);
             ArrayList<Lecture> toAdd =
-                apiCommunicator.getLecturesInCourse(course.getId(), currentTime, numOfDays);
+                    apiCommunicator.getLecturesInCourse(course.getId(), currentTime, numOfDays);
             lectures.addAll(toAdd);
         }
 
@@ -99,7 +100,7 @@ public class Generator {
         int iteration = 0;
         while (cal1.before(cal2) && iteration < maxIterations) {
             if ((Calendar.SATURDAY != cal1.get(Calendar.DAY_OF_WEEK))
-                && (Calendar.SUNDAY != cal1.get(Calendar.DAY_OF_WEEK))) {
+                    && (Calendar.SUNDAY != cal1.get(Calendar.DAY_OF_WEEK))) {
                 numDays = numDays + 1;
             }
             cal1.add(Calendar.DATE, 1);
@@ -113,7 +114,7 @@ public class Generator {
      * Assigns and schedules courses that are not assigned yet.
      * This is tested based on whether they are assigned a room or not.
      *
-     * @param lectures list containing every lecture there is
+     * @param lectures  list containing every lecture there is
      * @param timeTable list of lists containing all lectures, per day
      */
     private void scheduling(ArrayList<Lecture> lectures,
@@ -175,20 +176,20 @@ public class Generator {
                         List<Student> notSelected = new ArrayList<>();
                         int iteration = 0;
                         while (studentsToAdd.size() < capacity
-                            && iteration < maxIterationMultiplier * capacity) {
+                                && iteration < maxIterationMultiplier * capacity) {
                             try {
                                 Student prioStudent = studentsQueue.remove();
                                 // if student wasn't added already, add him
                                 if (!studentsToAdd.contains(prioStudent)) {
                                     studentsToAdd.add(prioStudent);
                                     prioStudent.setLastTimeOnCampus(
-                                        new Date(l.getStartTime().getTime()));
+                                            new Date(l.getStartTime().getTime()));
                                 } else {
                                     notSelected.add(prioStudent);
                                 }
                             } catch (Exception e) {
                                 System.out.println("there was an error "
-                                    + "scheduling students to lectures...");
+                                        + "scheduling students to lectures...");
                                 System.out.println(e.toString());
                             }
                             iteration++;
@@ -250,7 +251,7 @@ public class Generator {
                 startTime = nextTime;
             }
             Timestamp endTime = new Timestamp(startTime.getTime()
-                + lecture.getDuration().getTime());
+                    + lecture.getDuration().getTime());
             Time endTimeInDay = new Time(endTime.getHours(), endTime.getMinutes(), 0);
             if (endTimeInDay.after(endTimeOfDay)) {
                 day++;
@@ -269,7 +270,7 @@ public class Generator {
         for (int i = 0; i < lectures.size(); i++) {
             Lecture l = lectures.get(i);
             if ((overlap(lecture, l) && l.getRoom().equals(room))
-                || l.getYear() == lecture.getYear()) {
+                    || l.getYear() == lecture.getYear()) {
                 return new Timestamp(l.getStartTime().getTime() + l.getDuration().getTime());
             }
         }
