@@ -110,6 +110,27 @@ public class Generator {
     }
 
     /**
+     * method that increases the timestamp by one day,
+     * but only for working days. So if it's friday,
+     * the day will be increased to the next monday.
+     *
+     * @param t the timestamp you want to add a day to
+     * @return a new timestamp that is set to one day later
+     */
+    private Timestamp nextDay(Timestamp t) {
+        Calendar cal1 = Calendar.getInstance();
+
+        cal1.setTimeInMillis(t.getTime());
+
+        if (Calendar.FRIDAY == cal1.get(Calendar.DAY_OF_WEEK)) {
+            cal1.add(Calendar.DAY_OF_YEAR, 3);
+        } else {
+            cal1.add(Calendar.DAY_OF_YEAR, 1);
+        }
+        return new Timestamp(cal1.getTime().getTime());
+    }
+
+    /**
      * Assigns and schedules courses that are not assigned yet.
      * This is tested based on whether they are assigned a room or not.
      *
