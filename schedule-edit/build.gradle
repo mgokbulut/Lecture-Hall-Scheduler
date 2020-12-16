@@ -13,6 +13,9 @@ plugins {
 
 	// PITest
 	id 'info.solidsoft.pitest' version '1.5.2'
+
+	//Lombok
+	id "io.freefair.lombok" version "5.3.0"
 }
 
 group = 'nl.tudelft.unischeduler'
