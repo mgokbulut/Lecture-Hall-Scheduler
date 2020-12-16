@@ -1,7 +1,6 @@
 package nl.tudelft.unischeduler.database.lectureschedule;
 
 import java.io.Serializable;
-import java.util.Objects;
 import lombok.Data;
 
 @Data

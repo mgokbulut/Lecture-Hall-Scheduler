@@ -1,6 +1,5 @@
 package nl.tudelft.unischeduler.database.lectureschedule;
 
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
