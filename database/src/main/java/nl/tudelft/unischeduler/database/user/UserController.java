@@ -3,6 +3,7 @@ package nl.tudelft.unischeduler.database.user;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,9 +20,9 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    //    @GetMapping(path = "/users/{courseId}")
-    //    public List<User> getStudentsInCourse(@PathVariable Long courseId) {
-    //        Course c = courseService.getCourse(courseId);
-    //
-    //    }
+    @GetMapping(path = "/users/{netId}")
+    public @ResponseBody
+    Object[] getUser(@PathVariable String netId) {
+        return userService.getUser(netId);
+    }
 }

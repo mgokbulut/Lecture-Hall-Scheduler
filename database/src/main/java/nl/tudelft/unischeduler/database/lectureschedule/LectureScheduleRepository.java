@@ -1,5 +1,6 @@
 package nl.tudelft.unischeduler.database.lectureschedule;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,4 +15,10 @@ public interface LectureScheduleRepository
             Long lectureId, Long scheduleId);
 
     void deleteLectureSchedulesByLectureId(Long lectureId);
+
+    List<LectureSchedule> findAllByScheduleId(Long scheduleId);
+
+    List<LectureSchedule> findAllByLectureId(Long lectureId);
+
+    void deleteByLectureIdAndScheduleId(Long lectureId, Long scheduleId);
 }
