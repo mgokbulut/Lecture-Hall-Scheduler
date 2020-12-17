@@ -1,12 +1,15 @@
 package nl.tudelft.unischeduler.database.controller;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -18,6 +21,7 @@ import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleService;
 import nl.tudelft.unischeduler.database.schedule.Schedule;
 import nl.tudelft.unischeduler.database.schedule.ScheduleRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -93,4 +97,24 @@ public class LectureScheduleControllerTest {
     //                .content(objectMapper.writeValueAsString(lectureSchedule)))
     //                .andExpect(status().isNoContent());
     //    }
+
+    @Test
+    public void  cancelStudentAttendanceTest() throws Exception{
+        String uri = "/lectureSchedules/remove/byarar/2020-12-11 00:00:00/2020-12-11 00:45:00";
+        Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
+
+        mockMvc.perform(delete(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lectureSchedule)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getStudentScheduleTest() throws Exception{
+        String uri = "/lectureSchedules/byarar";
+        Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
+
+        mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lectureSchedule)))
+                .andExpect(status().isOk());
+    }
 }
