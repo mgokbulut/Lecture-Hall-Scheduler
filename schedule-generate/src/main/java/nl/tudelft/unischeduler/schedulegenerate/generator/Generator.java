@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
-
 import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
@@ -35,8 +34,8 @@ public class Generator {
      * @param currentTime Time at which to start scheduling
      */
     public void scheduleGenerate(Timestamp currentTime) {
-        int RANGE = 10;
-        int numOfDays = RANGE; // placeholder
+        int range = 10;
+        int numOfDays = range; // placeholder
         ArrayList<Course> courses = apiCommunicator.getCourses();
         ArrayList<Lecture> lectures = new ArrayList<>();
 
@@ -284,9 +283,10 @@ public class Generator {
             c.set(Calendar.HOUR_OF_DAY, 17);
             c.set(Calendar.MINUTE, 45);
             Timestamp endOfDay = new Timestamp(c.getTimeInMillis());
-            Timestamp nextTime = isFree(dayStartTime, room, lecture, timeTable, currentTime);
-            Timestamp nextTimeWithDuration = new Timestamp(nextTime.getTime() +
-                    lecture.getDuration().getTime());
+            Timestamp nextTime = isFree(dayStartTime, room, lecture,
+                                        timeTable, currentTime, day);
+            Timestamp nextTimeWithDuration = new Timestamp(nextTime.getTime()
+                    + lecture.getDuration().getTime());
             if (nextTimeWithDuration.after(endOfDay)) {
                 dayStartTime = nextDay(dayStartTime);
                 day++;
@@ -294,13 +294,6 @@ public class Generator {
             } else {
                 return nextTime;
             }
-            // Timestamp endTime = new Timestamp(dayStartTime.getTime()
-            //     + lecture.getDuration().getTime());
-            // Time endTimeInDay = new Time(endTime.getHours(), endTime.getMinutes(), 0);
-            // if (endTimeInDay.after(dayStartTime)) {
-            //     day++;
-            //     dayStartTime = currentTime;
-            // }
         }
         return null;
     }
@@ -319,20 +312,17 @@ public class Generator {
      */
     private Timestamp isFree(Timestamp timeslot, Room room,
                              Lecture lecture, List<List<Lecture>> timeTable,
-                             Timestamp currentTime) {
-        int day = calDistance(currentTime, timeslot);
+                             Timestamp currentTime, int day) {
         List<Lecture> lectures = timeTable.get(day);
-        // TODO poll this somewhere else
         long intervalBetweenLectures = getIntervalBetweenLectures();
 
         Timestamp found = new Timestamp(timeslot.getTime());
         for (int i = 0; i < lectures.size(); i++) {
             Lecture l = lectures.get(i);
-            if ((overlap(lecture, l) && l.getRoom().equals(room))
+            if ((overlap(lecture, found, l) && l.getRoom().equals(room))
                 || l.getYear() == lecture.getYear()) {
-                found = new Timestamp(l.getStartTime().getTime() +
-                        l.getDuration().getTime() +
-                        intervalBetweenLectures);
+                found = new Timestamp(l.computeEndTime().getTime()
+                        + intervalBetweenLectures);
             }
         }
         return found;
@@ -380,8 +370,7 @@ public class Generator {
     }
 
     private long getIntervalBetweenLectures() {
-        // TODO gets the interval from the Rules module, in milliseconds
-        return 0;
+        return apiCommunicator.getIntervalBetweenLectures();
     }
 
 
