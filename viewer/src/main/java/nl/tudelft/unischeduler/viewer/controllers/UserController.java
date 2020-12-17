@@ -21,22 +21,22 @@ public class UserController {
     @GetMapping()
     public Lecture[] getLecturesInCourse(int courseId) {
         //TODO: add a call to the database module to retrieve the correct lectures.
-
-        return null;
+        Lecture[] arr = new Lecture[1];
+        return arr;
     }
 
     @GetMapping()
     public Lecture[] getPossibleLectures(String netId) {
         //TODO: add a call to the database module to retrieve the correct lectures.
-
-        return null;
+        Lecture[] arr = new Lecture[1];
+        return arr;
     }
 
     @GetMapping("/lectureSchedules/{netId}")
     public Lecture[] getStudentSchedule(@PathVariable String netId) {
         //TODO: add a call to the database module to retrieve the correct lectures.
-
-        return null;
+        Lecture[] arr = new Lecture[1];
+        return arr;
     }
 
     @GetMapping()
@@ -49,8 +49,8 @@ public class UserController {
     @GetMapping()
     public User[] getStudentsForLecture(int lectureId) {
         //TODO: add a call to the database module to retrieve the correct students.
-
-        return null;
+        User[] arr = new User[1];
+        return arr;
     }
 
 }
