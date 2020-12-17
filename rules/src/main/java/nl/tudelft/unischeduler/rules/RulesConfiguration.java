@@ -1,12 +1,16 @@
 package nl.tudelft.unischeduler.rules;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import nl.tudelft.unischeduler.rules.core.RulesModule;
 import nl.tudelft.unischeduler.rules.storing.RulesParser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@Data
+@AllArgsConstructor
 public class RulesConfiguration {
 
     private static ObjectMapper defaultObjectMapper = generateDefaultObjectMapper();
@@ -21,34 +25,12 @@ public class RulesConfiguration {
         return new RulesModule();
     }
 
-    public static RulesModule getDefaultRulesModule() {
-        return defaultRulesModule;
-    }
-
-    public static void setDefaultRulesModule(RulesModule defaultRulesModule) {
-        RulesConfiguration.defaultRulesModule = defaultRulesModule;
-    }
-
-
-
     private static ObjectMapper generateDefaultObjectMapper() {
         return new ObjectMapper();
     }
 
     public static ObjectMapper getDefaultObjectMapper() {
         return defaultObjectMapper;
-    }
-
-    public static void setDefaultObjectMapper(ObjectMapper defaultObjectMapper) {
-        RulesConfiguration.defaultObjectMapper = defaultObjectMapper;
-    }
-
-    public static RulesParser getDefaultRulesParser() {
-        return defaultRulesParser;
-    }
-
-    public static void setDefaultRulesParser(RulesParser defaultRulesParser) {
-        RulesConfiguration.defaultRulesParser = defaultRulesParser;
     }
 
     @Bean

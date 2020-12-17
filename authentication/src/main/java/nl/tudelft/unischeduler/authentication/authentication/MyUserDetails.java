@@ -4,11 +4,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Data;
 import nl.tudelft.unischeduler.authentication.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+@Data
 public class MyUserDetails implements UserDetails {
 
     static final long serialVersionUID = 42L;
@@ -71,36 +73,7 @@ public class MyUserDetails implements UserDetails {
         return true;
     }
 
-    public String getNetid() {
-        return netid;
-    }
-
-    public void setNetid(String netid) {
-        this.netid = netid;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public boolean isActive() {
         return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public void setAuthorities(
-        List<GrantedAuthority> authorities) {
-        this.authorities = authorities;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 }

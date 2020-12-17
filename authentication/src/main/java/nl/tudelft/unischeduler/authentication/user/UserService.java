@@ -2,11 +2,13 @@ package nl.tudelft.unischeduler.authentication.user;
 
 import java.security.MessageDigest;
 import java.util.Optional;
+import lombok.Data;
 import nl.tudelft.unischeduler.authentication.authentication.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Data
 public class UserService {
 
     @Autowired
@@ -108,23 +110,6 @@ public class UserService {
         User user = optionalUser.get();
         user.setPassword("");
         return Optional.of(user);
-    }
-
-    public UserRepository getUserRepository() {
-        return userRepository;
-    }
-
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public AuthenticationService getAuthenticationService() {
-        return authenticationService;
-    }
-
-    public void setAuthenticationService(
-        AuthenticationService authenticationService) {
-        this.authenticationService = authenticationService;
     }
 }
 

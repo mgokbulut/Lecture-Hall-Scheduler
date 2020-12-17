@@ -1,12 +1,18 @@
 package nl.tudelft.unischeduler.authentication.user;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.Optional;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Data
 //@RequestMapping(path="/demo")
 public class UserController {
 
@@ -50,13 +56,5 @@ public class UserController {
     @GetMapping(path = "/user/{netId}")
     public Optional<User> getUser(@PathVariable String netId) {
         return userService.getUser(netId);
-    }
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
     }
 }
