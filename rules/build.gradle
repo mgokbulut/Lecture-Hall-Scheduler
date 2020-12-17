@@ -62,6 +62,7 @@ test {
 		includes = ['nl.tudelft.sem.template.*']
 		excludes = []
 	}
+	systemProperty 'eureka.client.enabled', 'false'
 }
 
 repositories {
