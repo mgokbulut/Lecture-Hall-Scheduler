@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ApiCommunicator {
 
-    //  API calls for scheduling:
+    //  ---- following are API calls for database module ----
 
     //  getCourses(): //done
     //  returns a list of all courses
@@ -75,6 +75,13 @@ public class ApiCommunicator {
 
     public void setLectureTime(int lectureId, Timestamp timeStamp) {
 
+    }
+
+    // ---- these are API calls for the rules module ----
+
+    public long getIntervalBetweenLectures() {
+        // TODO API call to rules module to get the time interval between lectures
+        return 0l;
     }
 }
 
