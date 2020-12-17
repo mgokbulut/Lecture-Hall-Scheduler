@@ -90,6 +90,11 @@ public class Lecture implements Comparable<Lecture> {
         this.year = year;
     }
 
+    public Timestamp computeEndTime() {
+        Timestamp end = new Timestamp(this.startTime.getTime() + this.duration.getTime());
+        return end;
+    }
+
     // Override method that compares based on the end time of the lecture;
     // this is needed for the generator algorithm.
     @Override
