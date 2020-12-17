@@ -29,10 +29,10 @@ public class UserService {
             return "{message:\"This NetID already exists\"}";
         } else {
             try {
-                MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-                messageDigest.update(user.getPassword().getBytes());
-                String stringHash = new String(messageDigest.digest());
-                user.setPassword(stringHash);
+//                MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+//                messageDigest.update(user.getPassword().getBytes());
+//                String stringHash = new String(messageDigest.digest());
+//                user.setPassword(stringHash);
                 userRepository.save(user);
             } catch (Exception e) {
                 System.out.println("Something went wrong in register method");
@@ -50,10 +50,10 @@ public class UserService {
      */
     public String login(User user) {
         try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            messageDigest.update(user.getPassword().getBytes());
-            String stringHash = new String(messageDigest.digest());
-            user.setPassword(stringHash);
+//            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+//            messageDigest.update(user.getPassword().getBytes());
+//            String stringHash = new String(messageDigest.digest());
+//            user.setPassword(stringHash);
             String token = authenticationService
                 .createAuthenticationToken(user.getNetId(), user.getPassword());
             if (token == null) {
