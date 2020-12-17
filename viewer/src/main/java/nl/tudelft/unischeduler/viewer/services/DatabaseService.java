@@ -1,17 +1,28 @@
 package nl.tudelft.unischeduler.viewer.services;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NonNull;
 import nl.tudelft.unischeduler.viewer.entities.Lecture;
 import nl.tudelft.unischeduler.viewer.entities.User;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-public class DatabaseService {
-    transient WebClient.Builder webClientBuilder;
+import javax.annotation.PostConstruct;
 
-    public DatabaseService() {
-        webClientBuilder = WebClient.builder();
+@Data
+@AllArgsConstructor
+@Service
+public class DatabaseService {
+
+    @NonNull private WebClient.Builder webClientBuilder;
+
+    @PostConstruct
+    public void setUp() {
         webClientBuilder.baseUrl("http://database-service/");
     }
+
 
     public Lecture[] getStudentSchedule(String netId) {
         Lecture[] result = webClientBuilder.build()
