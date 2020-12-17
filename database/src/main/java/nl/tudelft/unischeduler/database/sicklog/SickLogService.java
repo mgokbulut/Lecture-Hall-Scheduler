@@ -16,6 +16,10 @@ public class SickLogService {
     @Autowired
     private transient SickLogRepository sickLogRepository;
 
+    public SickLogService(SickLogRepository sickLogRepository){
+        this.sickLogRepository = sickLogRepository;
+    }
+
     public List<SickLog> getAllSickLogs() {
         return sickLogRepository.findAll();
     }

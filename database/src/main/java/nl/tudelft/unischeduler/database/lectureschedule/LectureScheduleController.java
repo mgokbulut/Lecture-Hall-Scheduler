@@ -40,6 +40,7 @@ public class LectureScheduleController {
         return lectureScheduleService.cancelStudentAttendance(netId, start, end);
     }
 
+    //TODO: test again
     @GetMapping(path = "/lectureSchedules/student/{netId}")
     public @ResponseBody
     List<Object []> getStudentSchedule(@PathVariable String netId) {

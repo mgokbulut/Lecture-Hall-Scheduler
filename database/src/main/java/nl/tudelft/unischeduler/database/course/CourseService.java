@@ -2,6 +2,8 @@ package nl.tudelft.unischeduler.database.course;
 
 import java.util.List;
 import java.util.Optional;
+
+import nl.tudelft.unischeduler.database.classroom.ClassroomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,10 @@ public class CourseService {
 
     @Autowired
     private transient CourseRepository courseRepository;
+
+    public CourseService(CourseRepository courseRepository){
+        this.courseRepository = courseRepository;
+    }
 
     public List<Course> getAllCourses() {
         return courseRepository.findAll();

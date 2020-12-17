@@ -180,7 +180,7 @@ public class LectureScheduleService {
             return lectureRepository
                     .findAllByTeacher(teacher)
                     .stream()
-                    .map(x->new Object[]
+                    .map(x -> new Object[]
                             {x, classroomRepository.findById(x.getClassroom()).get()})
                     .collect(Collectors.toList());
         } catch(Exception a) {
