@@ -1,6 +1,7 @@
 package nl.tudelft.unischeduler.scheduleedit.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
@@ -11,6 +12,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.io.IOException;
 import java.time.Clock;
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -226,5 +228,28 @@ public class ScheduleEditModuleTests {
         Assertions.assertThrows(ConnectionException.class, () -> {
             module.addStudentGroupLecture(testIds, 1L);
         });
+    }
+
+    @Test
+    public void calculateAlreadyStartOfWeekTest() {
+        LocalDate monday = LocalDate.parse("2000-01-03");
+        LocalDate result = module.calculateStartOfWeek(2000, 2);
+
+        assertEquals(DayOfWeek.MONDAY, monday.getDayOfWeek());
+        assertEquals(DayOfWeek.MONDAY, result.getDayOfWeek());
+        assertEquals(monday, result);
+    }
+
+    @Test
+    public void illegalTime() {
+        assertThrows(IllegalDateException.class, () -> module.calculateStartOfWeek(2000, -1));
+    }
+
+    @Test
+    public void yearWith53Weeks() {
+        LocalDate expected = LocalDate.parse("2004-12-27");
+
+        assertEquals(DayOfWeek.MONDAY, expected.getDayOfWeek());
+        assertEquals(expected, module.calculateStartOfWeek(2004, 53));
     }
 }
