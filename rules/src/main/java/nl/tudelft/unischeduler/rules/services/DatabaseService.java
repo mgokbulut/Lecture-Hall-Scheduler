@@ -1,5 +1,7 @@
 package nl.tudelft.unischeduler.rules.services;
 
+import java.io.IOException;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,13 +49,16 @@ public class DatabaseService {
      * @return A list of all the students in the lecture.
      */
     public Student[] getStudentsInLecture(int lectureId) {
-        Student[] result = webClientBuilder.build()
+        List<Student> list = webClientBuilder.build()
                 .get()
                 .uri("lectureSchedules/students/" + lectureId)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(Student[].class)
+                .bodyToFlux(Student.class)
+                .collectList()
                 .block();
+        Student[] result = new Student[list.size()];
+
         return result;
     }
 
@@ -98,14 +103,17 @@ public class DatabaseService {
      * @return All lectures stored in the database.
      */
     public Lecture[] getLectures() {
-        Lecture[] result = webClientBuilder.build()
+        List<Lecture> list = webClientBuilder.build()
                 .get()
                 .uri("lectures/courses")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(Lecture[].class)
+                .bodyToFlux(Lecture.class)
+                .collectList()
                 .block();
-        return result;
+        assert list != null;
+        Lecture[] result = new Lecture[list.size()];
+        return list.toArray(result);
     }
 
     /**
