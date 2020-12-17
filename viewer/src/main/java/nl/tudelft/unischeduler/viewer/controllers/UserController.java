@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 public class UserController {
 
-    DatabaseService dbService;
+    transient DatabaseService dbService;
 
     public UserController() {
         dbService = new DatabaseService();

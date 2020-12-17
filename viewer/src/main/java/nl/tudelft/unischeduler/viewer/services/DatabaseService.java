@@ -6,7 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 
 public class DatabaseService {
-    private WebClient.Builder webClientBuilder;
+    transient WebClient.Builder webClientBuilder;
 
     public DatabaseService() {
         webClientBuilder = WebClient.builder();
