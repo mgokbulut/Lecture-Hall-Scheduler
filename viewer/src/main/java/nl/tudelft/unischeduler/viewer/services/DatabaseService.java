@@ -3,13 +3,17 @@ package nl.tudelft.unischeduler.viewer.services;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
+import nl.tudelft.unischeduler.viewer.entities.Classroom;
 import nl.tudelft.unischeduler.viewer.entities.Lecture;
+import nl.tudelft.unischeduler.viewer.entities.LectureClassPair;
 import nl.tudelft.unischeduler.viewer.entities.User;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.annotation.PostConstruct;
+import java.util.Iterator;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -25,58 +29,92 @@ public class DatabaseService {
 
 
     public Lecture[] getStudentSchedule(String netId) {
-        Lecture[] result = webClientBuilder.build()
+        List<Object[]> result = webClientBuilder.build()
                 .get()
                 .uri("lectureSchedules/" + netId)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(Lecture[].class)
+                .bodyToFlux(Object[].class)
+                .collectList()
                 .block();
-        return result;
+
+        return getLectures(result);
     }
 
     public Lecture[] getTeacherSchedule(String netId) {
-        Lecture[] result = webClientBuilder.build()
+        List<Object[]> result = webClientBuilder.build()
                 .get()
                 .uri("lectureSchedules/teacher/" + netId)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(Lecture[].class)
+                .bodyToFlux(Object[].class)
+                .collectList()
                 .block();
-        return result;
+
+        return getLectures(result);
     }
 
+
+
     public Lecture[] getPossibleLectures(String netId) {
-        Lecture[] result = webClientBuilder.build()
+        List<Object[]> result = webClientBuilder.build()
                 .get()
                 .uri("userCourseService/possibleLectures/" + netId)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(Lecture[].class)
+                .bodyToFlux(Object[].class)
+                .collectList()
                 .block();
-        return result;
+
+        return getLectures(result);
     }
 
     public Lecture[] getLecturesInCourse(int courseId) {
-        Lecture[] result = webClientBuilder.build()
+        List<Object[]> result = webClientBuilder.build()
                 .get()
                 .uri("lectureSchedules/course/" + String.valueOf(courseId))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(Lecture[].class)
+                .bodyToFlux(Object[].class)
+                .collectList()
                 .block();
-        return result;
+
+        return getLectures(result);
     }
 
     public User[] getStudentsInLecture(int lectureId) {
-        User[] result = webClientBuilder.build()
+        List<Object[]> result = webClientBuilder.build()
                 .get()
                 .uri("lectureSchedules/studentsLecture/" + String.valueOf(lectureId))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(User[].class)
+                .bodyToFlux(Object[].class)
+                .collectList()
                 .block();
-        return result;
+
+        return getUsers(result);
     }
 
+    private User[] getUsers(List<Object[]> result) {
+        User[] ret = new User[result.size()];
+        int i = 0;
+        for(Iterator<Object[]> it = result.iterator(); it.hasNext();) {
+            Object[] ob = it.next();
+            User user = (User) ob[0];
+            ret[i++] = user;
+        }
+        return ret;
+    }
+
+    private Lecture[] getLectures(List<Object[]> result) {
+        Lecture[] ret = new Lecture[result.size()];
+        int i = 0;
+        for(Iterator<Object[]> it = result.iterator(); it.hasNext();) {
+            Object[] ob = it.next();
+            Lecture lect = (Lecture) ob[0];
+            lect.setClassroom((Classroom) ob[1]);
+            ret[i++] = lect;
+        }
+        return ret;
+    }
 }

@@ -2,6 +2,7 @@ package nl.tudelft.unischeduler.viewer.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NonNull;
 
 import java.sql.Date;
 import java.util.Objects;
@@ -10,9 +11,9 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 public class User {
-    private String netId;
-    private String type;
-    private Date lastTimeOnCampus;
+    @NonNull String netId;
+    @NonNull String type;
+    @NonNull Date lastTimeOnCampus;
     private Schedule schedule;
     private Set<Lecture> lectures;
     private Set<Course> courses;
