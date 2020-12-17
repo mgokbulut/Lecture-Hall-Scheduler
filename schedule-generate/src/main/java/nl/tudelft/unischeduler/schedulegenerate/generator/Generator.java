@@ -344,8 +344,38 @@ public class Generator {
         return room.getCapacity();
     }
 
-    private boolean overlap(Lecture l1, Lecture l2) {
-        // TODO implement
+    /**
+     * Helper method that tells us if a lecture and its potential
+     * start time overlaps with an already-scheduled lecture.
+     *
+     * @param lecture the lecture we are trying to schedule
+     * @param potentialStartTime the start time we want to give to this lecture
+     * @param scheduledLecture the already-scheduled lecture we want to check against
+     * @return whether there would be overlap should the lecture be scheduled at this time
+     */
+    private boolean overlap(Lecture lecture,
+                            Timestamp potentialStartTime, Lecture scheduledLecture) {
+        Timestamp scheduledLectureEndTime = scheduledLecture.computeEndTime();
+        long interval = getIntervalBetweenLectures();
+        Timestamp schLecEndTiWithInterval = new Timestamp(scheduledLectureEndTime.getTime()
+                + interval);
+        // if the start time is during the other lecture
+        if (potentialStartTime.after(scheduledLecture.getStartTime())
+                && potentialStartTime.before(schLecEndTiWithInterval)) {
+            return true;
+        }
+        // if the end time is during the other lecture
+        Timestamp potentialEndTime = new Timestamp(potentialStartTime.getTime()
+                + lecture.getDuration().getTime());
+        if (potentialEndTime.after(scheduledLecture.getStartTime())
+                && potentialStartTime.before(schLecEndTiWithInterval)) {
+            return true;
+        }
+        // if the start and end times are before and after the scheduled lecture
+        if (potentialStartTime.before(scheduledLecture.getStartTime())
+                && potentialEndTime.after(schLecEndTiWithInterval)) {
+            return true;
+        }
         return false;
     }
 
