@@ -2,6 +2,7 @@ package nl.tudelft.unischeduler.scheduleedit.core;
 
 import java.io.IOException;
 import java.time.Clock;
+import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -106,11 +107,18 @@ public class ScheduleEditModule {
      * @return The LocalDate which is the first day of the week in the year.
      */
     public LocalDate calculateStartOfWeek(int year, int week) {
-        LocalDate temp = LocalDate.ofYearDay(year, (week - 1) * 7);
-        while (!temp.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
-            temp = temp.minusDays(1);
+        try {
+            LocalDate temp = LocalDate.ofYearDay(year, (week - 1) * 7 + 1);
+            while (!temp.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
+                temp = temp.minusDays(1);
+            }
+            return temp;
+        } catch (DateTimeException e) {
+            throw new IllegalDateException("The week "
+                    + week
+                    + " does not exist in year "
+                    + year);
         }
-        return temp;
     }
 
     /**
