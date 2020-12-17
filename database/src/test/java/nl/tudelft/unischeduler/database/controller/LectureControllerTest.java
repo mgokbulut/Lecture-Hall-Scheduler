@@ -105,7 +105,7 @@ public class LectureControllerTest {
     }
 
 
-    @Disabled
+    //@Disabled
     @Test
     public void getLecturesInCourse() throws Exception {
         when(lectureService.getLecturesInCourse(0L, timestamp,
@@ -114,7 +114,7 @@ public class LectureControllerTest {
         //http://localhost:8081/lectures/1/2020-12-10%2000:00:00/24:00:00
 
         mockMvc.perform(get(uri).contentType(APPLICATION_JSON_VALUE))
-                .andDo(print())
+                //.andDo(print())
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$[0].id", is(0)))
                 .andExpect(jsonPath("$[0].classroom", is(0)))
@@ -151,7 +151,7 @@ public class LectureControllerTest {
         String uri = "/lectures/courses";
 
         mockMvc.perform(get(uri).contentType(APPLICATION_JSON_VALUE))
-                .andDo(print())
+                //.andDo(print())
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$[0][0].id", is(0)))
                 .andExpect(jsonPath("$[0][0].classroom", is(0)))

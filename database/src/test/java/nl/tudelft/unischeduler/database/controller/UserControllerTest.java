@@ -66,7 +66,7 @@ public class UserControllerTest {
         String uri = "/users/all";
         mockMvc.perform(get(uri).contentType(APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$").exists())
-                .andDo(print())
+                //.andDo(print())
                 .andExpect(jsonPath("$[0].netId", is("a.baran@student.tudelft.nl")))
                 .andExpect(jsonPath("$[0].type", is("STUDENT")))
                 .andExpect(jsonPath("$[0].interested", is(true)))
