@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -96,25 +97,24 @@ public class DatabaseService {
     }
 
     private User[] getUsers(List<Object[]> result) {
-        User[] ret = new User[result.size()];
-        int i = 0;
+        List<User> ret = new ArrayList<>();
+
         for(Iterator<Object[]> it = result.iterator(); it.hasNext();) {
             Object[] ob = it.next();
             User user = (User) ob[0];
-            ret[i++] = user;
+            ret.add(user);
         }
-        return ret;
+        return ret.toArray(new User[1]);
     }
 
     private Lecture[] getLectures(List<Object[]> result) {
-        Lecture[] ret = new Lecture[result.size()];
-        int i = 0;
+        List<Lecture> ret = new ArrayList<>();
         for(Iterator<Object[]> it = result.iterator(); it.hasNext();) {
             Object[] ob = it.next();
             Lecture lect = (Lecture) ob[0];
             lect.setClassroom((Classroom) ob[1]);
-            ret[i++] = lect;
+            ret.add(lect);
         }
-        return ret;
+        return ret.toArray(new Lecture[1]);
     }
 }
