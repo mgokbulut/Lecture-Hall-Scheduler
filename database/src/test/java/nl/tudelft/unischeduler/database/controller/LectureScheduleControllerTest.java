@@ -110,10 +110,30 @@ public class LectureScheduleControllerTest {
 
     @Test
     public void getStudentScheduleTest() throws Exception{
-        String uri = "/lectureSchedules/byarar";
+        String uri = "/lectureSchedules/student/byarar";
         Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
 
         mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lectureSchedule)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void removeLectureFromScheduleTest() throws Exception{
+        String uri = "/lectureSchedules/remove/0";
+        Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
+
+        mockMvc.perform(delete(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lectureSchedule)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void removeStudentFromLectureTest() throws Exception{
+        String uri = "/lectureSchedules/remove/1/0";
+        Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
+
+        mockMvc.perform(delete(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(lectureSchedule)))
                 .andExpect(status().isOk());
     }
