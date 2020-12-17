@@ -2,55 +2,27 @@ package nl.tudelft.unischeduler.rules.controllers;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NonNull;
 import nl.tudelft.unischeduler.rules.core.RulesModule;
 import nl.tudelft.unischeduler.rules.entities.Lecture;
 import nl.tudelft.unischeduler.rules.entities.Room;
 import nl.tudelft.unischeduler.rules.entities.Ruleset;
 import nl.tudelft.unischeduler.rules.entities.Student;
 import nl.tudelft.unischeduler.rules.storing.RulesParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Data
+@AllArgsConstructor
 @RestController
 public class VerificationController {
-    private RulesParser parser;
-    private RulesModule module;
+    @NonNull private RulesParser parser;
+    @NonNull private RulesModule module;
 
-    /**
-     * Constructs a VerificationController from a single ruleParser.
-     *
-     * @param parser the parser from which to get the rules.
-     */
-    public VerificationController(RulesParser parser, RulesModule module) {
-        this.parser = parser;
-        this.module = module;
-        try {
-            this.module.setRules(parser.parseRules());
-        } catch (FileNotFoundException e) {
-            System.err.println("no rulesConfiguration file found,"
-                    + " please create one with the appropriate api call");
-        } catch (IOException e) {
-            e.printStackTrace();
-            //TODO: stop server
-        }
-    }
-
-    public RulesParser getParser() {
-        return parser;
-    }
-
-    public void setParser(RulesParser parser) {
-        this.parser = parser;
-    }
-
-    public RulesModule getModule() {
-        return module;
-    }
-
-    public void setModule(RulesModule module) {
-        this.module = module;
-    }
 
     @GetMapping("/rules")
     public Ruleset getRules() {
