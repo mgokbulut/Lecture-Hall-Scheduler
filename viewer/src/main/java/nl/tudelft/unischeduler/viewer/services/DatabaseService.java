@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NonNull;
 import nl.tudelft.unischeduler.viewer.entities.Classroom;
 import nl.tudelft.unischeduler.viewer.entities.Lecture;
-import nl.tudelft.unischeduler.viewer.entities.LectureClassPair;
 import nl.tudelft.unischeduler.viewer.entities.User;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
