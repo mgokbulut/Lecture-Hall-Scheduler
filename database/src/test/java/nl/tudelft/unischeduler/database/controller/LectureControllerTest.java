@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.sql.Time;
@@ -104,7 +105,7 @@ public class LectureControllerTest {
     }
 
 
-    @Disabled
+    //@Disabled
     @Test
     public void getLecturesInCourse() throws Exception {
         when(lectureService.getLecturesInCourse(0L, timestamp,
@@ -113,7 +114,7 @@ public class LectureControllerTest {
         //http://localhost:8081/lectures/1/2020-12-10%2000:00:00/24:00:00
 
         mockMvc.perform(get(uri).contentType(APPLICATION_JSON_VALUE))
-                .andDo(print())
+                //.andDo(print())
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$[0].id", is(0)))
                 .andExpect(jsonPath("$[0].classroom", is(0)))
@@ -150,7 +151,7 @@ public class LectureControllerTest {
         String uri = "/lectures/courses";
 
         mockMvc.perform(get(uri).contentType(APPLICATION_JSON_VALUE))
-                .andDo(print())
+                //.andDo(print())
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$[0][0].id", is(0)))
                 .andExpect(jsonPath("$[0][0].classroom", is(0)))
@@ -165,5 +166,60 @@ public class LectureControllerTest {
 
         verify(lectureService, times(1)).getLecturesWithCourses();
         verifyNoMoreInteractions(lectureService);
+    }
+
+    @Test
+    public void setLectureToOnlineTest() throws Exception{
+        String uri =  "/lectures/setToOnline/sanders@tudelft.nl/2020-12-11 00:00:00/2020-12-11 00:45:00/true";
+        Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
+                new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
+
+        mockMvc.perform(put(uri).contentType(APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lecture)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void setLectureToOnlineTest2() throws Exception {
+        String uri = "/lectures/setToOnline/2/true";
+        Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
+                new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
+
+        mockMvc.perform(put(uri).contentType(APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lecture)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void setLectureToOfflineTest() throws Exception {
+        String uri = "/lectures/setToOffline/sanders@tudelft.nl/2020-12-11 00:00:00";
+        Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
+                new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
+
+        mockMvc.perform(put(uri).contentType(APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lecture)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void setLectureToOfflineTest2() throws Exception{
+        String uri = "/lectures/setToOffline/2";
+        Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
+                new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
+
+        mockMvc.perform(put(uri).contentType(APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lecture)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void createLectureTest() throws Exception{
+        String uri = "/lectures/create/2/sanders@tudelft.nl/2020-12-11 00:00:00/00:45:00/false";
+        Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
+                new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
+
+        mockMvc.perform(put(uri).contentType(APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lecture)))
+                .andExpect(status().isOk());
     }
 }

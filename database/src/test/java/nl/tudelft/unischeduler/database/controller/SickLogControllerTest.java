@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -17,15 +18,21 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import nl.tudelft.unischeduler.database.sicklog.SickLog;
 import nl.tudelft.unischeduler.database.sicklog.SickLogController;
 import nl.tudelft.unischeduler.database.sicklog.SickLogService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
@@ -42,6 +49,9 @@ public class SickLogControllerTest {
     @Autowired
     @MockBean
     private transient SickLogService sickLogService;
+
+    private final transient ObjectMapper objectMapper =
+            new ObjectMapper().registerModule(new JavaTimeModule());
 
     private transient MockMvc mockMvc;
 
@@ -87,5 +97,15 @@ public class SickLogControllerTest {
 
         verify(sickLogService, times(1)).getAllSickLogs();
         verifyNoMoreInteractions(sickLogService);
+    }
+
+    @Test
+    public void setUserSickTest() throws Exception {
+        String uri = "/sickLogs/new/test-user1/2020-12-11 00:00:00";
+        SickLog sicklog = new SickLog(0L, "test-user1", new Date(timestamp.getTime()), true);
+
+        mockMvc.perform(put(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(sicklog)))
+                .andExpect(status().isOk());
     }
 }
