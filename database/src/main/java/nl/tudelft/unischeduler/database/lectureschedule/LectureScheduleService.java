@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
+
+import nl.tudelft.unischeduler.database.classroom.ClassroomRepository;
 import nl.tudelft.unischeduler.database.lecture.Lecture;
 import nl.tudelft.unischeduler.database.lecture.LectureRepository;
 import nl.tudelft.unischeduler.database.schedule.Schedule;
@@ -33,7 +35,11 @@ public class LectureScheduleService {
     private transient UserRepository userRepository;
 
     @Autowired
+    private transient ClassroomRepository classroomRepository;
+
+    @Autowired
     private transient UserService userService;
+
 
     /**
      *  Removes the Lecture from all the LectureSchedules
@@ -132,21 +138,56 @@ public class LectureScheduleService {
     }
 
     /**
-     * Returns a List of lectures in a student's schedule.
+     * Returns a List of Object arrays of size 2,
+     * arr[0] = lectures in a student's schedule,
+     * arr[1] = corresponding classroom object.
      *
-     * @param user the student Id
+     * @param student the student Id
      * @return List of all the lectures in user's schedule
      */
-    public List<Lecture> getStudentSchedule(String user) {
-        Schedule schedule = scheduleRepository.findByUser(user)
-                .orElseThrow(() -> new IllegalArgumentException("No such object in DB"));
-        return  lectureScheduleRepository
-                .findAllByScheduleId(schedule.getId())
-                .stream()
-                .map(x -> lectureRepository
-                        .findById(x.getLectureId())
-                        .get())
-                .collect(Collectors.toList());
+    //TODO: actually test
+    public List<Object []> getStudentSchedule(String student) {
+        try {
+            Schedule schedule = scheduleRepository.findByUser(student).get();
+            return  lectureScheduleRepository
+                    .findAllByScheduleId(schedule.getId())
+                    .stream()
+                    .map(x -> lectureRepository
+                            .findById(x.getLectureId())
+                            .get())
+                    .map(x->new Object[]
+                            {x, classroomRepository.findById(x.getClassroom()).get()})
+                    .collect(Collectors.toList());
+
+        } catch(Exception a) {
+            System.err.println("No such object in DB");
+            a.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Returns a List of Object arrays of size 2,
+     * arr[0] = lectures in a teacher's schedule,
+     * arr[1] = corresponding classroom object.
+     *
+     * @param teacher the teacher Id
+     * @return List of all the lectures in user's schedule
+     */
+    //TODO: actually test
+    public List<Object []> getTeacherSchedule(String teacher) {
+        try {
+            return lectureRepository
+                    .findAllByTeacher(teacher)
+                    .stream()
+                    .map(x->new Object[]
+                            {x, classroomRepository.findById(x.getClassroom()).get()})
+                    .collect(Collectors.toList());
+        } catch(Exception a) {
+            System.err.println("No such object in DB");
+            a.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -203,6 +244,30 @@ public class LectureScheduleService {
         } catch (Exception a) {
             a.printStackTrace();
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * Returns a List of Object arrays of size 2,
+     * arr[0] = lectures in a course,
+     * arr[1] = corresponding classroom object.
+     *
+     * @param courseId the courseId
+     * @return List of all the lectures in a course
+     */
+    //TODO: actually test
+    public List<Object []> getAllLecturesInCourse(Long courseId) {
+        try {
+            return lectureRepository
+                    .findAllByCourse(courseId)
+                    .stream()
+                    .map(x->new Object[]
+                            {x, classroomRepository.findById(x.getClassroom()).get()})
+                    .collect(Collectors.toList());
+        } catch(Exception a) {
+            System.err.println("No such object in DB");
+            a.printStackTrace();
+            return null;
         }
     }
 }

@@ -30,4 +30,10 @@ public class UserCourseController {
                                          @PathVariable Long courseId) {
         return userCourseService.addStudentToCourse(netIds, courseId);
     }
+
+    @GetMapping(path = "/userCourseService/possibleLectures/{netId}")
+    public @ResponseBody
+    List<Object []> getPossibleLectures(@PathVariable String netId) {
+        return userCourseService.getPossibleLectures(netId);
+    }
 }
