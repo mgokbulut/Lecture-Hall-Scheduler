@@ -192,6 +192,13 @@ public class Generator {
                                     currentTime, numOfDays));
                             l.setRoom(onlineRoom);
                             l.setIsOnline(true);
+                            apiCommunicator.assignRoomToLecture(l.getId(), onlineRoom.getId());
+                            // and we assign all students to it
+                            Iterator<Student> its = courseStudents.iterator();
+                            for(int m = 0; m < courseStudents.size(); m++) {
+                                apiCommunicator.assignStudentToLecture(its.next().getNetId(),
+                                        l.getId());
+                            }
                             continue;
                         }
                         // if a room was found
