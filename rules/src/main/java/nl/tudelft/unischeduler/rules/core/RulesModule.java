@@ -140,7 +140,7 @@ public class RulesModule {
                         Time.valueOf("1:00:00"), null),
                 new Lecture(0, 50, Timestamp.valueOf("2020-12-1 9:00:00"),
                         Time.valueOf("1:00:00"), null));
-        for(Lecture lectureOnDay : lectures) {
+        for (Lecture lectureOnDay : lectures) {
             if (overlap(lecture, lectureOnDay)) {
                 return false;
             }

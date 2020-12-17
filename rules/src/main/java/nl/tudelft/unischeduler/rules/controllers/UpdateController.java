@@ -7,6 +7,7 @@ import lombok.NonNull;
 import nl.tudelft.unischeduler.rules.core.RulesModule;
 import nl.tudelft.unischeduler.rules.entities.Lecture;
 import nl.tudelft.unischeduler.rules.entities.Ruleset;
+import nl.tudelft.unischeduler.rules.services.DatabaseService;
 import nl.tudelft.unischeduler.rules.storing.RulesParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ public class UpdateController {
 
     @NonNull private RulesParser parser;
     @NonNull private RulesModule module;
+    @NonNull private DatabaseService databaseService;
 
     /**
      * Updates the current rules file to the newRules passed by the body of the request.
@@ -38,14 +40,13 @@ public class UpdateController {
     }
 
     public boolean verifyLectures() {
-        DatabaseController dat = new DatabaseController(parser, module);
 
-        Lecture[] lectures = dat.getLectures();
+        Lecture[] lectures = databaseService.getLectures();
         Lecture[] toRemove = module.verifyLectures(lectures);
 
         for(int i = 0; i < toRemove.length; i++) {
-            dat.removeLectureFromSchedule(toRemove[i].getId());
-            dat.removeRoomFromLecture(toRemove[i].getId());
+            databaseService.removeLectureFromSchedule(toRemove[i].getId());
+            databaseService.removeRoomFromLecture(toRemove[i].getId());
         }
         return toRemove.length == 0;
     }
