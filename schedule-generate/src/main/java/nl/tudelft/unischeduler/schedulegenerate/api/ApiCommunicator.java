@@ -83,5 +83,11 @@ public class ApiCommunicator {
         // TODO API call to rules module to get the time interval between lectures
         return 0l;
     }
+
+    public boolean allowedOnCampus(Student s) {
+        // TODO API call to rules module to know if student is allowed to be on campus
+        // he wouldn't be allowed to if he's had corona recently for example
+        return true;
+    }
 }
 
