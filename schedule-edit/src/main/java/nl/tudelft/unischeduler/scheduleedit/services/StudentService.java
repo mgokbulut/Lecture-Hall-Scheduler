@@ -49,6 +49,9 @@ public class StudentService extends DatabaseService {
                 .uri("/lectureSchedules/remove/"
                         + studentNetId + "/"
                         + Timestamp.valueOf(start) + "/"
-                        + Timestamp.valueOf(end));
+                        + Timestamp.valueOf(end))
+                .retrieve()
+                .toBodilessEntity()
+                .block();
     }
 }
