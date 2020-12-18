@@ -1,9 +1,11 @@
 package nl.tudelft.unischeduler.scheduleedit.services;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,6 +25,13 @@ public class TeacherService extends DatabaseService {
      */
     public void cancelLectures(String teacherNetId, LocalDateTime start, LocalDateTime end)
             throws IOException {
-        //TODO: this is a stub, and in the future should actually send the data.
+        ResponseEntity<Void> response = webClient.delete()
+                .uri("lectureSchedules/remove/" + teacherNetId
+                        + "/" + Timestamp.valueOf(start)
+                        + "/" + Timestamp.valueOf(end))
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+        verifyStatusCode(response);
     }
 }
