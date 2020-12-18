@@ -11,6 +11,10 @@ public class ClassroomService {
     @Autowired
     private transient ClassroomRepository classroomRepository;
 
+    public ClassroomService(ClassroomRepository classroomRepository){
+        this.classroomRepository = classroomRepository;
+    }
+
     /**
      * Returns all the Classrooms.
      *
@@ -23,7 +27,7 @@ public class ClassroomService {
     /**
      * Returns specified Classroom.
      *
-     * @param classroomId classrood ID
+     * @param classroomId classroom ID
      * @return Classroom object
      */
     public Classroom getClassroom(Long classroomId) {
