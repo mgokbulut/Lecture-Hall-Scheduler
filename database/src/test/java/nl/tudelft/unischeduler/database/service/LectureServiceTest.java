@@ -1,19 +1,20 @@
 package nl.tudelft.unischeduler.database.service;
 
-import nl.tudelft.unischeduler.database.classroom.Classroom;
+import static org.mockito.Mockito.when;
+
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Optional;
 import nl.tudelft.unischeduler.database.course.Course;
 import nl.tudelft.unischeduler.database.course.CourseRepository;
 import nl.tudelft.unischeduler.database.lecture.Lecture;
 import nl.tudelft.unischeduler.database.lecture.LectureRepository;
 import nl.tudelft.unischeduler.database.lecture.LectureService;
-import nl.tudelft.unischeduler.database.lectureschedule.LectureSchedule;
-import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleService;
-import nl.tudelft.unischeduler.database.schedule.Schedule;
-import nl.tudelft.unischeduler.database.sicklog.SickLog;
-import nl.tudelft.unischeduler.database.sicklog.SickLogRepository;
-import nl.tudelft.unischeduler.database.sicklog.SickLogService;
-import nl.tudelft.unischeduler.database.user.User;
-import nl.tudelft.unischeduler.database.user.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,14 +22,7 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.sql.Date;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.*;
-
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class LectureServiceTest {
 
     private transient List<Lecture> lectures;
@@ -42,10 +36,10 @@ public class LectureServiceTest {
             Mockito.mock(CourseRepository.class);
 
     private final transient Timestamp timestamp = new Timestamp(new GregorianCalendar(
-            2020, Calendar.DECEMBER, 01, 0, 0).getTimeInMillis());
+            2020, Calendar.DECEMBER, 1, 0, 0).getTimeInMillis());
 
     @BeforeEach
-    void setup(){
+    void setup() {
         lectures = new ArrayList<>(
                 List.of(
                         new Lecture(0L, 0L, 0L, "sanders@tudelft.nl",
@@ -54,7 +48,8 @@ public class LectureServiceTest {
                                 new Timestamp(timestamp.getTime() + 10800000),
                                 new Time(7200000), false),
                         new Lecture(2L, 2L, 0L, "sanders@tudelft.nl",
-                                new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false)
+                                new Timestamp(timestamp.getTime() + 21600000), new Time(7200000),
+                                false)
                 ));
 
         courses = new ArrayList<>(
@@ -79,7 +74,7 @@ public class LectureServiceTest {
     }
 
     @Test
-    public void getLecturesInCourseTest(){
+    public void getLecturesInCourseTest() {
         when(lectureRepository.findAllByCourse(0L)).thenReturn(List.of(lectures.get(0)));
 
         LectureService lectureService = new LectureService(
@@ -87,7 +82,8 @@ public class LectureServiceTest {
 
         Assertions.assertEquals(List.of(lectures.get(0)),
                 lectureService.getLecturesInCourse(0L,
-                        new Timestamp(timestamp.getTime() - 1000), new Time(2*timestamp.getTime())));
+                        new Timestamp(timestamp.getTime() - 1000),
+                        new Time(2 * timestamp.getTime())));
     }
 
     @Test

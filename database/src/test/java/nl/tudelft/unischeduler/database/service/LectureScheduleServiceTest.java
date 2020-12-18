@@ -1,5 +1,18 @@
 package nl.tudelft.unischeduler.database.service;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Optional;
 import nl.tudelft.unischeduler.database.classroom.Classroom;
 import nl.tudelft.unischeduler.database.classroom.ClassroomRepository;
 import nl.tudelft.unischeduler.database.lecture.Lecture;
@@ -9,13 +22,9 @@ import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleRepositor
 import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleService;
 import nl.tudelft.unischeduler.database.schedule.Schedule;
 import nl.tudelft.unischeduler.database.schedule.ScheduleRepository;
-import nl.tudelft.unischeduler.database.sicklog.SickLog;
 import nl.tudelft.unischeduler.database.user.User;
 import nl.tudelft.unischeduler.database.user.UserRepository;
 import nl.tudelft.unischeduler.database.user.UserService;
-import nl.tudelft.unischeduler.database.usercourse.UserCourse;
-import nl.tudelft.unischeduler.database.usercourse.UserCourseRepository;
-import nl.tudelft.unischeduler.database.usercourse.UserCourseService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,13 +32,8 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.sql.Date;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.*;
 
-import static org.mockito.Mockito.*;
-
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class LectureScheduleServiceTest {
     private transient List<User> users;
 
@@ -59,7 +63,7 @@ public class LectureScheduleServiceTest {
             2020, Calendar.DECEMBER, 1, 0, 0).getTimeInMillis());
 
     @BeforeEach
-    void setup(){
+    void setup() {
         users = new ArrayList<>(
                 List.of(
                         new User("a.baran@student.tudelft.nl", "STUDENT", true, timestamp),
@@ -75,7 +79,8 @@ public class LectureScheduleServiceTest {
                                 new Timestamp(timestamp.getTime() + 10800000),
                                 new Time(7200000), false),
                         new Lecture(2L, 1L, 2L, "teacher@tudelft.nl",
-                                new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false)
+                                new Timestamp(timestamp.getTime() + 21600000), new Time(7200000),
+                                false)
                 ));
 
         lectureSchedules = new ArrayList<>(
@@ -132,7 +137,7 @@ public class LectureScheduleServiceTest {
                 .thenReturn(Optional.of(new Schedule(1L, "a.baran@student.tudelft.nl")));
 
         when(lectureRepository.findAllByStartTimeDateBetween(timestamp,
-               new Timestamp(timestamp.getTime()+10000))).thenReturn(List.of(lectures.get(0)));
+               new Timestamp(timestamp.getTime() + 10000))).thenReturn(List.of(lectures.get(0)));
 
         when(lectureScheduleRepository.findAllByScheduleId(1L))
                 .thenReturn(List.of(lectureSchedules.get(0)));
@@ -143,7 +148,7 @@ public class LectureScheduleServiceTest {
 
 
         lectureScheduleService.cancelStudentAttendance("a.baran@student.tudelft.nl", timestamp,
-                new Timestamp(timestamp.getTime()+10000));
+                new Timestamp(timestamp.getTime() + 10000));
 
         verify(lectureScheduleRepository, times(1))
                 .deleteByLectureIdAndScheduleId(0L, 1L);
@@ -175,7 +180,8 @@ public class LectureScheduleServiceTest {
         Classroom classroom = new Classroom(30, "Test", "Building", 1);
         when(scheduleRepository.findByUser("a.baran@student.tudelft.nl"))
                 .thenReturn(Optional.of(new Schedule(1L, "a.baran@student.tudelft.nl")));
-        when(lectureScheduleRepository.findAllByScheduleId(1L)).thenReturn(List.of(lectureSchedules.get(0)));
+        when(lectureScheduleRepository.findAllByScheduleId(1L))
+                .thenReturn(List.of(lectureSchedules.get(0)));
         when(lectureRepository.findById(0L))
                 .thenReturn(Optional.ofNullable(lectures.get(0)));
         when(classroomRepository.findById(1L)).thenReturn(
@@ -192,7 +198,7 @@ public class LectureScheduleServiceTest {
 
     @Test
     public void getTeacherScheduleTest() {
-        Classroom classroom = new Classroom(1L,30, "Test", "Building", 1);
+        Classroom classroom = new Classroom(1L, 30, "Test", "Building", 1);
 
         when(lectureRepository.findAllByTeacher("sanders@tudelft.nl"))
                 .thenReturn(List.of(lectures.get(0)));
@@ -220,7 +226,8 @@ public class LectureScheduleServiceTest {
         when(userRepository.findByNetId("a.baran@student.tudelft.nl")).thenReturn(
                 Optional.of(users.get(0)));
 
-        when(userService.getUser(users.get(0).getNetId())).thenReturn(new Object[]{users.get(0), classroom});
+        when(userService.getUser(users.get(0).getNetId()))
+                .thenReturn(new Object[]{users.get(0), classroom});
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
@@ -232,7 +239,7 @@ public class LectureScheduleServiceTest {
 
     @Test
     public void getAllLecturesInCourseTest() {
-        Classroom classroom = new Classroom(1L,30, "Test", "Building", 1);
+        Classroom classroom = new Classroom(1L, 30, "Test", "Building", 1);
 
         when(lectureRepository.findAllByCourse(2L))
                 .thenReturn(List.of(lectures.get(2)));

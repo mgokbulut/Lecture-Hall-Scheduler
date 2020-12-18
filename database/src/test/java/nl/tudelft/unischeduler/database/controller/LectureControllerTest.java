@@ -8,12 +8,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.sql.Time;
@@ -27,7 +25,6 @@ import nl.tudelft.unischeduler.database.lecture.Lecture;
 import nl.tudelft.unischeduler.database.lecture.LectureController;
 import nl.tudelft.unischeduler.database.lecture.LectureService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -169,10 +166,12 @@ public class LectureControllerTest {
     }
 
     @Test
-    public void setLectureToOnlineTest() throws Exception{
-        String uri =  "/lectures/setToOnline/sanders@tudelft.nl/2020-12-11 00:00:00/2020-12-11 00:45:00/true";
+    public void setLectureToOnlineTest() throws Exception {
+        String uri =
+            "/lectures/setToOnline/sanders@tudelft.nl/2020-12-11 00:00:00/2020-12-11 00:45:00/true";
         Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
-                new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
+                new Timestamp(timestamp.getTime() + 21600000),
+                new Time(7200000), false);
 
         mockMvc.perform(put(uri).contentType(APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(lecture)))
@@ -202,7 +201,7 @@ public class LectureControllerTest {
     }
 
     @Test
-    public void setLectureToOfflineTest2() throws Exception{
+    public void setLectureToOfflineTest2() throws Exception {
         String uri = "/lectures/setToOffline/2";
         Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
                 new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);
@@ -213,7 +212,7 @@ public class LectureControllerTest {
     }
 
     @Test
-    public void createLectureTest() throws Exception{
+    public void createLectureTest() throws Exception {
         String uri = "/lectures/create/2/sanders@tudelft.nl/2020-12-11 00:00:00/00:45:00/false";
         Lecture lecture = new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
                 new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false);

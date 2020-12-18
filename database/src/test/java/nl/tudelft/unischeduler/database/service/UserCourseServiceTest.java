@@ -1,13 +1,22 @@
 package nl.tudelft.unischeduler.database.service;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Optional;
 import nl.tudelft.unischeduler.database.classroom.Classroom;
 import nl.tudelft.unischeduler.database.classroom.ClassroomRepository;
-import nl.tudelft.unischeduler.database.course.Course;
-import nl.tudelft.unischeduler.database.course.CourseService;
 import nl.tudelft.unischeduler.database.lecture.Lecture;
 import nl.tudelft.unischeduler.database.lecture.LectureRepository;
-import nl.tudelft.unischeduler.database.sicklog.SickLog;
-import nl.tudelft.unischeduler.database.sicklog.SickLogRepository;
 import nl.tudelft.unischeduler.database.user.User;
 import nl.tudelft.unischeduler.database.user.UserRepository;
 import nl.tudelft.unischeduler.database.usercourse.UserCourse;
@@ -20,15 +29,7 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.sql.Date;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.*;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class UserCourseServiceTest {
 
     private transient List<User> users;
@@ -50,10 +51,10 @@ public class UserCourseServiceTest {
             Mockito.mock(ClassroomRepository.class);
 
     private final transient Timestamp timestamp = new Timestamp(new GregorianCalendar(
-            2020, Calendar.DECEMBER, 01, 0, 0).getTimeInMillis());
+            2020, Calendar.DECEMBER, 1, 0, 0).getTimeInMillis());
 
     @BeforeEach
-    void setup(){
+    void setup() {
         users = new ArrayList<>(
                 List.of(
                         new User("a.baran@student.tudelft.nl", "STUDENT", true, timestamp),
@@ -76,13 +77,14 @@ public class UserCourseServiceTest {
                                 new Timestamp(timestamp.getTime() + 10800000),
                                 new Time(7200000), false),
                         new Lecture(2L, 1L, 2L, "sanders@tudelft.nl",
-                                new Timestamp(timestamp.getTime() + 21600000), new Time(7200000), false)
+                                new Timestamp(timestamp.getTime() + 21600000),
+                                new Time(7200000), false)
                 ));
 
     }
 
     @Test
-    public void getStudentsInCourseTest(){
+    public void getStudentsInCourseTest() {
         when(userCourseRepository.findAllByCourseId(1L)).thenReturn(List.of(userCourses.get(0)));
         when(userRepository.findByNetId("a.baran@student.tudelft.nl"))
                 .thenReturn(java.util.Optional.ofNullable(users.get(0)));
@@ -99,25 +101,27 @@ public class UserCourseServiceTest {
     }
 
     @Test
-    public void addStudentToCourseTest(){
+    public void addStudentToCourseTest() {
         UserCourse userCourse = new UserCourse("Test", 1L);
         when(userCourseRepository.findByCourseIdAndNetId(1L, "Test"))
                 .thenReturn(Optional.empty());
-        when(userCourseRepository.save(Mockito.any(UserCourse.class))).thenAnswer(x -> x.getArguments()[0]);
+        when(userCourseRepository.save(Mockito.any(UserCourse.class)))
+                .thenAnswer(x -> x.getArguments()[0]);
 
         UserCourseService userCourseService = new UserCourseService(
                 userCourseRepository, userRepository, lectureRepository, classroomRepository);
 
-        Assertions.assertEquals(new ResponseEntity<>(List.of(userCourse), HttpStatus.OK), userCourseService
+        Assertions.assertEquals(new ResponseEntity<>(
+                List.of(userCourse), HttpStatus.OK), userCourseService
                 .addStudentToCourse(List.of("Test"), 1L));
 
         verify(userCourseRepository, times(1)).save(Mockito.any(UserCourse.class));
-        verify(userCourseRepository, times(1)).findByCourseIdAndNetId( 1L, "Test");
+        verify(userCourseRepository, times(1)).findByCourseIdAndNetId(1L, "Test");
         verifyNoMoreInteractions(userCourseRepository);
     }
 
     @Test
-    public void getPossibleLecturesTest(){
+    public void getPossibleLecturesTest() {
         Classroom classroom = new Classroom(30, "Test", "Building", 1);
         when(userCourseRepository.findAllByNetId("a.baran@student.tudelft.nl"))
                 .thenReturn(List.of(userCourses.get(0), userCourses.get(2)));
@@ -134,7 +138,7 @@ public class UserCourseServiceTest {
     }
 
     @Test
-    public void getPossibleLecturesTestFail(){
+    public void getPossibleLecturesTestFail() {
         Classroom classroom = new Classroom(30, "Test", "Building", 1);
         when(userCourseRepository.findAllByNetId("a.baran@student.tudelft.nl"))
                 .thenReturn(List.of(userCourses.get(0), userCourses.get(2)));
@@ -150,7 +154,7 @@ public class UserCourseServiceTest {
     }
 
     @Test
-    public void getStudentsInCourseTestFail(){
+    public void getStudentsInCourseTestFail() {
         when(userCourseRepository.findAllByCourseId(1L)).thenReturn(List.of(userCourses.get(0)));
         when(userRepository.findByNetId("a.baran@student.tudelft.nl"))
                 .thenReturn(Optional.empty());

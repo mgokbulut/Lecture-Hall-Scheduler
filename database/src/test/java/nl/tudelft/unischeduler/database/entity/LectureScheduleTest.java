@@ -37,8 +37,10 @@ public class LectureScheduleTest {
     }
 
     @Test
-    public void constructorTest(){
-        assertEquals(new LectureScheduleId().getLectureId(), new LectureScheduleId().getLectureId());
-        assertEquals(new LectureScheduleId().getScheduleId(), new LectureScheduleId().getScheduleId());
+    public void constructorTest() {
+        assertEquals(new LectureScheduleId().getLectureId(),
+                new LectureScheduleId().getLectureId());
+        assertEquals(new LectureScheduleId().getScheduleId(),
+                new LectureScheduleId().getScheduleId());
     }
 }

@@ -1,15 +1,14 @@
 package nl.tudelft.unischeduler.database.controller;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -21,7 +20,6 @@ import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleService;
 import nl.tudelft.unischeduler.database.schedule.Schedule;
 import nl.tudelft.unischeduler.database.schedule.ScheduleRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -80,7 +78,7 @@ public class LectureScheduleControllerTest {
     }
 
     @Test
-    public void  cancelStudentAttendanceTest() throws Exception{
+    public void  cancelStudentAttendanceTest() throws Exception {
         String uri = "/lectureSchedules/remove/byarar/2020-12-11 00:00:00/2020-12-11 00:45:00";
         Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
 
@@ -90,7 +88,7 @@ public class LectureScheduleControllerTest {
     }
 
     @Test
-    public void getStudentScheduleTest() throws Exception{
+    public void getStudentScheduleTest() throws Exception {
         String uri = "/lectureSchedules/student/byarar";
         Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
 
@@ -100,7 +98,7 @@ public class LectureScheduleControllerTest {
     }
 
     @Test
-    public void removeLectureFromScheduleTest() throws Exception{
+    public void removeLectureFromScheduleTest() throws Exception {
         String uri = "/lectureSchedules/remove/0";
         Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
 
@@ -110,7 +108,7 @@ public class LectureScheduleControllerTest {
     }
 
     @Test
-    public void removeStudentFromLectureTest() throws Exception{
+    public void removeStudentFromLectureTest() throws Exception {
         String uri = "/lectureSchedules/remove/1/0";
         Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
 
@@ -120,7 +118,7 @@ public class LectureScheduleControllerTest {
     }
 
     @Test
-    public void getTeacherScheduleTest() throws Exception{
+    public void getTeacherScheduleTest() throws Exception {
         String uri = "/lectureSchedules/teacher/byarar";
         Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
 
@@ -130,7 +128,7 @@ public class LectureScheduleControllerTest {
     }
 
     @Test
-    public void getStudentsInLectureTest() throws Exception{
+    public void getStudentsInLectureTest() throws Exception {
         String uri = "/lectureSchedules/studentsLecture/1";
         Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
 
@@ -140,7 +138,7 @@ public class LectureScheduleControllerTest {
     }
 
     @Test
-    public void getAllLecturesInCourseTest() throws Exception{
+    public void getAllLecturesInCourseTest() throws Exception {
         String uri = "/lectureSchedules/course/1";
         Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
 

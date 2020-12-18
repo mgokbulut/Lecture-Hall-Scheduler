@@ -34,7 +34,7 @@ public class ScheduleTest {
     }
 
     @Test
-    public void constructorTest(){
+    public void constructorTest() {
         assertEquals(new Schedule("user"), new Schedule("user"));
     }
 }

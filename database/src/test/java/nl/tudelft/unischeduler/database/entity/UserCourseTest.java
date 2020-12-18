@@ -36,8 +36,10 @@ public class UserCourseTest {
     }
 
     @Test
-    public void constructorTest(){
-        assertEquals(new UserCourseId().getCourseId(), new UserCourseId().getCourseId());
-        assertEquals(new UserCourseId().getNetId(), new UserCourseId().getNetId());
+    public void constructorTest() {
+        assertEquals(new UserCourseId().getCourseId(),
+                new UserCourseId().getCourseId());
+        assertEquals(new UserCourseId().getNetId(),
+                new UserCourseId().getNetId());
     }
 }
