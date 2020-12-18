@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ConnectionException extends IOException {
     private static final long serialVersionUID = 2L;
 
-    public ConnectionException(String message, Throwable cause) {
-        super(message, cause);
+    public ConnectionException(String message) {
+        super(message);
     }
 }
