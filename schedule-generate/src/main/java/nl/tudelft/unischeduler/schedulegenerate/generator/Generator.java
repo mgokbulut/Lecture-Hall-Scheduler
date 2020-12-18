@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.Iterator;
 import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
@@ -165,7 +166,14 @@ public class Generator {
                 Set<Student> courseStudents = c.getStudents();
                 // sort them per when they were last on campus in a priority queue
                 PriorityQueue<Student> studentsQueue = new PriorityQueue<>();
-                studentsQueue.addAll(courseStudents);
+                // add a student to the queue if he's allowed to
+                Iterator<Student> it = courseStudents.iterator();
+                for (int k = 0; k < courseStudents.size(); k++) {
+                    Student s = it.next();
+                    if (apiCommunicator.allowedOnCampus(s)) {
+                        studentsQueue.add(s);
+                    }
+                }
 
                 // for each lecture in the course
                 ArrayList<Lecture> lecturesCurrentCourse = new ArrayList<Lecture>(c.getLectures());
@@ -184,6 +192,13 @@ public class Generator {
                                     currentTime, numOfDays));
                             l.setRoom(onlineRoom);
                             l.setIsOnline(true);
+                            apiCommunicator.assignRoomToLecture(l.getId(), onlineRoom.getId());
+                            // and we assign all students to it
+                            Iterator<Student> its = courseStudents.iterator();
+                            for(int m = 0; m < courseStudents.size(); m++) {
+                                apiCommunicator.assignStudentToLecture(its.next().getNetId(),
+                                        l.getId());
+                            }
                             continue;
                         }
                         // if a room was found
