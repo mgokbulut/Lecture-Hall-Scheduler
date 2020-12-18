@@ -1,0 +1,29 @@
+image: gradle:6.7-jdk11
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+  -
+stages:
+  - build
+  - staticAnalysis
+  - test
+
+gateway-authentication-build:
+  stage: build
+  script:
+    gradle --build-cache :gateway-authentication:assemble
+
+gateway-authentication-checkStyle:
+  stage: staticAnalysis
+  script:
+    gradle :gateway-authentication:checkstyleMain :gateway-authentication:checkStyleTest
+
+gateway-authentication-PMD:
+  stage: staticAnalysis
+  script:
+    gradle :gateway-authentication:pmdMain :gateway-authentication:pmdTest
+
+gateway-authentication-test:
+  stage: test
+  script:
+    gradle :gateway-authentication:test
