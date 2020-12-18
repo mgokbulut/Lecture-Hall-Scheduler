@@ -53,6 +53,8 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-webflux'
 	compile 'org.projectreactor:reactor-spring:1.0.1.RELEASE'
 	compile group: 'org.springframework', name: 'spring-webflux', version: '5.2.7.RELEASE'
+	implementation("com.squareup.okhttp3:okhttp:4.9.0")
+	testImplementation("com.squareup.okhttp3:mockwebserver:4.9.0")
 }
 
 test {
@@ -62,6 +64,7 @@ test {
 		includes = ['nl.tudelft.sem.template.*']
 		excludes = []
 	}
+	systemProperty 'eureka.client.enabled', 'false'
 }
 
 repositories {
