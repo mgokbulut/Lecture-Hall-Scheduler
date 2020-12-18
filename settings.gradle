@@ -10,4 +10,5 @@ include 'discovery-server'
 include 'test-module'
 include 'gateway-server'
 include 'gateway-authentication'
+include 'another-gateway'
 

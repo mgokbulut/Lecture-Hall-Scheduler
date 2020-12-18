@@ -13,11 +13,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 @EnableZuulProxy
 public class GatewayServerApplication {
 
-    @Bean
-    @LoadBalanced
-    public WebClient.Builder getWebClientBuilder() {
-        return WebClient.builder();
-    }
+//    @Bean
+//    @LoadBalanced
+//    public WebClient.Builder getWebClientBuilder() {
+//        return WebClient.builder();
+//    }
 
 
     public static void main(String[] args) {
