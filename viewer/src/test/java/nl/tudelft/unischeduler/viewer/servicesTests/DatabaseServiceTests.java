@@ -17,6 +17,7 @@ import nl.tudelft.unischeduler.viewer.entities.Lecture;
 import nl.tudelft.unischeduler.viewer.entities.User;
 import nl.tudelft.unischeduler.viewer.services.DatabaseService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,11 +98,10 @@ public class DatabaseServiceTests {
         };
 
         Lecture[] actual = databaseService.getLectures(lectures);
+        assertEquals(expected.length, actual.length);
         for(int i = 0; i < actual.length; i++) {
             assertEquals(expected[i], actual[i]);
         }
-
-
     }
 
     @Test
@@ -111,27 +111,28 @@ public class DatabaseServiceTests {
                 new User("testUser2", "TestType2", new Date(1l))
         };
         User[] actual = databaseService.getUsers(users);
+        assertEquals(expected.length, actual.length);
         for(int i = 0; i < actual.length; i++) {
             assertEquals(expected[i], actual[i]);
         }
     }
 
-    //@Test
-    void getStudentScheduleTest() {
-
-        String netId = "test";
-
-        when(webClientBuilder.build()
-                .get()
-                .uri("lectureSchedules/" + netId)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToFlux(Object[].class)
-                .collectList()
-                .block())
-                .thenReturn(lectures);
-        Lecture[] expected = databaseService.getStudentSchedule(netId).getBody();
-        Lecture[] actual = databaseService.getLectures(lectures);
-        assertEquals(expected, actual);
-    }
+//    @Test
+//    void getStudentScheduleTest() {
+//
+//        String netId = "test";
+//
+//        when(webClientBuilder.build()
+//                .get()
+//                .uri("lectureSchedules/" + netId)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .retrieve()
+//                .bodyToFlux(Object[].class)
+//                .collectList()
+//                .block())
+//                .thenReturn(lectures);
+//        Lecture[] expected = databaseService.getStudentSchedule(netId).getBody();
+//        Lecture[] actual = databaseService.getLectures(lectures);
+//        assertEquals(expected, actual);
+//    }
 }

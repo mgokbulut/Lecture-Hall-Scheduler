@@ -27,21 +27,21 @@ import org.springframework.web.reactive.function.client.WebClient;
 public abstract class ControllerTest {
 
     @Autowired
-    protected WebApplicationContext wac;
+    protected transient WebApplicationContext wac;
 
     @Autowired
-    protected MockMvc mockMvc;
-    public MockWebServer server;
+    protected transient MockMvc mockMvc;
+    public transient MockWebServer server;
 
     @Autowired
-    protected ObjectMapper objectMapper;
+    protected transient ObjectMapper objectMapper;
 
     @Autowired
-    protected WebClient.Builder webClientBuilder;
+    protected transient WebClient.Builder webClientBuilder;
 
     @Autowired
     @MockBean
-    protected DatabaseService databaseService;
+    protected transient DatabaseService databaseService;
 
     @BeforeEach
     void beforeEach() throws IOException {

@@ -42,7 +42,7 @@ public class UserControllerTest extends ControllerTest{
     @Test
     public void getLecturesInCourseTest() throws Exception {
         String uri = "/lectureSchedules/course/1";
-        User user = new User("a.baran@student.tudelft.nl", "STUDENT", new Date(10L));
+        User user = new User("a.baran1@student.tudelft.nl", "STUDENT1", new Date(10L));
 
         mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(user)))
@@ -52,7 +52,7 @@ public class UserControllerTest extends ControllerTest{
     @Test
     public void getPossibleLecturesTest() throws Exception{
         String uri = "/userCourseService/possibleLectures/a.baran@student.tudelft.nl";
-        User user = new User("a.baran@student.tudelft.nl", "STUDENT", new Date(10L));
+        User user = new User("a.baran2@student.tudelft.nl", "STUDENT2", new Date(10L));
 
         mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(user)))
@@ -62,7 +62,7 @@ public class UserControllerTest extends ControllerTest{
     @Test
     public void getStudentScheduleTest() throws Exception{
         String uri = "/lectureSchedules/a.baran@student.tudelft.nl";
-        User user = new User("a.baran@student.tudelft.nl", "STUDENT", new Date(10L));
+        User user = new User("a.baran3@student.tudelft.nl", "STUDENT3", new Date(10L));
 
         mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(user)))
@@ -72,7 +72,7 @@ public class UserControllerTest extends ControllerTest{
     @Test
     public void getTeacherScheduleTest() throws Exception{
         String uri = "/lectureSchedules/teacher/a.baran@student.tudelft.nl";
-        User user = new User("a.baran@student.tudelft.nl", "STUDENT", new Date(10L));
+        User user = new User("a.baran4@student.tudelft.nl", "STUDENT4", new Date(10L));
 
         mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(user)))
@@ -82,7 +82,7 @@ public class UserControllerTest extends ControllerTest{
     @Test
     public void getStudentsInLectureTest() throws Exception{
         String uri = "/lectureSchedules/studentsLecture/1";
-        User user = new User("a.baran@student.tudelft.nl", "STUDENT", new Date(10L));
+        User user = new User("a.baran5@student.tudelft.nl", "STUDENT5", new Date(10L));
 
         mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(user)))
