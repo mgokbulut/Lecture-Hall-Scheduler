@@ -1,14 +1,13 @@
-package nl.tudelft.unischeduler.schedulegenerate.generatorTests;
-
-import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
-import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
-import nl.tudelft.unischeduler.schedulegenerate.entities.Room;
-import nl.tudelft.unischeduler.schedulegenerate.generator.Generator;
+package nl.tudelft.unischeduler.schedulegenerate.GeneratorTests;
 
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
+import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
+import nl.tudelft.unischeduler.schedulegenerate.entities.Room;
+import nl.tudelft.unischeduler.schedulegenerate.generator.Generator;
 
 // a class that creates basic entities, useful for unit testing
 public class Util {
