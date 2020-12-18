@@ -1,12 +1,11 @@
 package nl.tudelft.unischeduler.user;
 
-import lombok.Data;
-import nl.tudelft.unischeduler.gateway.AuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.security.MessageDigest;
 import java.util.Optional;
+import lombok.Data;
+import nl.tudelft.unischeduler.authentication.AuthenticationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 @Data
@@ -30,10 +29,10 @@ public class UserService {
             return "{message:\"This NetID already exists\"}";
         } else {
             try {
-//                MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-//                messageDigest.update(user.getPassword().getBytes());
-//                String stringHash = new String(messageDigest.digest());
-//                user.setPassword(stringHash);
+                //  MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+                //  messageDigest.update(user.getPassword().getBytes());
+                //  String stringHash = new String(messageDigest.digest());
+                //  user.setPassword(stringHash);
                 userRepository.save(user);
             } catch (Exception e) {
                 System.out.println("Something went wrong in register method");
@@ -51,10 +50,10 @@ public class UserService {
      */
     public String login(User user) {
         try {
-//            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-//            messageDigest.update(user.getPassword().getBytes());
-//            String stringHash = new String(messageDigest.digest());
-//            user.setPassword(stringHash);
+            // MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            // messageDigest.update(user.getPassword().getBytes());
+            // String stringHash = new String(messageDigest.digest());
+            // user.setPassword(stringHash);
             String token = authenticationService
                 .createAuthenticationToken(user.getNetId(), user.getPassword());
             if (token == null) {
@@ -80,7 +79,7 @@ public class UserService {
             String stringHash = new String(messageDigest.digest());
             user.setPassword(stringHash);
             String token = authenticationService
-                    .createAuthenticationToken(user.getNetId(), user.getPassword());
+                .createAuthenticationToken(user.getNetId(), user.getPassword());
             if (token == null) {
                 return null;
             }

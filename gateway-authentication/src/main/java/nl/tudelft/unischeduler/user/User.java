@@ -1,12 +1,11 @@
 package nl.tudelft.unischeduler.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 @Entity
 @Data
