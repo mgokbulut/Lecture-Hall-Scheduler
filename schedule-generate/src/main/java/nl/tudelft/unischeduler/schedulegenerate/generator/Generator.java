@@ -1,5 +1,15 @@
 package nl.tudelft.unischeduler.schedulegenerate.generator;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Set;
 import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
@@ -7,18 +17,6 @@ import nl.tudelft.unischeduler.schedulegenerate.entities.Room;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.PriorityQueue;
-import java.util.Date;
-import java.util.HashSet;
-
 
 // These were warnings on getEarliestTime(),
 // they signal an anomaly which is part of the way the method
@@ -36,8 +34,8 @@ public class Generator {
      * @param currentTime Time at which to start scheduling
      */
     public void scheduleGenerate(Timestamp currentTime) {
-
-        int numOfDays = 10; // placeholder
+        int range = 10;
+        int numOfDays = range; // placeholder
         ArrayList<Course> courses = apiCommunicator.getCourses();
         ArrayList<Lecture> lectures = new ArrayList<>();
 
@@ -45,7 +43,7 @@ public class Generator {
         for (int i = 0; i < courses.size(); i++) {
             Course course = courses.get(i);
             ArrayList<Lecture> toAdd =
-                    apiCommunicator.getLecturesInCourse(course.getId(), currentTime, numOfDays);
+                apiCommunicator.getLecturesInCourse(course.getId(), currentTime, numOfDays);
             lectures.addAll(toAdd);
         }
 
@@ -56,7 +54,7 @@ public class Generator {
         // easy-to-access datastructure.
         List<List<Lecture>> timeTable = createTimeTable(lectures, currentTime, numOfDays);
 
-        scheduling(lectures, timeTable, currentTime);
+        scheduling(lectures, timeTable, currentTime, numOfDays);
     }
 
     private List<List<Lecture>> createTimeTable(ArrayList<Lecture> lectures,
@@ -100,7 +98,7 @@ public class Generator {
         int iteration = 0;
         while (cal1.before(cal2) && iteration < maxIterations) {
             if ((Calendar.SATURDAY != cal1.get(Calendar.DAY_OF_WEEK))
-                    && (Calendar.SUNDAY != cal1.get(Calendar.DAY_OF_WEEK))) {
+                && (Calendar.SUNDAY != cal1.get(Calendar.DAY_OF_WEEK))) {
                 numDays = numDays + 1;
             }
             cal1.add(Calendar.DATE, 1);
@@ -111,14 +109,36 @@ public class Generator {
     }
 
     /**
+     * method that increases the timestamp by one day,
+     * but only for working days. So if it's friday,
+     * the day will be increased to the next monday.
+     *
+     * @param t the timestamp you want to add a day to
+     * @return a new timestamp that is set to one day later
+     */
+    private Timestamp nextDay(Timestamp t) {
+        Calendar cal1 = Calendar.getInstance();
+
+        cal1.setTimeInMillis(t.getTime());
+
+        if (Calendar.FRIDAY == cal1.get(Calendar.DAY_OF_WEEK)) {
+            cal1.add(Calendar.DAY_OF_YEAR, 3);
+        } else {
+            cal1.add(Calendar.DAY_OF_YEAR, 1);
+        }
+        return new Timestamp(cal1.getTime().getTime());
+    }
+
+    /**
      * Assigns and schedules courses that are not assigned yet.
      * This is tested based on whether they are assigned a room or not.
      *
-     * @param lectures  list containing every lecture there is
+     * @param lectures list containing every lecture there is
      * @param timeTable list of lists containing all lectures, per day
      */
     private void scheduling(ArrayList<Lecture> lectures,
-                            List<List<Lecture>> timeTable, Timestamp currentTime) {
+                            List<List<Lecture>> timeTable, Timestamp currentTime,
+                            int numOfDays) {
         // TODO change this to a proper template online room, ask Kuba
         Room onlineRoom = new Room(0, Integer.MAX_VALUE, "online_room");
         // this value is placeholder until we find a better solution, should work
@@ -154,12 +174,14 @@ public class Generator {
                     // if the lecture is not assigned in the schedule yet
                     if (l.getRoom() == null && !(l.getIsOnline())) {
                         // then we want to assign it a room
-                        Room room = findRoom(rooms, currentTime, l, timeTable, currentTime);
+                        Room room = findRoom(rooms, currentTime, l, timeTable,
+                                currentTime, numOfDays);
                         // if no room was found (no space or bug)
                         if (room == null) {
                             // then we want to move it online
                             // so we set its time, its room, and its isOnline
-                            l.setStartTime(getEarliestTime(room, l, timeTable, currentTime));
+                            l.setStartTime(getEarliestTime(room, l, timeTable,
+                                    currentTime, numOfDays));
                             l.setRoom(onlineRoom);
                             l.setIsOnline(true);
                             continue;
@@ -176,20 +198,20 @@ public class Generator {
                         List<Student> notSelected = new ArrayList<>();
                         int iteration = 0;
                         while (studentsToAdd.size() < capacity
-                                && iteration < maxIterationMultiplier * capacity) {
+                            && iteration < maxIterationMultiplier * capacity) {
                             try {
                                 Student prioStudent = studentsQueue.remove();
                                 // if student wasn't added already, add him
                                 if (!studentsToAdd.contains(prioStudent)) {
                                     studentsToAdd.add(prioStudent);
                                     prioStudent.setLastTimeOnCampus(
-                                            new Date(l.getStartTime().getTime()));
+                                        new Date(l.getStartTime().getTime()));
                                 } else {
                                     notSelected.add(prioStudent);
                                 }
                             } catch (Exception e) {
                                 System.out.println("there was an error "
-                                        + "scheduling students to lectures...");
+                                    + "scheduling students to lectures...");
                                 System.out.println(e.toString());
                             }
                             iteration++;
@@ -213,15 +235,16 @@ public class Generator {
 
     private Room findRoom(ArrayList<Room> rooms, Timestamp date,
                           Lecture lecture, List<List<Lecture>> timeTable,
-                          Timestamp currentTime) {
+                          Timestamp currentTime, int numOfDays) {
         // sort in descending order
         Collections.sort(rooms);
         Collections.reverse(rooms);
         // for each room
         for (int i = 0; i < rooms.size(); i++) {
             Room currRoom = rooms.get(i);
-            // get their latest available time
-            Timestamp time = getEarliestTime(currRoom, lecture, timeTable, currentTime);
+            // get the earliest time when it is free
+            Timestamp time = getEarliestTime(currRoom, lecture, timeTable,
+                    currentTime, numOfDays);
             // if there is none, return null
             if (time != null) {
                 // otherwise update the relevant values
@@ -235,46 +258,74 @@ public class Generator {
         return null;
     }
 
+    /**
+     * For a single lecture, tells us the earliest time of the day, and
+     * the day itself, when the lecture can be scheduled, in a given room.
+     *
+     * @param room which room we're checking for
+     * @param lecture which lecture we would like to add
+     * @param timeTable the timetable with lectures listed per day
+     * @param currentTime the starting time of the whole scheduling system
+     * @return time when we can schedule the lecture
+     */
     private Timestamp getEarliestTime(Room room, Lecture lecture,
-                                      List<List<Lecture>> timeTable, Timestamp currentTime) {
+                                      List<List<Lecture>> timeTable, Timestamp currentTime,
+                                      int numOfDays) {
         // this part will need the most testing as it is complex to work with timestamps
         int day = 0;
-        Time endTimeOfDay = new Time(17, 45, 0);
-        Timestamp startTime = new Timestamp(currentTime.getTime());
+        Calendar c = Calendar.getInstance();
+
+        // end of the day is at 17:45, courses should not end any further than that
+        Timestamp dayStartTime = new Timestamp(currentTime.getTime());
         // TODO use API to get window
-        int window = 10; // placeholder until we implement
-        while (day < window) {
-            Timestamp nextTime = isFree(startTime, room, lecture, timeTable, currentTime);
-            if (nextTime == null) {
-                return startTime;
-            } else {
-                startTime = nextTime;
-            }
-            Timestamp endTime = new Timestamp(startTime.getTime()
+        while (day < numOfDays) {
+            c.setTimeInMillis(dayStartTime.getTime());
+            c.set(Calendar.HOUR_OF_DAY, 17);
+            c.set(Calendar.MINUTE, 45);
+            Timestamp endOfDay = new Timestamp(c.getTimeInMillis());
+            Timestamp nextTime = isFree(dayStartTime, room, lecture,
+                                        timeTable, currentTime, day);
+            Timestamp nextTimeWithDuration = new Timestamp(nextTime.getTime()
                     + lecture.getDuration().getTime());
-            Time endTimeInDay = new Time(endTime.getHours(), endTime.getMinutes(), 0);
-            if (endTimeInDay.after(endTimeOfDay)) {
+            if (nextTimeWithDuration.after(endOfDay)) {
+                dayStartTime = nextDay(dayStartTime);
                 day++;
-                startTime = currentTime;
+                continue;
+            } else {
+                return nextTime;
             }
         }
         return null;
     }
 
+    /**
+     * For a single day and room, tells us the earliest time of the day when
+     * the room is not occupied. This returns the value PLUS the inter-lecture
+     * interval specified by the Rules module.
+     *
+     * @param timeslot which day we're checking for
+     * @param room which room we're checking for
+     * @param lecture which lecture we would like to add
+     * @param timeTable the timetable with lectures listed per day
+     * @param currentTime the starting time of the whole scheduling system
+     * @return earliest time when the room is not busy
+     */
     private Timestamp isFree(Timestamp timeslot, Room room,
                              Lecture lecture, List<List<Lecture>> timeTable,
-                             Timestamp currentTime) {
-        int day = calDistance(currentTime, timeslot);
+                             Timestamp currentTime, int day) {
         List<Lecture> lectures = timeTable.get(day);
+        long intervalBetweenLectures = getIntervalBetweenLectures();
 
+        Timestamp found = new Timestamp(timeslot.getTime());
         for (int i = 0; i < lectures.size(); i++) {
             Lecture l = lectures.get(i);
-            if ((overlap(lecture, l) && l.getRoom().equals(room))
-                    || l.getYear() == lecture.getYear()) {
-                return new Timestamp(l.getStartTime().getTime() + l.getDuration().getTime());
+            if ((overlap(lecture, found, l) && l.getRoom().equals(room))
+                || l.getYear() == lecture.getYear()) {
+                found = new Timestamp(l.computeEndTime().getTime()
+                        + intervalBetweenLectures);
             }
         }
-        return null;
+        return found;
     }
 
     private int getCapacity(Room room) {
@@ -283,9 +334,43 @@ public class Generator {
         return room.getCapacity();
     }
 
-    protected boolean overlap(Lecture l1, Lecture l2) {
-        // TODO implement
+    /**
+     * Helper method that tells us if a lecture and its potential
+     * start time overlaps with an already-scheduled lecture.
+     *
+     * @param lecture the lecture we are trying to schedule
+     * @param potentialStartTime the start time we want to give to this lecture
+     * @param scheduledLecture the already-scheduled lecture we want to check against
+     * @return whether there would be overlap should the lecture be scheduled at this time
+     */
+    private boolean overlap(Lecture lecture,
+                            Timestamp potentialStartTime, Lecture scheduledLecture) {
+        Timestamp scheduledLectureEndTime = scheduledLecture.computeEndTime();
+        long interval = getIntervalBetweenLectures();
+        Timestamp schLecEndTiWithInterval = new Timestamp(scheduledLectureEndTime.getTime()
+                + interval);
+        // if the start time is during the other lecture
+        if (potentialStartTime.after(scheduledLecture.getStartTime())
+                && potentialStartTime.before(schLecEndTiWithInterval)) {
+            return true;
+        }
+        // if the end time is during the other lecture
+        Timestamp potentialEndTime = new Timestamp(potentialStartTime.getTime()
+                + lecture.getDuration().getTime());
+        if (potentialEndTime.after(scheduledLecture.getStartTime())
+                && potentialStartTime.before(schLecEndTiWithInterval)) {
+            return true;
+        }
+        // if the start and end times are before and after the scheduled lecture
+        if (potentialStartTime.before(scheduledLecture.getStartTime())
+                && potentialEndTime.after(schLecEndTiWithInterval)) {
+            return true;
+        }
         return false;
+    }
+
+    private long getIntervalBetweenLectures() {
+        return apiCommunicator.getIntervalBetweenLectures();
     }
 
 
