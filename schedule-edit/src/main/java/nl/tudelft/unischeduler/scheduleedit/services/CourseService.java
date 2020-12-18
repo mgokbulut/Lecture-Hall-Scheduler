@@ -1,11 +1,8 @@
 package nl.tudelft.unischeduler.scheduleedit.services;
 
 import java.io.IOException;
-import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
-import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +21,7 @@ public class CourseService extends DatabaseService{
      */
     public long createCourse(String name, int year) throws IOException {
         ResponseEntity<Long> response = webClient.put()
-                .uri("/courses/" + name + "/" + year)
+                .uri("/courses/create/{name}/{year}", name, year)
                 .retrieve()
                 .toEntity(Long.class)
                 .block();
@@ -41,7 +38,8 @@ public class CourseService extends DatabaseService{
                         courseId,
                         teacher,
                         startTime,
-                        duration)
+                        duration,
+                        false)
                 .retrieve()
                 .toEntity(Long.class)
                 .block();

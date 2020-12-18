@@ -24,7 +24,7 @@ public abstract class DatabaseService {
 
     @PostConstruct
     public void setUp() {
-        webClientBuilder.baseUrl("http://database-service/");
+        webClientBuilder.baseUrl("http://database-service");
         webClient = webClientBuilder.build();
     }
 
