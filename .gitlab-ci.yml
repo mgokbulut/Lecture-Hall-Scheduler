@@ -1,5 +1,7 @@
 include:
   - /discovery-server/.gitlab-ci.yml
+  - /gateway-server/.gitlab-ci.yml
+  - /gateway-authentication/.gitlab-ci.yml
   - /authentication/.gitlab-ci.yml
   - /database/.gitlab-ci.yml
   - /viewer/.gitlab-ci.yml

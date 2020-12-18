@@ -1,0 +1,29 @@
+image: gradle:6.7-jdk11
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+  -
+stages:
+  - build
+  - staticAnalysis
+  - test
+
+gateway-server-build:
+  stage: build
+  script:
+    gradle --build-cache :gateway-server:assemble
+
+gateway-server-checkStyle:
+  stage: staticAnalysis
+  script:
+    gradle :gateway-server:checkstyleMain :gateway-server:checkStyleTest
+
+gateway-server-PMD:
+  stage: staticAnalysis
+  script:
+    gradle :gateway-server:pmdMain :gateway-server:pmdTest
+
+gateway-server-test:
+  stage: test
+  script:
+    gradle :gateway-server:test
