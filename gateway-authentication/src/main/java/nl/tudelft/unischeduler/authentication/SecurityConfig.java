@@ -45,7 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .hasAnyRole("STUDENT", "TEACHER", "ADMIN")
             .antMatchers("/schedule-edit/teacherdemo")
             .hasAnyRole("TEACHER", "ADMIN")
-            .antMatchers("/user/**", "/schedule-edit/admindemo")
+            .antMatchers("/user/**", "/schedule-edit/admindemo", "/schedule-edit/**",
+                "/database/**", "/rules/**", "/schedule-generate/**", "/viewer-module/**")
             .hasAnyRole("ADMIN")
             .and().sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

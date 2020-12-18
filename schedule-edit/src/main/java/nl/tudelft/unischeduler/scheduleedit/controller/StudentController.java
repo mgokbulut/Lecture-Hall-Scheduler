@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class StudentController {
     private ScheduleEditModule core;
 
-
     /**
      * Sets all the lectures until the until date to no longer be attended by the student.
      * <p>Use this method if you want to specify a specific date
