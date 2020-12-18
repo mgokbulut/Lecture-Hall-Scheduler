@@ -5,6 +5,8 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,9 +19,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
+    @Getter
+    @Setter
     private MyUserDetailsService userDetailsService;
 
     @Autowired
+    @Getter
+    @Setter
     private JwtUtil jwtUtil;
 
     @Override
@@ -53,22 +59,5 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    public MyUserDetailsService getUserDetailsService() {
-        return userDetailsService;
-    }
-
-    public void setUserDetailsService(
-        MyUserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
-
-    public JwtUtil getJwtUtil() {
-        return jwtUtil;
-    }
-
-    public void setJwtUtil(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
     }
 }

@@ -1,37 +1,23 @@
 package nl.tudelft.unischeduler.rules.controllers;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NonNull;
 import nl.tudelft.unischeduler.rules.core.RulesModule;
 import nl.tudelft.unischeduler.rules.entities.Lecture;
 import nl.tudelft.unischeduler.rules.entities.Room;
 import nl.tudelft.unischeduler.rules.entities.Student;
 import nl.tudelft.unischeduler.rules.storing.RulesParser;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+@Data
+@AllArgsConstructor
+@RestController
 public class DatabaseController {
 
-    private RulesParser parser;
-    private RulesModule module;
-
-    public DatabaseController(RulesParser parser, RulesModule module) {
-        this.parser = parser;
-        this.module = module;
-    }
-
-    public RulesParser getParser() {
-        return parser;
-    }
-
-    public void setParser(RulesParser parser) {
-        this.parser = parser;
-    }
-
-    public RulesModule getModule() {
-        return module;
-    }
-
-    public void setModule(RulesModule module) {
-        this.module = module;
-    }
+    @NonNull private RulesParser parser;
+    @NonNull private RulesModule module;
 
     @GetMapping("/users/{netId}")
     public Student getStudent(String netId) {

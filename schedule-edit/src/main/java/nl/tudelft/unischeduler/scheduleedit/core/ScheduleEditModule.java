@@ -4,61 +4,23 @@ import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
 import nl.tudelft.unischeduler.scheduleedit.exception.IllegalDateException;
 import nl.tudelft.unischeduler.scheduleedit.services.StudentService;
 import nl.tudelft.unischeduler.scheduleedit.services.TeacherService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Data
+@AllArgsConstructor
 public class ScheduleEditModule {
 
     private Clock clock;
     private TeacherService teacherService;
     private StudentService studentService;
 
-    /**
-     * Constructs a new ScheduleEditModule.
-     *
-     * @param clock The clock to use for retrieving the time.
-     *              For general purpose should be the system clock;
-     * @param teacherService The service to use for contacting the database
-     *                       for any teacher related events.
-     * @param studentService The service to use for contacting the database
-     *                       for any student related events.
-     */
-    public ScheduleEditModule(@Autowired Clock clock,
-                              @Autowired TeacherService teacherService,
-                              @Autowired StudentService studentService) {
-        this.clock = clock;
-        this.teacherService = teacherService;
-        this.studentService = studentService;
-    }
-
-    public Clock getClock() {
-        return clock;
-    }
-
-    public void setClock(Clock clock) {
-        this.clock = clock;
-    }
-
-    public TeacherService getTeacherService() {
-        return teacherService;
-    }
-
-    public void setTeacherService(TeacherService teacherService) {
-        this.teacherService = teacherService;
-    }
-
-    public StudentService getStudentService() {
-        return studentService;
-    }
-
-    public void setStudentService(StudentService studentService) {
-        this.studentService = studentService;
-    }
 
     private LocalDate checkBeforeNow(LocalDate future) throws IllegalDateException {
         if (future == null) {
