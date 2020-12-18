@@ -1,0 +1,37 @@
+server:
+  port: 8100
+
+#eureka:
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    service-url: http://localhost:8761/eureka
+#  instance:
+#    hostname: localhost
+
+zuul:
+  host:
+    connect-timeout-millis: 5000000
+    socket-timeout-millis: 5000000
+  routes:
+#    database:
+#      path: /database/**
+#      serviceId: database-service
+#      stripPrefix: true
+    rules:
+      path: /rules/**
+      serviceId: rules-service
+      stripPrefix: true
+    schedule-edit:
+      path: /schedule-edit/**
+      serviceId: schedule-edit-service
+      stripPrefix: true
+    schedule-generate:
+      path: /schedule-generate/**
+      serviceId: schedule-generate-service
+      stripPrefix: true
+    viewer:
+      path: /viewer/**
+      serviceId: viewer-service
+      stripPrefix: true
+  ignored-services: '*'
