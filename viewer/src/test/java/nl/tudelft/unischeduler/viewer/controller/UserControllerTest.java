@@ -44,7 +44,9 @@ public class UserControllerTest extends ControllerTest{
         String uri = "/lectureSchedules/course/1";
         User user = new User("a.baran@student.tudelft.nl", "STUDENT", new Date(10L));
 
-        mockMvc.perform(get(uri)).andExpect(status().isOk());
+        mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isOk());
     }
 
     @Test
