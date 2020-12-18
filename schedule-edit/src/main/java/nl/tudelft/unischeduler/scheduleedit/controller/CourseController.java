@@ -6,7 +6,6 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import nl.tudelft.unischeduler.scheduleedit.core.ScheduleEditModule;
-import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +35,7 @@ public class CourseController {
         return core.createLecture(courseId, teacherNetId, year, week, duration);
     }
 
-    @PutMapping
+    @PutMapping("student")
     public void addStudentToLecture(@RequestBody List<String> studentNetId,
                                     @RequestParam long courseId) throws IOException {
         core.addStudentGroupLecture(studentNetId, courseId);

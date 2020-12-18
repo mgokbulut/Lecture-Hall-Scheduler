@@ -31,7 +31,7 @@ public class StudentController {
      * @param until The LocalDate until the student is sick (inclusive).
      * @throws ConnectionException When the connection to the database service fails.
      */
-    @PutMapping(value = "/{studentNetId}/sick", params = {"until"})
+    @PutMapping(value = "{studentNetId}/sick", params = {"until"})
     public void cancelAttendance(@PathVariable String studentNetId,
                                  @RequestParam LocalDateTime until)
             throws IOException {
@@ -39,7 +39,7 @@ public class StudentController {
     }
 
 
-    @PutMapping("/{studentNetId}/sick")
+    @PutMapping("{studentNetId}/sick")
     public void cancelLecturesStandard(@PathVariable String studentNetId)
             throws IOException {
         core.reportStudentSick(studentNetId);

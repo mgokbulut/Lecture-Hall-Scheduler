@@ -31,7 +31,7 @@ public class TeacherController {
      * @param until The LocalDate until the teacher is sick (inclusive).
      * @throws ConnectionException When the connection to the database service fails.
      */
-    @PutMapping(value = "/{teacherNetId}/sick", params = {"until"})
+    @PutMapping(value = "{teacherNetId}/sick", params = {"until"})
     public void cancelLectures(@PathVariable String teacherNetId, @RequestParam LocalDateTime until)
             throws IOException {
         core.reportTeacherSick(teacherNetId, until);
@@ -45,7 +45,7 @@ public class TeacherController {
      *                     or the token should belong to a faculty member.
      * @throws ConnectionException When the connection to the database service fails.
      */
-    @PutMapping("/{teacherNetId}/sick")
+    @PutMapping("{teacherNetId}/sick")
     public void cancelLecturesStandard(@PathVariable String teacherNetId)
             throws IOException {
         core.reportTeacherSick(teacherNetId);
