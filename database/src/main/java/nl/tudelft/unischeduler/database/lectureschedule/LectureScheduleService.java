@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
-
 import nl.tudelft.unischeduler.database.classroom.ClassroomRepository;
 import nl.tudelft.unischeduler.database.lecture.Lecture;
 import nl.tudelft.unischeduler.database.lecture.LectureRepository;
@@ -40,6 +39,29 @@ public class LectureScheduleService {
     @Autowired
     private transient UserService userService;
 
+    /**
+     * Constructor.
+     *
+     * @param lectureScheduleRepository input repository
+     * @param scheduleRepository input repository
+     * @param userRepository input repository
+     * @param lectureRepository input repository
+     * @param classroomRepository input repository
+     * @param userService input repository
+     */
+    public LectureScheduleService(LectureScheduleRepository lectureScheduleRepository,
+                                  ScheduleRepository scheduleRepository,
+                                  UserRepository userRepository,
+                                  LectureRepository lectureRepository,
+                                  ClassroomRepository classroomRepository,
+                                  UserService userService) {
+        this.lectureScheduleRepository = lectureScheduleRepository;
+        this.scheduleRepository = scheduleRepository;
+        this.userRepository = userRepository;
+        this.lectureRepository = lectureRepository;
+        this.classroomRepository = classroomRepository;
+        this.userService = userService;
+    }
 
     /**
      *  Removes the Lecture from all the LectureSchedules
@@ -53,11 +75,9 @@ public class LectureScheduleService {
         try {
             lectureScheduleRepository.deleteLectureSchedulesByLectureId(lectureId);
             return ResponseEntity.ok().build();
-            //return "Lecture successfully deleted from all the schedules";
         } catch (Exception a) {
             a.printStackTrace();
             return ResponseEntity.badRequest().build();
-            //return "Issue with deletion of a lecture from schedules";
         }
     }
 
@@ -123,8 +143,6 @@ public class LectureScheduleService {
                     .filter(lectureIds::contains)
                     .collect(Collectors.toList());
 
-            System.out.println(lectureSchedulesToDelete.toString());
-
             for (Long id : lectureSchedulesToDelete) {
                 lectureScheduleRepository
                         .deleteByLectureIdAndScheduleId(id, schedule.get().getId());
@@ -154,11 +172,11 @@ public class LectureScheduleService {
                     .map(x -> lectureRepository
                             .findById(x.getLectureId())
                             .get())
-                    .map(x->new Object[]
-                            {x, classroomRepository.findById(x.getClassroom()).get()})
+                    .map(x -> new Object[]
+                        {x, classroomRepository.findById(x.getClassroom()).get()})
                     .collect(Collectors.toList());
 
-        } catch(Exception a) {
+        } catch (Exception a) {
             System.err.println("No such object in DB");
             a.printStackTrace();
             return null;
@@ -179,9 +197,9 @@ public class LectureScheduleService {
                     .findAllByTeacher(teacher)
                     .stream()
                     .map(x -> new Object[]
-                            {x, classroomRepository.findById(x.getClassroom()).get()})
+                        {x, classroomRepository.findById(x.getClassroom()).get()})
                     .collect(Collectors.toList());
-        } catch(Exception a) {
+        } catch (Exception a) {
             System.err.println("No such object in DB");
             a.printStackTrace();
             return null;
@@ -191,7 +209,7 @@ public class LectureScheduleService {
     /**
      * Returns a list of students that are scheduled to attend the given lecture
      * with an Object array of size 2: arr[0] = the student with the given netId
-     * arr[1] = latest reportSick date from their sickLog.
+     * arr[1] = boolean whether the student has finished being sick.
      *
      * @param lectureId lecture Id
      * @return a list of student scheduled for a lecture
@@ -258,10 +276,10 @@ public class LectureScheduleService {
             return lectureRepository
                     .findAllByCourse(courseId)
                     .stream()
-                    .map(x->new Object[]
-                            {x, classroomRepository.findById(x.getClassroom()).get()})
+                    .map(x -> new Object[]
+                        {x, classroomRepository.findById(x.getClassroom()).get()})
                     .collect(Collectors.toList());
-        } catch(Exception a) {
+        } catch (Exception a) {
             System.err.println("No such object in DB");
             a.printStackTrace();
             return null;

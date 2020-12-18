@@ -40,28 +40,24 @@ public class LectureScheduleController {
         return lectureScheduleService.cancelStudentAttendance(netId, start, end);
     }
 
-    //TODO: test again
     @GetMapping(path = "/lectureSchedules/student/{netId}")
     public @ResponseBody
     List<Object []> getStudentSchedule(@PathVariable String netId) {
         return lectureScheduleService.getStudentSchedule(netId);
     }
 
-    //TODO: test again
     @GetMapping(path = "/lectureSchedules/teacher/{netId}")
     public @ResponseBody
     List<Object []> getTeacherSchedule(@PathVariable String netId) {
         return lectureScheduleService.getTeacherSchedule(netId);
     }
 
-    //TODO: test again
     @GetMapping(path = "/lectureSchedules/studentsLecture/{lectureId}")
     public @ResponseBody
     List<Object []> getStudentsInLecture(@PathVariable Long lectureId) {
         return lectureScheduleService.getStudentsInLecture(lectureId);
     }
 
-    //TODO: test again
     @GetMapping(path = "/lectureSchedules/course/{courseId}")
     public @ResponseBody
     List<Object []> getAllLecturesInCourse(@PathVariable Long courseId) {

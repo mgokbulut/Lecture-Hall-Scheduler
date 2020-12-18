@@ -20,7 +20,6 @@ public class UserCourseController {
     @GetMapping(path = "/userCourses/{courseId}")
     public @ResponseBody
     List<User> getStudentsInCourse(@PathVariable Long courseId) {
-        //edit for "along with the TimeStamp of their most recent Lecture"
         return userCourseService.getStudentsInCourse(courseId);
     }
 
@@ -31,7 +30,6 @@ public class UserCourseController {
         return userCourseService.addStudentToCourse(netIds, courseId);
     }
 
-    //TODO: test again
     @GetMapping(path = "/userCourseService/possibleLectures/{netId}")
     public @ResponseBody
     List<Object []> getPossibleLectures(@PathVariable String netId) {

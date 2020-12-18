@@ -2,6 +2,7 @@ package nl.tudelft.unischeduler.database.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleId;
 import nl.tudelft.unischeduler.database.usercourse.UserCourse;
 import nl.tudelft.unischeduler.database.usercourse.UserCourseId;
 import nl.tudelft.unischeduler.database.usercourse.UserCourseRepository;
@@ -32,5 +33,13 @@ public class UserCourseTest {
         UserCourse userCourse = new UserCourse("Test", 1L);
         UserCourse test = new UserCourse("Test", 1L);
         assertEquals(userCourse, test);
+    }
+
+    @Test
+    public void constructorTest() {
+        assertEquals(new UserCourseId().getCourseId(),
+                new UserCourseId().getCourseId());
+        assertEquals(new UserCourseId().getNetId(),
+                new UserCourseId().getNetId());
     }
 }
