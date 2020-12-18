@@ -1,6 +1,5 @@
 rootProject.name = 'OP30-sem59'
 include 'discovery-server'
-include 'authentication'
 include 'database'
 include 'viewer'
 include 'schedule-edit'
@@ -8,5 +7,5 @@ include 'schedule-generate'
 include 'rules'
 include 'discovery-server'
 include 'test-module'
-include 'Gateway'
+include 'gateway-authentication'
 
