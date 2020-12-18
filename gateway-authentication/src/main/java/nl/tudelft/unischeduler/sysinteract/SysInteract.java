@@ -1,5 +1,6 @@
 package nl.tudelft.unischeduler.sysinteract;
 
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
 import nl.tudelft.unischeduler.user.User;
@@ -18,19 +19,34 @@ public class SysInteract {
 
     private transient User user;
 
+    private transient List<Object> args;
+
+
+
     /***
      * <p>This method initialises the SysInteract object.</p>
      *
      * @param action the name of the action the user wants to perform
      * @param hashCode the session hashcode
      * @param user the user who is doing the action
+     * @param args a list of all arguments needed for the requested call
      */
-    public SysInteract(String action, int hashCode, User user) {
+    public SysInteract(String action, int hashCode, User user, List<Object> args) {
         this.action = action;
 
         this.givenHashCode = hashCode;
 
         this.user = user;
+
+        this.args = args;
+    }
+
+    public List<Object> getArgs() {
+        return args;
+    }
+
+    public void setArgs(List<Object> args) {
+        this.args = args;
     }
 
     /***
