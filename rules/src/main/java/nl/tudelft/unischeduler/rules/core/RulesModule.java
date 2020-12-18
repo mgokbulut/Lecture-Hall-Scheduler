@@ -1,14 +1,20 @@
 package nl.tudelft.unischeduler.rules.core;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Objects;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import nl.tudelft.unischeduler.rules.entities.Lecture;
+import nl.tudelft.unischeduler.rules.entities.Room;
 import nl.tudelft.unischeduler.rules.entities.Ruleset;
 import nl.tudelft.unischeduler.rules.entities.Student;
+import nl.tudelft.unischeduler.rules.services.DatabaseService;
+import org.springframework.beans.factory.annotation.Autowired;
 
+@Data
+@NoArgsConstructor
 public class RulesModule {
 
     private int[][] thresholds;
@@ -17,33 +23,8 @@ public class RulesModule {
 
     private Ruleset rules;
 
-    public int[][] getThresholds() {
-        return thresholds;
-    }
-
-    public void setThresholds(int[][] thresholds) {
-        this.thresholds = thresholds;
-    }
-
-    public long getBreakTime() {
-        return breakTime;
-    }
-
-    public void setBreakTime(long breakTime) {
-        this.breakTime = breakTime;
-    }
-
-    public int getMaxDays() {
-        return maxDays;
-    }
-
-    public void setMaxDays(int maxDays) {
-        this.maxDays = maxDays;
-    }
-
-    public Ruleset getRules() {
-        return rules;
-    }
+    @Autowired
+    private DatabaseService databaseService;
 
     public void setRules(Ruleset rules) {
         this.rules = rules;
@@ -51,14 +32,6 @@ public class RulesModule {
         setMaxDays(rules.getMaxDays());
         setThresholds(rules.getThresholds());
     }
-
-    /*
-    public void Rules() {
-
-        Ruleset nl.tudelft.unischeduler.rules.rules = rulesTable.getRulesFromDataBase();
-
-    }
-    */
 
     /**
      * calculates the capacity of a room, given the
@@ -84,6 +57,11 @@ public class RulesModule {
 
         return (init * thresholds[index][1] / 100);
 
+    }
+
+    public int getCapacityOfRoom(int roomId) {
+        Room room = databaseService.getClassroom(roomId);
+        return getCapacity(room.getCapacity());
     }
 
     /**
@@ -129,7 +107,20 @@ public class RulesModule {
                 || (start1 == start2);
     }
 
-    public boolean canBeScheduled(Student student) {
+    public boolean overlap(Lecture lecture) {
+        Lecture[] lectures = databaseService.getLectures();
+
+        for (Lecture lectureOnDay : lectures) {
+            if (Objects.equals(lecture.getRoom(), lectureOnDay.getRoom())
+                    && overlap(lecture, lectureOnDay)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean canBeScheduled(String studentNetId) {
+        Student student = databaseService.getStudent(studentNetId);
         return student.isInterested() && student.isRecovered();
     }
 
@@ -164,16 +155,15 @@ public class RulesModule {
 
     }
 
-    public boolean overlap(Lecture lecture) {
-        //TODO: call to database for all lectures on that day in a room.
-        List<Lecture> lectures = Arrays.asList(
-                new Lecture(0, 50, Timestamp.valueOf("2020-12-1 9:00:00"), Time.valueOf("1:00:00")),
-                new Lecture(0, 50, Timestamp.valueOf("2020-12-1 9:00:00"), Time.valueOf("1:00:00")));
-        for(Lecture lectureOnDay : lectures) {
-            if (overlap(lecture, lectureOnDay)) {
-                return false;
-            }
+    public boolean verifyLectures() {
+
+        Lecture[] lectures = databaseService.getLectures();
+        Lecture[] toRemove = verifyLectures(lectures);
+
+        for(int i = 0; i < toRemove.length; i++) {
+            databaseService.removeLectureFromSchedule(toRemove[i].getId());
+            databaseService.removeRoomFromLecture(toRemove[i].getId());
         }
-        return true;
+        return toRemove.length == 0;
     }
 }

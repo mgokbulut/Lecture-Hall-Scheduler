@@ -81,7 +81,7 @@ public class ApiCommunicator {
 
     public long getIntervalBetweenLectures() {
         // TODO API call to rules module to get the time interval between lectures
-        return 0l;
+        return 0L;
     }
 
     public boolean allowedOnCampus(Student s) {

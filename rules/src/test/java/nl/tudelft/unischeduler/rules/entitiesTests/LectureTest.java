@@ -16,7 +16,7 @@ class LectureTest {
     static Lecture makeLecture() {
         Timestamp ts = new Timestamp(2000, 1, 1, 0, 0, 0, 0);
         Time t = new Time(1, 0, 0);
-        Lecture test = new Lecture(1, 10, ts, t);
+        Lecture test = new Lecture(1, 10, ts, t, null);
         return test;
     }
 

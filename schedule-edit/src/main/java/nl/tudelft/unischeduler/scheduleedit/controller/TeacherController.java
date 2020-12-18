@@ -1,9 +1,12 @@
 package nl.tudelft.unischeduler.scheduleedit.controller;
 
-import java.time.LocalDate;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import nl.tudelft.unischeduler.scheduleedit.core.ScheduleEditModule;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,21 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/teacher/")
+@Data
+@AllArgsConstructor
 public class TeacherController {
 
     private ScheduleEditModule core;
-
-    public ScheduleEditModule getCore() {
-        return core;
-    }
-
-    public void setCore(ScheduleEditModule core) {
-        this.core = core;
-    }
-
-    public TeacherController(@Autowired ScheduleEditModule core) {
-        this.core = core;
-    }
 
     /**
      * Sets all the lectures until the until date to no longer being on campus.
@@ -39,9 +32,12 @@ public class TeacherController {
      * @param until The LocalDate until the teacher is sick (inclusive).
      * @throws ConnectionException When the connection to the database service fails.
      */
-    @PutMapping(value = "/{teacherNetId}/sick", params = {"until"})
-    public void cancelLectures(@PathVariable String teacherNetId, @RequestParam LocalDate until)
-            throws ConnectionException {
+    @PutMapping(value = "{teacherNetId}/sick", params = {"until"})
+    public void cancelLectures(@PathVariable String teacherNetId,
+                               @RequestParam
+                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                       LocalDateTime until)
+            throws IOException {
         core.reportTeacherSick(teacherNetId, until);
     }
 
@@ -53,9 +49,9 @@ public class TeacherController {
      *                     or the token should belong to a faculty member.
      * @throws ConnectionException When the connection to the database service fails.
      */
-    @PutMapping("/{teacherNetId}/sick")
+    @PutMapping("{teacherNetId}/sick")
     public void cancelLecturesStandard(@PathVariable String teacherNetId)
-            throws ConnectionException {
+            throws IOException {
         core.reportTeacherSick(teacherNetId);
     }
 }
