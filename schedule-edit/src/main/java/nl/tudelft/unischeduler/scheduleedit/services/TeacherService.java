@@ -26,9 +26,9 @@ public class TeacherService extends DatabaseService {
     public void cancelLectures(String teacherNetId, LocalDateTime start, LocalDateTime end)
             throws IOException {
         ResponseEntity<Void> response = webClient.delete()
-                .uri("lectureSchedules/remove/" + teacherNetId
-                        + "/" + Timestamp.valueOf(start)
-                        + "/" + Timestamp.valueOf(end))
+                .uri("/lectures/setToOffline/{teacherId}/{start}", teacherNetId,
+                        Timestamp.valueOf(start),
+                        Timestamp.valueOf(end))
                 .retrieve()
                 .toBodilessEntity()
                 .block();
