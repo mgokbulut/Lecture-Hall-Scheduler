@@ -24,13 +24,14 @@ public class UserCourseController {
         return userCourseService.getStudentsInCourse(courseId);
     }
 
-    @PutMapping(path = "/courses/assignStudents/{netIds}/{courseId}")
+    @PutMapping(path = "/userCourses/assignStudents/{netIds}/{courseId}")
     public @ResponseBody
     ResponseEntity<?> addStudentToCourse(@PathVariable List<String> netIds,
                                          @PathVariable Long courseId) {
         return userCourseService.addStudentToCourse(netIds, courseId);
     }
 
+    //TODO: test again
     @GetMapping(path = "/userCourseService/possibleLectures/{netId}")
     public @ResponseBody
     List<Object []> getPossibleLectures(@PathVariable String netId) {

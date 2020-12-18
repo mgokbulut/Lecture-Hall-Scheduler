@@ -59,6 +59,7 @@ public class UserCourseService {
             List<UserCourse> userCourses = new ArrayList<>();
             for (String netId : netIds) {
                 if (userCourseRepository.findByCourseIdAndNetId(courseId, netId).isPresent()) {
+                    System.err.println(netId);
                     return ResponseEntity.notFound().build();
                 }
                 UserCourse userCourse = new UserCourse(netId, courseId);
@@ -81,7 +82,6 @@ public class UserCourseService {
      * @param netId student netId
      * @return List of all the lectures
      */
-    //TODO: actually test
     public List<Object []> getPossibleLectures(String netId) {
         try {
             return userCourseRepository

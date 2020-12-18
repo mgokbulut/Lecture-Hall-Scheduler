@@ -145,7 +145,6 @@ public class LectureScheduleService {
      * @param student the student Id
      * @return List of all the lectures in user's schedule
      */
-    //TODO: actually test
     public List<Object []> getStudentSchedule(String student) {
         try {
             Schedule schedule = scheduleRepository.findByUser(student).get();
@@ -174,7 +173,6 @@ public class LectureScheduleService {
      * @param teacher the teacher Id
      * @return List of all the lectures in user's schedule
      */
-    //TODO: actually test
     public List<Object []> getTeacherSchedule(String teacher) {
         try {
             return lectureRepository
@@ -255,7 +253,6 @@ public class LectureScheduleService {
      * @param courseId the courseId
      * @return List of all the lectures in a course
      */
-    //TODO: actually test
     public List<Object []> getAllLecturesInCourse(Long courseId) {
         try {
             return lectureRepository
