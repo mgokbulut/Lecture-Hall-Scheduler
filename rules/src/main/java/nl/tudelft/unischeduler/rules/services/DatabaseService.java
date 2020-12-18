@@ -1,6 +1,5 @@
 package nl.tudelft.unischeduler.rules.services;
 
-import java.io.IOException;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;

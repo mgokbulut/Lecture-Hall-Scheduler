@@ -59,10 +59,8 @@ public class RulesParser {
     public boolean delete() throws IOException {
         if (rulesFile.isFile()) {
             return rulesFile.delete();
-        } else if (!rulesFile.exists()) {
-            return false;
         } else {
-            throw new IOException("File was not pointing to a file");
+            return false;
         }
     }
 }
