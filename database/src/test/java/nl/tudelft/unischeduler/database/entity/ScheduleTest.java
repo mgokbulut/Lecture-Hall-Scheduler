@@ -1,6 +1,7 @@
 package nl.tudelft.unischeduler.database.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import nl.tudelft.unischeduler.database.schedule.Schedule;
 import nl.tudelft.unischeduler.database.schedule.ScheduleRepository;
@@ -30,5 +31,10 @@ public class ScheduleTest {
         Schedule schedule = new Schedule(1L, "Test");
         Schedule test = new Schedule(1L, "Test");
         assertEquals(schedule, test);
+    }
+
+    @Test
+    public void constructorTest() {
+        assertEquals(new Schedule("user"), new Schedule("user"));
     }
 }

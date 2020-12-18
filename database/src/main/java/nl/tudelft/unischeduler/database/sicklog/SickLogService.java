@@ -16,7 +16,7 @@ public class SickLogService {
     @Autowired
     private transient SickLogRepository sickLogRepository;
 
-    public SickLogService(SickLogRepository sickLogRepository){
+    public SickLogService(SickLogRepository sickLogRepository) {
         this.sickLogRepository = sickLogRepository;
     }
 

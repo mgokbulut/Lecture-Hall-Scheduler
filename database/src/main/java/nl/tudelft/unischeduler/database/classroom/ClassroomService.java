@@ -11,7 +11,7 @@ public class ClassroomService {
     @Autowired
     private transient ClassroomRepository classroomRepository;
 
-    public ClassroomService(ClassroomRepository classroomRepository){
+    public ClassroomService(ClassroomRepository classroomRepository) {
         this.classroomRepository = classroomRepository;
     }
 
