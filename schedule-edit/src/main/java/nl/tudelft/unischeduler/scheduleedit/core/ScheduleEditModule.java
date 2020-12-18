@@ -3,6 +3,7 @@ package nl.tudelft.unischeduler.scheduleedit.core;
 import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,11 +23,11 @@ public class ScheduleEditModule {
     private StudentService studentService;
 
 
-    private LocalDate checkBeforeNow(LocalDate future) throws IllegalDateException {
+    private LocalDateTime checkBeforeNow(LocalDateTime future) throws IllegalDateException {
         if (future == null) {
             throw new IllegalDateException("There was no date specified");
         }
-        LocalDate now = LocalDate.now(clock);
+        LocalDateTime now = LocalDateTime.now(clock);
         if (future.isBefore(now)) {
             throw new IllegalDateException("the supplied date is before the current date");
         }
@@ -39,9 +40,9 @@ public class ScheduleEditModule {
      * @param teacherNetId The netId of the teacher that is sick.
      * @param until The LocalDate until the teacher is sick (inclusive).
      */
-    public void reportTeacherSick(String teacherNetId, LocalDate until)
+    public void reportTeacherSick(String teacherNetId, LocalDateTime until)
             throws IllegalDateException, ConnectionException {
-        LocalDate now = checkBeforeNow(until);
+        LocalDateTime now = checkBeforeNow(until);
         try {
             teacherService.cancelLectures(teacherNetId, now, until);
         } catch (IOException e) {
@@ -50,7 +51,7 @@ public class ScheduleEditModule {
     }
 
     public void reportTeacherSick(String teacherNetId) throws ConnectionException {
-        LocalDate until = LocalDate.now(clock).plus(13, ChronoUnit.DAYS);
+        LocalDateTime until = LocalDateTime.now(clock).plus(14, ChronoUnit.DAYS);
         reportTeacherSick(teacherNetId, until);
     }
 
@@ -60,9 +61,9 @@ public class ScheduleEditModule {
      * @param studentNetId The netId of the student that is sick.
      * @param until The LocalDate until the teacher is sick (inclusive).
      */
-    public void reportStudentSick(String studentNetId, LocalDate until)
+    public void reportStudentSick(String studentNetId, LocalDateTime until)
             throws IllegalDateException, ConnectionException {
-        LocalDate now = checkBeforeNow(until);
+        LocalDateTime now = checkBeforeNow(until);
         try {
             studentService.cancelStudentAttendance(studentNetId, now, until);
             studentService.setUserSick(studentNetId, now);
@@ -72,7 +73,7 @@ public class ScheduleEditModule {
     }
 
     public void reportStudentSick(String studentNetId) throws ConnectionException {
-        LocalDate until = LocalDate.now(clock).plus(13, ChronoUnit.DAYS);
+        LocalDateTime until = LocalDateTime.now(clock).plus(14, ChronoUnit.DAYS);
         reportStudentSick(studentNetId, until);
     }
 }

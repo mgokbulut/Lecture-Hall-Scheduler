@@ -1,9 +1,7 @@
 package nl.tudelft.unischeduler.scheduleedit.services;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.Period;
-import lombok.AllArgsConstructor;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.stereotype.Service;
@@ -23,7 +21,7 @@ public class TeacherService extends DatabaseService {
      * @param start The date for which to start canceling lectures (inclusive).
      * @param end the date for which to end canceling lectures (inclusive).
      */
-    public void cancelLectures(String teacherNetId, LocalDate start, LocalDate end)
+    public void cancelLectures(String teacherNetId, LocalDateTime start, LocalDateTime end)
             throws IOException {
         //TODO: this is a stub, and in the future should actually send the data.
     }

@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import lombok.Data;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
 import nl.tudelft.unischeduler.scheduleedit.exception.IllegalDateException;
 import nl.tudelft.unischeduler.scheduleedit.services.StudentService;
@@ -20,49 +22,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+@Data
 public class ScheduleEditModuleTests {
 
+    private final ZoneId zoneId = ZoneId.of("UTC+01:00");
     private final String testId = "testId";
     Clock fixedClock;
     Instant instant;
     TeacherService teacherService;
     StudentService studentService;
-
-    public String getTestId() {
-        return testId;
-    }
-
-    public Clock getFixedClock() {
-        return fixedClock;
-    }
-
-    public void setFixedClock(Clock fixedClock) {
-        this.fixedClock = fixedClock;
-    }
-
-    public Instant getInstant() {
-        return instant;
-    }
-
-    public void setInstant(Instant instant) {
-        this.instant = instant;
-    }
-
-    public TeacherService getTeacherService() {
-        return teacherService;
-    }
-
-    public void setTeacherService(TeacherService teacherService) {
-        this.teacherService = teacherService;
-    }
-
-    public StudentService getStudentService() {
-        return studentService;
-    }
-
-    public void setStudentService(StudentService studentService) {
-        this.studentService = studentService;
-    }
 
     /**
      * sets up all the standard mocks and is run before every test.
@@ -70,7 +38,7 @@ public class ScheduleEditModuleTests {
     @BeforeEach
     public void setUp() {
         instant = Instant.parse("2000-01-01T12:00:00.00Z");
-        fixedClock = Clock.fixed(instant, ZoneId.systemDefault());
+        fixedClock = Clock.fixed(instant, zoneId);
         teacherService = mock(TeacherService.class);
         studentService = mock(StudentService.class);
     }
@@ -80,8 +48,8 @@ public class ScheduleEditModuleTests {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
                 studentService);
-        LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
-        LocalDate until = LocalDate.parse("2000-01-14");
+        LocalDateTime start = LocalDateTime.ofInstant(instant, zoneId);
+        LocalDateTime until = LocalDate.parse("2000-01-14").atStartOfDay();
 
         module.reportTeacherSick(testId);
 
@@ -93,7 +61,7 @@ public class ScheduleEditModuleTests {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
                 studentService);
-        LocalDate until = LocalDate.parse("1999-12-31");
+        LocalDateTime until = LocalDate.parse("1999-12-31").atStartOfDay();
 
         Assertions.assertThrows(IllegalDateException.class, () -> {
             module.reportTeacherSick(testId, until);
@@ -107,8 +75,8 @@ public class ScheduleEditModuleTests {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
                 studentService);
-        LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
-        LocalDate until = LocalDate.parse("2000-01-15");
+        LocalDateTime start = LocalDateTime.ofInstant(instant, zoneId);
+        LocalDateTime until = LocalDate.parse("2000-01-15").atStartOfDay();
 
         module.reportTeacherSick(testId, until);
 
@@ -146,8 +114,8 @@ public class ScheduleEditModuleTests {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
                 studentService);
-        LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
-        LocalDate until = LocalDate.parse("2000-01-14");
+        LocalDateTime start = LocalDateTime.ofInstant(instant, zoneId);
+        LocalDateTime until = LocalDate.parse("2000-01-15").atTime(13, 0);
 
         module.reportStudentSick(testId);
 
@@ -159,7 +127,7 @@ public class ScheduleEditModuleTests {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
                 studentService);
-        LocalDate until = LocalDate.parse("1999-12-31");
+        LocalDateTime until = LocalDate.parse("1999-12-31").atStartOfDay();
 
         Assertions.assertThrows(IllegalDateException.class, () -> {
             module.reportStudentSick(testId, until);
@@ -173,8 +141,8 @@ public class ScheduleEditModuleTests {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
                 studentService);
-        LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
-        LocalDate until = LocalDate.parse("2000-01-01");
+        LocalDateTime start = LocalDateTime.ofInstant(instant, zoneId);
+        LocalDateTime until = LocalDate.parse("2000-01-01").atTime(23, 59, 59);
 
         module.reportStudentSick(testId, until);
 

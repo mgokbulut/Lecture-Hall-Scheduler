@@ -1,6 +1,6 @@
 package nl.tudelft.unischeduler.scheduleedit.controller;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import nl.tudelft.unischeduler.scheduleedit.core.ScheduleEditModule;
@@ -31,7 +31,7 @@ public class TeacherController {
      * @throws ConnectionException When the connection to the database service fails.
      */
     @PutMapping(value = "/{teacherNetId}/sick", params = {"until"})
-    public void cancelLectures(@PathVariable String teacherNetId, @RequestParam LocalDate until)
+    public void cancelLectures(@PathVariable String teacherNetId, @RequestParam LocalDateTime until)
             throws ConnectionException {
         core.reportTeacherSick(teacherNetId, until);
     }
