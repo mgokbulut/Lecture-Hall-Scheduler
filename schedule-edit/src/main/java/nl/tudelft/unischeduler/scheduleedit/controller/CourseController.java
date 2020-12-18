@@ -22,15 +22,16 @@ public class CourseController {
     private ScheduleEditModule core;
 
     @PostMapping
-    public long createCourse(@RequestParam String courseName, int year) throws ConnectionException {
+    public long createCourse(@RequestParam String courseName, @RequestParam int year)
+            throws ConnectionException {
         return core.createCourse(courseName, year);
     }
 
-    @PostMapping
-    public long createLecture(long courseId,
-                              String teacherNetId,
-                              int year, int week,
-                              Duration duration) throws ConnectionException {
+    @PostMapping("lecture")
+    public long createLecture(@RequestParam long courseId,
+                              @RequestParam String teacherNetId,
+                              @RequestParam int year, @RequestParam int week,
+                              @RequestParam Duration duration) throws ConnectionException {
         return core.createLecture(courseId, teacherNetId, year, week, duration);
     }
 
