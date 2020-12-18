@@ -95,7 +95,7 @@ public class DatabaseService {
         return getUsers(result);
     }
 
-    private User[] getUsers(List<Object[]> result) {
+    public User[] getUsers(List<Object[]> result) {
         List<User> ret = new ArrayList<>();
 
         for(Iterator<Object[]> it = result.iterator(); it.hasNext();) {
@@ -106,7 +106,7 @@ public class DatabaseService {
         return ret.toArray(new User[1]);
     }
 
-    private Lecture[] getLectures(List<Object[]> result) {
+    public Lecture[] getLectures(List<Object[]> result) {
         List<Lecture> ret = new ArrayList<>();
         for(Iterator<Object[]> it = result.iterator(); it.hasNext();) {
             Object[] ob = it.next();
@@ -114,6 +114,6 @@ public class DatabaseService {
             lect.setClassroom((Classroom) ob[1]);
             ret.add(lect);
         }
-        return ret.toArray(new Lecture[1]);
+        return ret.toArray(new Lecture[result.size()]);
     }
 }

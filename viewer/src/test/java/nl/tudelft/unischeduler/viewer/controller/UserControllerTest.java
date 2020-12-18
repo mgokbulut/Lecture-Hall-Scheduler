@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import lombok.Data;
 import nl.tudelft.unischeduler.viewer.entities.User;
 import nl.tudelft.unischeduler.viewer.controllers.UserController;
 import nl.tudelft.unischeduler.viewer.services.DatabaseService;
@@ -33,14 +34,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-@Disabled
+//@Disabled
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 @ContextConfiguration(classes = UserController.class)
+@ComponentScan(basePackages = {"nl/tudelft/unischeduler/viewer"})
 @AutoConfigureMockMvc
 @WebMvcTest
 public class UserControllerTest {
@@ -54,6 +57,7 @@ public class UserControllerTest {
     private final transient ObjectMapper objectMapper =
             new ObjectMapper().registerModule(new JavaTimeModule());
 
+    @Autowired
     private transient MockMvc mockMvc;
 
     @BeforeEach

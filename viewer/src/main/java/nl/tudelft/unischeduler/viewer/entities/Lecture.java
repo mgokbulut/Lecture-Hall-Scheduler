@@ -15,7 +15,7 @@ public class Lecture {
     private Long id;
     Classroom classroom;
     Course course;
-    private User teacher;
+    private String teacher;
     private Timestamp start;
     private Time duration;
     private boolean movedOnline;
