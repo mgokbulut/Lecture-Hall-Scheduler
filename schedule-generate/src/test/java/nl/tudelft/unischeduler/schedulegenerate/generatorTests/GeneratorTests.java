@@ -64,4 +64,23 @@ public class GeneratorTests {
         Timestamp supposedMonday = test.nextDay(tFriday);
         assertEquals(tMonday.getTime(), supposedMonday.getTime());
     }
+
+    // test that it returns an empty list when all lectures are unscheduled
+    @Test
+    void testCreateTimetableNoneScheduled() {
+        Generator test = makeGenerator();
+        List<List<Lecture>> l = test.createTimeTable(createListLectures(),
+                makeBasicStartTime(), 5);
+        assertEquals(5, l.size());
+        assertEquals(0, l.get(0).size());
+    }
+    // test that it creates a timetable when the lectures are scheduled
+    @Test
+    void testCreateTimetableAllScheduled() {
+        Generator test = makeGenerator();
+        List<List<Lecture>> l = test.createTimeTable(createListLecturesScheduled(),
+                makeBasicStartTime(), 5);
+        assertEquals(5, l.size());
+        assertEquals(1, l.get(0).size());
+    }
 }
