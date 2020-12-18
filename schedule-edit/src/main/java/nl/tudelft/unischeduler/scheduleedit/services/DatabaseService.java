@@ -28,6 +28,13 @@ public abstract class DatabaseService {
         webClient = webClientBuilder.build();
     }
 
+    /**
+     * This method checks wheter the status code of the response is Ok
+     * and if it is not will throw the appropriate exception.
+     *
+     * @param response the response object gotten from the webclient.
+     * @throws IOException When response is null or the status code != 200.
+     */
     public void verifyStatusCode(ResponseEntity<Void> response) throws IOException {
         if (response == null) {
             throw new ConnectionException("the response was null");
