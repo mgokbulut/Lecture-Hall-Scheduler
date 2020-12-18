@@ -2,7 +2,6 @@ package nl.tudelft.unischeduler.scheduleedit.services;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.Period;
 import org.springframework.stereotype.Service;
 
 /**
