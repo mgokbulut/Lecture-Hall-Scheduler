@@ -1,6 +1,8 @@
 package nl.tudelft.unischeduler.database.user;
 
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import nl.tudelft.unischeduler.database.sicklog.SickLog;
@@ -18,13 +20,19 @@ public class UserService {
     @Autowired
     private transient SickLogRepository sickLogRepository;
 
+    public UserService(UserRepository userRepository, SickLogRepository sickLogRepository){
+        this.userRepository = userRepository;
+        this.sickLogRepository = sickLogRepository;
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     /**
      * Returns an Object array of size 2, arr[0] = the student with the given netId
-     * arr[1] = latest reportSick date from their sickLog.
+     * arr[1] = boolean whether the student has finished being sick,
+     * the method also updates that boolean.
      *
      * @param netId student
      * @return Object array
@@ -34,13 +42,23 @@ public class UserService {
             List<SickLog> sickLogs = sickLogRepository.findAllByUser(netId);
             //Sort in descending order of reportSick
             sickLogs.sort((x, y) -> y.getReportSick().compareTo(x.getReportSick()));
-            Optional<Date> lastOne;
+            boolean finished;
             if (sickLogs.size() > 0) {
-                lastOne = Optional.of(sickLogs.get(0).getReportSick());
+                //If the date of reported sick + 2 weeks is less than today.
+                //Meaning has 2 weeks passed since the date of reportSick
+                if(sickLogs.get(0).getReportSick().getTime() + 1209600000L < Calendar.getInstance().getTimeInMillis()) {
+                    finished = true;
+                    for(SickLog sickLog : sickLogs){
+                        sickLog.setFinished(true);
+                    }
+                }
+                else{
+                    finished = false;
+                }
             } else {
-                lastOne = Optional.empty();
+                finished = true;
             }
-            return new Object[]{userRepository.findByNetId(netId), lastOne};
+            return new Object[]{userRepository.findByNetId(netId).get(), finished};
         } catch (Exception e) {
             e.printStackTrace();
             return null;

@@ -10,4 +10,8 @@ public class IllegalDateException extends RuntimeException {
     public IllegalDateException(String message) {
         super(message);
     }
+
+    public IllegalDateException(String message, Exception source) {
+        super(message, source);
+    }
 }

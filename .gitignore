@@ -28,3 +28,5 @@ gradle-app.setting
 
 # IntelliJ
 /.idea/
+
+rules.json

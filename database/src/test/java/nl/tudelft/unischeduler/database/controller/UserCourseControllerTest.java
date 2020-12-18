@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -96,11 +97,12 @@ public class UserCourseControllerTest {
 
     @Test
     public void addStudentToCourseTest() throws Exception {
-        String uri = "/courses/assignStudents/byarar/0";
-        Course course = new Course(0L, "ADS", 1);
+        String uri = "/userCourses/assignStudents/testStudent/1";
+        Course course = new Course(1L, "Test", 1);
 
         mockMvc.perform(put(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(course)))
+                .andDo(print())
                 .andExpect(status().isOk());
     }
 }
