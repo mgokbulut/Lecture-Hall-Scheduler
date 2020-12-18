@@ -1,5 +1,6 @@
 package nl.tudelft.unischeduler.scheduleedit.core;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
@@ -21,7 +22,6 @@ import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import lombok.Data;
-import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
 import nl.tudelft.unischeduler.scheduleedit.exception.IllegalDateException;
 import nl.tudelft.unischeduler.scheduleedit.services.CourseService;
 import nl.tudelft.unischeduler.scheduleedit.services.StudentService;
@@ -34,6 +34,7 @@ import org.mockito.Mockito;
 @Data
 public class ScheduleEditModuleTests {
 
+    private final ZoneId zoneId = ZoneId.of("UTC+00:00");
     private final String testId = "testId";
     private final String testCourseName = "test course";
     Clock fixedClock;
@@ -50,7 +51,7 @@ public class ScheduleEditModuleTests {
     @BeforeEach
     public void setUp() {
         instant = Instant.parse("2000-01-01T12:00:00.00Z");
-        fixedClock = Clock.fixed(instant, ZoneId.systemDefault());
+        fixedClock = Clock.fixed(instant, zoneId);
         teacherService = mock(TeacherService.class);
         studentService = mock(StudentService.class);
         courseService = mock(CourseService.class);
@@ -59,8 +60,8 @@ public class ScheduleEditModuleTests {
 
     @Test
     public void reportTeacherTest() throws IOException {
-        LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
-        LocalDate until = LocalDate.parse("2000-01-14");
+        LocalDateTime start = LocalDateTime.ofInstant(instant, zoneId);
+        LocalDateTime until = LocalDateTime.parse("2000-01-15T12:00:00");
 
         module.reportTeacherSick(testId);
 
@@ -69,7 +70,7 @@ public class ScheduleEditModuleTests {
 
     @Test
     public void cancelPastTest() throws IOException {
-        LocalDate until = LocalDate.parse("1999-12-31");
+        LocalDateTime until = LocalDate.parse("1999-12-31").atStartOfDay();
 
         Assertions.assertThrows(IllegalDateException.class, () -> {
             module.reportTeacherSick(testId, until);
@@ -80,8 +81,8 @@ public class ScheduleEditModuleTests {
 
     @Test
     public void singleDayTest() throws IOException {
-        LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
-        LocalDate until = LocalDate.parse("2000-01-15");
+        LocalDateTime start = LocalDateTime.ofInstant(instant, zoneId);
+        LocalDateTime until = LocalDate.parse("2000-01-15").atStartOfDay();
 
         module.reportTeacherSick(testId, until);
 
@@ -98,19 +99,9 @@ public class ScheduleEditModuleTests {
     }
 
     @Test
-    public void databaseTeacherThrowsTest() throws IOException {
-        Mockito.doThrow(new IOException())
-                .when(teacherService).cancelLectures(any(), any(), any());
-
-        Assertions.assertThrows(ConnectionException.class, () -> {
-            module.reportTeacherSick(testId);
-        });
-    }
-
-    @Test
     public void reportStudentTest() throws IOException {
-        LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
-        LocalDate until = LocalDate.parse("2000-01-14");
+        LocalDateTime start = LocalDateTime.ofInstant(instant, zoneId);
+        LocalDateTime until = LocalDate.parse("2000-01-15").atTime(12, 0);
 
         module.reportStudentSick(testId);
 
@@ -119,7 +110,7 @@ public class ScheduleEditModuleTests {
 
     @Test
     public void studentPastTest() throws IOException {
-        LocalDate until = LocalDate.parse("1999-12-31");
+        LocalDateTime until = LocalDate.parse("1999-12-31").atStartOfDay();
 
         Assertions.assertThrows(IllegalDateException.class, () -> {
             module.reportStudentSick(testId, until);
@@ -130,8 +121,8 @@ public class ScheduleEditModuleTests {
 
     @Test
     public void singleDayStudentTest() throws IOException {
-        LocalDate start = LocalDate.ofInstant(instant, ZoneId.systemDefault());
-        LocalDate until = LocalDate.parse("2000-01-01");
+        LocalDateTime start = LocalDateTime.ofInstant(instant, zoneId);
+        LocalDateTime until = LocalDate.parse("2000-01-01").atTime(23, 59, 59);
 
         module.reportStudentSick(testId, until);
 
@@ -148,28 +139,9 @@ public class ScheduleEditModuleTests {
     }
 
     @Test
-    public void databaseStudentThrowsTest() throws IOException {
-        Mockito.doThrow(new IOException())
-                .when(studentService).cancelStudentAttendance(any(), any(), any());
-
-        Assertions.assertThrows(ConnectionException.class, () -> {
-            module.reportStudentSick(testId);
-        });
-    }
-
-    @Test
     public void createCourseTest() throws IOException {
-        Mockito.when(courseService.createCourse("test course", 2000)).thenReturn(1L);
+        Mockito.when(courseService.createCourse(testCourseName, 2000)).thenReturn(1L);
         assertEquals(1L, module.createCourse(testCourseName, 2000));
-    }
-
-    @Test
-    public void createCourseFailsTest() throws IOException {
-        Mockito.when(courseService.createCourse(testCourseName, 2000)).thenThrow(new IOException());
-
-        Assertions.assertThrows(ConnectionException.class, () -> {
-            module.createCourse(testCourseName, 2000);
-        });
     }
 
     @Test
@@ -192,42 +164,13 @@ public class ScheduleEditModuleTests {
     }
 
     @Test
-    public void createLectureFailsTest() throws IOException {
-        LocalDateTime firstDayOfWeek = LocalDateTime.of(1999, 12, 27, 0, 0);
-        Duration duration = Duration.ofHours(1);
-        Mockito.when(courseService.createLecture(eq(1L), any(), any(), any()))
-                .thenThrow(new IOException());
-
-        Assertions.assertThrows(ConnectionException.class, () -> {
-            module.createLecture(1L, testId, 2000, 1, duration);
-        });
-
-        verify(courseService).createLecture(eq(1L), eq(testId), eq(firstDayOfWeek), eq(duration));
-        verifyNoMoreInteractions(courseService);
-    }
-
-    @Test
     public void addStudentTest() throws IOException {
         List<String> testIds = Collections.singletonList(testId);
 
         module.addStudentGroupLecture(testIds, 1L);
 
-        verify(courseService, times(1)).addStudentToCourse(testIds, 1L);
+        verify(courseService, times(1)).addStudentsToCourse(any(), eq(1L));
         verifyNoMoreInteractions(courseService);
-    }
-
-    @Test
-    public void addStudentFailTest() throws IOException {
-        List<String> testIds = Collections.singletonList(testId);
-
-
-        assert courseService != null;
-        Mockito.doThrow(new IOException())
-                .when(courseService).addStudentToCourse(testIds, 1L);
-
-        Assertions.assertThrows(ConnectionException.class, () -> {
-            module.addStudentGroupLecture(testIds, 1L);
-        });
     }
 
     @Test
@@ -251,5 +194,24 @@ public class ScheduleEditModuleTests {
 
         assertEquals(DayOfWeek.MONDAY, expected.getDayOfWeek());
         assertEquals(expected, module.calculateStartOfWeek(2004, 53));
+    }
+
+    @Test
+    public void pathParamConstructEmptyTest() {
+        assertThat(CourseService.constructPathParam(Collections.emptyList())).isNull();
+    }
+
+    @Test
+    public void pathParamConstructSingleTest() {
+        assertThat(CourseService.constructPathParam(Collections.singletonList("netId")))
+                .isEqualTo("netId");
+    }
+
+    @Test
+    public void pathParamConstructMultipleTest() {
+        List<String> list = List.of("netID", "netID2", "netID3");
+        assertThat(CourseService.constructPathParam(list))
+                .isNotNull()
+                .isEqualTo("netID,netID2,netID3");
     }
 }

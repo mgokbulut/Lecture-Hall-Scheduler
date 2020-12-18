@@ -29,11 +29,11 @@ public class ScheduleEditModule {
     private CourseService courseService;
 
 
-    private LocalDate checkBeforeNow(LocalDate future) throws IllegalDateException {
+    private LocalDateTime checkBeforeNow(LocalDateTime future) throws IllegalDateException {
         if (future == null) {
             throw new IllegalDateException("There was no date specified");
         }
-        LocalDate now = LocalDate.now(clock);
+        LocalDateTime now = LocalDateTime.now(clock);
         if (future.isBefore(now)) {
             throw new IllegalDateException("the supplied date is before the current date");
         }
@@ -46,18 +46,15 @@ public class ScheduleEditModule {
      * @param teacherNetId The netId of the teacher that is sick.
      * @param until The LocalDate until the teacher is sick (inclusive).
      */
-    public void reportTeacherSick(String teacherNetId, LocalDate until)
-            throws IllegalDateException, ConnectionException {
-        LocalDate now = checkBeforeNow(until);
-        try {
-            teacherService.cancelLectures(teacherNetId, now, until);
-        } catch (IOException e) {
-            throw createException(e);
-        }
+    public void reportTeacherSick(String teacherNetId, LocalDateTime until)
+            throws IllegalDateException, IOException {
+        LocalDateTime now = checkBeforeNow(until);
+        teacherService.cancelLectures(teacherNetId, now, until);
+
     }
 
-    public void reportTeacherSick(String teacherNetId) throws ConnectionException {
-        LocalDate until = LocalDate.now(clock).plus(13, ChronoUnit.DAYS);
+    public void reportTeacherSick(String teacherNetId) throws IOException {
+        LocalDateTime until = LocalDateTime.now(clock).plus(14, ChronoUnit.DAYS);
         reportTeacherSick(teacherNetId, until);
     }
 
@@ -67,19 +64,16 @@ public class ScheduleEditModule {
      * @param studentNetId The netId of the student that is sick.
      * @param until The LocalDate until the teacher is sick (inclusive).
      */
-    public void reportStudentSick(String studentNetId, LocalDate until)
-            throws IllegalDateException, ConnectionException {
-        LocalDate now = checkBeforeNow(until);
-        try {
-            studentService.cancelStudentAttendance(studentNetId, now, until);
-            studentService.setUserSick(studentNetId, now);
-        } catch (IOException e) {
-            throw createException(e);
-        }
+    public void reportStudentSick(String studentNetId, LocalDateTime until)
+            throws IllegalDateException, IOException {
+        LocalDateTime now = checkBeforeNow(until);
+        studentService.cancelStudentAttendance(studentNetId, now, until);
+        studentService.setUserSick(studentNetId, now);
+
     }
 
-    public void reportStudentSick(String studentNetId) throws ConnectionException {
-        LocalDate until = LocalDate.now(clock).plus(13, ChronoUnit.DAYS);
+    public void reportStudentSick(String studentNetId) throws IOException {
+        LocalDateTime until = LocalDateTime.now(clock).plus(14, ChronoUnit.DAYS);
         reportStudentSick(studentNetId, until);
     }
 
@@ -91,12 +85,8 @@ public class ScheduleEditModule {
      * @return the id of the newly created course.
      * @throws ConnectionException When the connection with the database fails.
      */
-    public long createCourse(String courseName, int year) throws ConnectionException {
-        try {
-            return courseService.createCourse(courseName, year);
-        } catch (IOException e) {
-            throw createException(e);
-        }
+    public long createCourse(String courseName, int year) throws IOException {
+        return courseService.createCourse(courseName, year);
     }
 
     /**
@@ -137,13 +127,9 @@ public class ScheduleEditModule {
                               int year,
                               int week,
                               Duration duration)
-            throws ConnectionException {
+            throws IOException {
         LocalDateTime startWeek = calculateStartOfWeek(year, week).atStartOfDay();
-        try {
-            return courseService.createLecture(courseId, teacherNetId, startWeek, duration);
-        } catch (IOException e) {
-            throw createException(e);
-        }
+        return courseService.createLecture(courseId, teacherNetId, startWeek, duration);
     }
 
     /**
@@ -154,15 +140,7 @@ public class ScheduleEditModule {
      * @throws ConnectionException When the connection with the database fails.
      */
     public void addStudentGroupLecture(List<String> students, long courseId)
-            throws ConnectionException {
-        try {
-            courseService.addStudentToCourse(students, courseId);
-        } catch (IOException e) {
-            throw createException(e);
-        }
-    }
-
-    private ConnectionException createException(IOException exception) {
-        return new ConnectionException("The connection with the database failed", exception);
+            throws IOException {
+        courseService.addStudentsToCourse(students, courseId);
     }
 }
