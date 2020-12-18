@@ -26,8 +26,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class Generator {
 
-    @Autowired
-    private transient ApiCommunicator apiCommunicator;
+    private final transient ApiCommunicator apiCommunicator;
+
+    public Generator(ApiCommunicator apiCommunicator) {
+        this.apiCommunicator = apiCommunicator;
+    }
 
     /**
      * Generates a full schedule by adding it to the database using API calls.
@@ -58,21 +61,24 @@ public class Generator {
         scheduling(lectures, timeTable, currentTime, numOfDays);
     }
 
-    private List<List<Lecture>> createTimeTable(ArrayList<Lecture> lectures,
+    public List<List<Lecture>> createTimeTable(ArrayList<Lecture> lectures,
                                                 Timestamp currentTime,
                                                 int numOfDays) {
 
         List<List<Lecture>> timeTable = new ArrayList<>(numOfDays);
         // initialize
-        for (int i = 0; i < timeTable.size(); i++) {
-            timeTable.add(new ArrayList<Lecture>());
+        for (int i = 0; i < numOfDays; i++) {
+            timeTable.add(new ArrayList<>());
         }
         // distribute the lectures
         for (int i = 0; i < lectures.size(); i++) {
             Lecture l = lectures.get(i);
+
             // now get which day compared to currentTime, as an int
-            int lecDay = calDistance(l.getStartTime(), currentTime);
-            timeTable.get(lecDay).add(l);
+            if(l.getStartTime() != null) {
+                int lecDay = calDistance(currentTime, l.getStartTime());
+                timeTable.get(lecDay).add(l);
+            }
         }
         return timeTable;
     }
@@ -85,16 +91,13 @@ public class Generator {
      * @param c2 the timestamp of the second date
      * @return the number of days difference between them
      */
-    private int calDistance(Timestamp c1, Timestamp c2) {
+    public int calDistance(Timestamp c1, Timestamp c2) {
         int maxIterations = 100; // just to never get stuck in the while loop
-        long long1 = c1.getTime();
-        long long2 = c2.getTime();
         Calendar cal1 = Calendar.getInstance();
+        cal1.setTimeInMillis(c1.getTime());
+
         Calendar cal2 = Calendar.getInstance();
-
-        cal1.setTimeInMillis(long1);
-        cal2.setTimeInMillis(long2);
-
+        cal2.setTimeInMillis(c2.getTime());
         int numDays = 0;
         int iteration = 0;
         while (cal1.before(cal2) && iteration < maxIterations) {
@@ -117,7 +120,7 @@ public class Generator {
      * @param t the timestamp you want to add a day to
      * @return a new timestamp that is set to one day later
      */
-    private Timestamp nextDay(Timestamp t) {
+    public Timestamp nextDay(Timestamp t) {
         Calendar cal1 = Calendar.getInstance();
 
         cal1.setTimeInMillis(t.getTime());
