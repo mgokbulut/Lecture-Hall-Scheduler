@@ -42,4 +42,26 @@ public class GeneratorTests {
         int n1 = test.calDistance(tFriday, tMonday);
         assertEquals(1, n1);
     }
+
+    @Test
+    void testNextDay() {
+        Timestamp tMonday = makeBasicStartTime();
+        Timestamp tTuesday = new Timestamp(tMonday.getTime()
+                + (1 * makeTimeLength(24).getTime()));
+        Generator test = makeGenerator();
+        Timestamp supposedTuesday = test.nextDay(tMonday);
+        assertEquals(tTuesday.getTime(), supposedTuesday.getTime());
+    }
+
+    @Test
+    void testNextDayWeekend() {
+        Timestamp t1 = makeBasicStartTime();
+        Timestamp tFriday = new Timestamp(t1.getTime()
+                + (4 * makeTimeLength(24).getTime()));
+        Timestamp tMonday = new Timestamp(tFriday.getTime()
+                + (3 * makeTimeLength(24).getTime()));
+        Generator test = makeGenerator();
+        Timestamp supposedMonday = test.nextDay(tFriday);
+        assertEquals(tMonday.getTime(), supposedMonday.getTime());
+    }
 }
