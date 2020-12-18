@@ -11,6 +11,4 @@ public interface UserRepository extends JpaRepository<User, String> {
     List<User> findAll();
 
     Optional<User> findByNetId(String netId);
-
-    //  List<User> findAllByNetId(Iterable<String> netIds);
 }
