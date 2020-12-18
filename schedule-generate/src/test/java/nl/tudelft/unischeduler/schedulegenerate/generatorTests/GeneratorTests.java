@@ -83,4 +83,18 @@ public class GeneratorTests {
         assertEquals(5, l.size());
         assertEquals(1, l.get(0).size());
     }
+
+    @Test
+    @SuppressWarnings("PMD.DataflowAnomalyAnalysis") // the null assignment is necessary
+    void testScheduleGenerate() {
+        Exception e = null;
+        Generator test = makeGenerator();
+        test.scheduleGenerate(makeBasicStartTime());
+        try {
+            test.scheduleGenerate(makeBasicStartTime());
+        } catch (Exception a) {
+            e = a;
+        }
+        assertNull(e);
+    }
 }
