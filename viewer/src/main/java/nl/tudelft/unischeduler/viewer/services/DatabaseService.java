@@ -6,11 +6,14 @@ import lombok.NonNull;
 import nl.tudelft.unischeduler.viewer.entities.Classroom;
 import nl.tudelft.unischeduler.viewer.entities.Lecture;
 import nl.tudelft.unischeduler.viewer.entities.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -20,13 +23,16 @@ import java.util.List;
 @Service
 public class DatabaseService {
 
-    @NonNull private WebClient.Builder webClientBuilder;
+    @NonNull
+    private WebClient.Builder webClientBuilder;
+
+    protected WebClient webClient;
 
     @PostConstruct
     public void setUp() {
-        webClientBuilder.baseUrl("http://database-service/");
+        webClientBuilder.baseUrl("http://database-service");
+        webClient = webClientBuilder.build();
     }
-
 
     public Lecture[] getStudentSchedule(String netId) {
         List<Object[]> result = webClientBuilder.build()

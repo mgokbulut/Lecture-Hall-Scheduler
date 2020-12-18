@@ -79,8 +79,9 @@ public class DatabaseServiceTests {
     @BeforeEach
     public void setup() {
         webClientBuilder = Mockito.mock(WebClient.Builder.class);
+        WebClient webClient = Mockito.mock(WebClient.class);
         //webClientBuilder.baseUrl("http://database-service/");
-        databaseService = new DatabaseService(webClientBuilder);
+        databaseService = new DatabaseService(webClientBuilder, webClient);
     }
 
     @Test
