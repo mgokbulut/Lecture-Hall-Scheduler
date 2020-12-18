@@ -1,6 +1,7 @@
 package nl.tudelft.unischeduler.scheduleedit.services;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Date;
 import lombok.Data;
@@ -24,7 +25,13 @@ public class StudentService extends DatabaseService {
      * @throws ConnectionException When the connection to the database service fails.
      */
     public void setUserSick(String netId, LocalDate startDate) throws IOException {
-        //TODO: this is a stub, and in the future should actually send the data.
+        webClientBuilder.build().put()
+                .uri("/sickLogs/new/"
+                        + netId
+                        + "/" + Timestamp.valueOf(startDate.atTime(12, 0)))
+                .retrieve()
+                .toBodilessEntity()
+                .block();
     }
 
     /**
@@ -32,12 +39,16 @@ public class StudentService extends DatabaseService {
      * they are following in between the start and end time.
      *
      * @param studentNetId The netId of the students for which to cancel their attendance.
-     * @param start The start time for which the student is sick.
-     * @param end The end time for when the student is expected to be better.
+     * @param start The start time for which the student is sick (inclusive).
+     * @param end The end time for when the student is expected to be better (exclusive).
      * @throws ConnectionException When the connection to the database service fails.
      */
     public void cancelStudentAttendance(String studentNetId, LocalDate start, LocalDate end)
             throws IOException {
-        //TODO: this is a stub, and in the future should actually send the data.
+        webClientBuilder.build().delete()
+                .uri("/lectureSchedules/remove/"
+                        + studentNetId + "/"
+                        + Timestamp.valueOf(start.atStartOfDay()) + "/"
+                        + Timestamp.valueOf(end.atStartOfDay()));
     }
 }

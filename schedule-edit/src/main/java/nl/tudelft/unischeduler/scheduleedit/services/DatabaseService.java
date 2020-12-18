@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public abstract class DatabaseService {
 
     @Autowired
-    private WebClient.Builder webClientBuilder;
+    protected WebClient.Builder webClientBuilder;
 
     @PostConstruct
     public void setUp() {
