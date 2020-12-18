@@ -36,7 +36,7 @@ public class Lecture implements Comparable<Lecture> {
     }
 
     /**
-     * Constructor for Lecture, without start date if it's not scheduled yet
+     * Constructor for Lecture, without start date if it's not scheduled yet.
      *
      * @param id the unique identifier representing this lecture
      * @param attendance the number of students currently assigned to this lecture

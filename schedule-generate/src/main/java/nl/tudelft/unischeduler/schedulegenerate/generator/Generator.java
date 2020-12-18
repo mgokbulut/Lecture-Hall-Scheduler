@@ -7,10 +7,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.Iterator;
 import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
@@ -61,6 +61,14 @@ public class Generator {
         scheduling(lectures, timeTable, currentTime, numOfDays);
     }
 
+    /**
+     * Creates a list with lectures for every day we want to make a schedule for.
+     *
+     * @param lectures all lectures
+     * @param currentTime start time of the generator
+     * @param numOfDays how many days we're scheduling for
+     * @return list of lists that contain lectures for each day
+     */
     public List<List<Lecture>> createTimeTable(ArrayList<Lecture> lectures,
                                                 Timestamp currentTime,
                                                 int numOfDays) {
@@ -75,7 +83,7 @@ public class Generator {
             Lecture l = lectures.get(i);
 
             // now get which day compared to currentTime, as an int
-            if(l.getStartTime() != null) {
+            if (l.getStartTime() != null) {
                 int lecDay = calDistance(currentTime, l.getStartTime());
                 timeTable.get(lecDay).add(l);
             }
@@ -140,7 +148,7 @@ public class Generator {
      * @param lectures list containing every lecture there is
      * @param timeTable list of lists containing all lectures, per day
      */
-    private void scheduling(ArrayList<Lecture> lectures,
+    public void scheduling(ArrayList<Lecture> lectures,
                             List<List<Lecture>> timeTable, Timestamp currentTime,
                             int numOfDays) {
         // TODO change this to a proper template online room, ask Kuba
@@ -198,7 +206,7 @@ public class Generator {
                             apiCommunicator.assignRoomToLecture(l.getId(), onlineRoom.getId());
                             // and we assign all students to it
                             Iterator<Student> its = courseStudents.iterator();
-                            for(int m = 0; m < courseStudents.size(); m++) {
+                            for (int m = 0; m < courseStudents.size(); m++) {
                                 apiCommunicator.assignStudentToLecture(its.next().getNetId(),
                                         l.getId());
                             }
@@ -286,7 +294,7 @@ public class Generator {
      * @param currentTime the starting time of the whole scheduling system
      * @return time when we can schedule the lecture
      */
-    private Timestamp getEarliestTime(Room room, Lecture lecture,
+    public Timestamp getEarliestTime(Room room, Lecture lecture,
                                       List<List<Lecture>> timeTable, Timestamp currentTime,
                                       int numOfDays) {
         // this part will need the most testing as it is complex to work with timestamps
