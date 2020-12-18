@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * This package acts as a placeholder until the communication Part is worked out.
  */
 @Service
-public class CourseService extends DatabaseService{
+public class CourseService extends DatabaseService {
 
     /**
      * Creates a course and marks it to be scheduled by the schedule generate module.
@@ -30,6 +30,16 @@ public class CourseService extends DatabaseService{
         return extractLong(response);
     }
 
+    /**
+     * Creates a new lecture on the database for the course with the coursId.
+     *
+     * @param courseId The id of the course this lecture belongs to.
+     * @param teacher The teacher that gives this lecture.
+     * @param startTime The startTime of the lecture.
+     * @param duration The duration of the lecture.
+     * @return the new Id of the lecture.
+     * @throws IOException If the create is rejected.
+     */
     public long createLecture(long courseId,
                               String teacher,
                               LocalDateTime startTime,
@@ -48,8 +58,14 @@ public class CourseService extends DatabaseService{
         return extractLong(response);
     }
 
+    /**
+     * Constructs a string that can be used for a list of Strings in a path parameter.
+     *
+     * @param strings the strings to convert ot one single list.
+     * @return The string that can be used as a path parameter.
+     */
     public static String constructPathParam(List<String> strings) {
-        if(strings == null || strings.size() == 0) {
+        if (strings == null || strings.size() == 0) {
             return null;
         }
         StringBuilder stringBuilder = new StringBuilder();
@@ -61,9 +77,17 @@ public class CourseService extends DatabaseService{
         return stringBuilder.toString();
     }
 
+    /**
+     * Adds the list of students to the course.
+     *
+     * @param netIds The netIds of the students to add.
+     * @param courseId The id of the course for which to add them to.
+     * @throws IOException IOException If the update is rejected.
+     */
     public void addStudentsToCourse(List<String> netIds, long courseId) throws IOException {
         ResponseEntity<Void> response = webClient.put()
-                .uri("/courses/assignStudents/{netIdsFormat}/{lectureId}", constructPathParam(netIds), courseId)
+                .uri("/courses/assignStudents/{netIdsFormat}/{lectureId}",
+                        constructPathParam(netIds), courseId)
                 .retrieve()
                 .toBodilessEntity()
                 .block();

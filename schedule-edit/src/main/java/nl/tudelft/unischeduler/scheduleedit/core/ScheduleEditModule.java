@@ -2,11 +2,11 @@ package nl.tudelft.unischeduler.scheduleedit.core;
 
 import java.io.IOException;
 import java.time.Clock;
-import java.time.LocalDateTime;
 import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import lombok.AllArgsConstructor;
