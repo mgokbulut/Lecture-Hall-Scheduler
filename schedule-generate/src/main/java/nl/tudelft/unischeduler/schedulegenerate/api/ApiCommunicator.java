@@ -21,7 +21,7 @@ public class ApiCommunicator {
     //      path = "/courses/all"
 
     public ArrayList<Course> getCourses() {
-        return null;
+        return new ArrayList<>();
     }
 
     //  getStudentsInCourse(Long courseId): //wait till the DB is changed
