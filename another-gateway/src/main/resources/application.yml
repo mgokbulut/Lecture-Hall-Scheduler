@@ -15,7 +15,7 @@ zuul:
     socket-timeout-millis: 5000000
   routes:
     authentication-service:
-      path: /authentication/**
-      serviceId: gateway-authentication-service
+      path: /schedule-edit/**
+      serviceId: schedule-edit-service
       stripPrefix: true
   ignored-services: '*'
