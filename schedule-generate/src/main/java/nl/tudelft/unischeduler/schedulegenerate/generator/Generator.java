@@ -7,10 +7,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.Iterator;
 import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
@@ -26,8 +26,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class Generator {
 
-    @Autowired
-    private transient ApiCommunicator apiCommunicator;
+    private final transient ApiCommunicator apiCommunicator;
+
+    public Generator(ApiCommunicator apiCommunicator) {
+        this.apiCommunicator = apiCommunicator;
+    }
 
     /**
      * Generates a full schedule by adding it to the database using API calls.
@@ -55,24 +58,36 @@ public class Generator {
         // easy-to-access datastructure.
         List<List<Lecture>> timeTable = createTimeTable(lectures, currentTime, numOfDays);
 
-        scheduling(lectures, timeTable, currentTime, numOfDays);
+        scheduling(lectures, timeTable, currentTime, numOfDays,
+                apiCommunicator.getRooms(), apiCommunicator.getCourses());
     }
 
-    private List<List<Lecture>> createTimeTable(ArrayList<Lecture> lectures,
+    /**
+     * Creates a list with lectures for every day we want to make a schedule for.
+     *
+     * @param lectures all lectures
+     * @param currentTime start time of the generator
+     * @param numOfDays how many days we're scheduling for
+     * @return list of lists that contain lectures for each day
+     */
+    public List<List<Lecture>> createTimeTable(ArrayList<Lecture> lectures,
                                                 Timestamp currentTime,
                                                 int numOfDays) {
 
         List<List<Lecture>> timeTable = new ArrayList<>(numOfDays);
         // initialize
-        for (int i = 0; i < timeTable.size(); i++) {
-            timeTable.add(new ArrayList<Lecture>());
+        for (int i = 0; i < numOfDays; i++) {
+            timeTable.add(new ArrayList<>());
         }
         // distribute the lectures
         for (int i = 0; i < lectures.size(); i++) {
             Lecture l = lectures.get(i);
+
             // now get which day compared to currentTime, as an int
-            int lecDay = calDistance(l.getStartTime(), currentTime);
-            timeTable.get(lecDay).add(l);
+            if (l.getStartTime() != null) {
+                int lecDay = calDistance(currentTime, l.getStartTime());
+                timeTable.get(lecDay).add(l);
+            }
         }
         return timeTable;
     }
@@ -85,16 +100,13 @@ public class Generator {
      * @param c2 the timestamp of the second date
      * @return the number of days difference between them
      */
-    private int calDistance(Timestamp c1, Timestamp c2) {
+    public int calDistance(Timestamp c1, Timestamp c2) {
         int maxIterations = 100; // just to never get stuck in the while loop
-        long long1 = c1.getTime();
-        long long2 = c2.getTime();
         Calendar cal1 = Calendar.getInstance();
+        cal1.setTimeInMillis(c1.getTime());
+
         Calendar cal2 = Calendar.getInstance();
-
-        cal1.setTimeInMillis(long1);
-        cal2.setTimeInMillis(long2);
-
+        cal2.setTimeInMillis(c2.getTime());
         int numDays = 0;
         int iteration = 0;
         while (cal1.before(cal2) && iteration < maxIterations) {
@@ -117,7 +129,7 @@ public class Generator {
      * @param t the timestamp you want to add a day to
      * @return a new timestamp that is set to one day later
      */
-    private Timestamp nextDay(Timestamp t) {
+    public Timestamp nextDay(Timestamp t) {
         Calendar cal1 = Calendar.getInstance();
 
         cal1.setTimeInMillis(t.getTime());
@@ -137,20 +149,19 @@ public class Generator {
      * @param lectures list containing every lecture there is
      * @param timeTable list of lists containing all lectures, per day
      */
-    private void scheduling(ArrayList<Lecture> lectures,
+    public void scheduling(ArrayList<Lecture> lectures,
                             List<List<Lecture>> timeTable, Timestamp currentTime,
-                            int numOfDays) {
+                            int numOfDays, ArrayList<Room> rooms, ArrayList<Course> courses) {
         // TODO change this to a proper template online room, ask Kuba
         Room onlineRoom = new Room(0, Integer.MAX_VALUE, "online_room");
         // this value is placeholder until we find a better solution, should work
         int maxIterationMultiplier = 2;
-        // get all the rooms available on campus
-        ArrayList<Room> rooms = apiCommunicator.getRooms();
-
-        // get all the courses
-        ArrayList<Course> courses = apiCommunicator.getCourses();
+        int maxNumberOfYears = 3;
         // and separate them per year
         List<List<Course>> coursesPerYear = new ArrayList<>();
+        for (int i = 0; i < maxNumberOfYears; i++) {
+            coursesPerYear.add(new ArrayList<>());
+        }
         for (int i = 0; i < courses.size(); i++) {
             Course c = courses.get(i);
             coursesPerYear.get(c.getYear()).add(c);
@@ -195,7 +206,7 @@ public class Generator {
                             apiCommunicator.assignRoomToLecture(l.getId(), onlineRoom.getId());
                             // and we assign all students to it
                             Iterator<Student> its = courseStudents.iterator();
-                            for(int m = 0; m < courseStudents.size(); m++) {
+                            for (int m = 0; m < courseStudents.size(); m++) {
                                 apiCommunicator.assignStudentToLecture(its.next().getNetId(),
                                         l.getId());
                             }
@@ -248,7 +259,7 @@ public class Generator {
         }
     }
 
-    private Room findRoom(ArrayList<Room> rooms, Timestamp date,
+    public Room findRoom(ArrayList<Room> rooms, Timestamp date,
                           Lecture lecture, List<List<Lecture>> timeTable,
                           Timestamp currentTime, int numOfDays) {
         // sort in descending order
@@ -266,6 +277,7 @@ public class Generator {
                 lecture.setStartTime(time);
                 lecture.setRoom(currRoom);
                 int day = calDistance(currentTime, time);
+                System.out.println(day);
                 timeTable.get(day).add(lecture);
                 return currRoom;
             }
@@ -283,7 +295,7 @@ public class Generator {
      * @param currentTime the starting time of the whole scheduling system
      * @return time when we can schedule the lecture
      */
-    private Timestamp getEarliestTime(Room room, Lecture lecture,
+    public Timestamp getEarliestTime(Room room, Lecture lecture,
                                       List<List<Lecture>> timeTable, Timestamp currentTime,
                                       int numOfDays) {
         // this part will need the most testing as it is complex to work with timestamps
@@ -325,7 +337,7 @@ public class Generator {
      * @param currentTime the starting time of the whole scheduling system
      * @return earliest time when the room is not busy
      */
-    private Timestamp isFree(Timestamp timeslot, Room room,
+    public Timestamp isFree(Timestamp timeslot, Room room,
                              Lecture lecture, List<List<Lecture>> timeTable,
                              Timestamp currentTime, int day) {
         List<Lecture> lectures = timeTable.get(day);
@@ -343,7 +355,7 @@ public class Generator {
         return found;
     }
 
-    private int getCapacity(Room room) {
+    public int getCapacity(Room room) {
         // TODO make an API call here to find out the rule for capacity
         // for now we don't take the rules into account
         return room.getCapacity();
@@ -358,7 +370,7 @@ public class Generator {
      * @param scheduledLecture the already-scheduled lecture we want to check against
      * @return whether there would be overlap should the lecture be scheduled at this time
      */
-    private boolean overlap(Lecture lecture,
+    public boolean overlap(Lecture lecture,
                             Timestamp potentialStartTime, Lecture scheduledLecture) {
         Timestamp scheduledLectureEndTime = scheduledLecture.computeEndTime();
         long interval = getIntervalBetweenLectures();
