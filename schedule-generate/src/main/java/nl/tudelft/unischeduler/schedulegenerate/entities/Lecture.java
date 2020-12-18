@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import javax.persistence.Entity;
 
 @Entity
+@SuppressWarnings("PMD.NullAssignment") // needed to express an unscheduled lecture
 public class Lecture implements Comparable<Lecture> {
 
     private int id;
@@ -16,7 +17,7 @@ public class Lecture implements Comparable<Lecture> {
     private int year;
 
     /**
-     * constructor for Lecture.
+     * Constructor for Lecture.
      *
      * @param id the unique identifier representing this lecture
      * @param attendance the number of students currently assigned to this lecture
@@ -29,6 +30,23 @@ public class Lecture implements Comparable<Lecture> {
         this.id = id;
         this.attendance = attendance;
         this.startTime = startTime;
+        this.duration = duration;
+        this.isOnline = isOnline;
+        this.year = year;
+    }
+
+    /**
+     * Constructor for Lecture, without start date if it's not scheduled yet
+     *
+     * @param id the unique identifier representing this lecture
+     * @param attendance the number of students currently assigned to this lecture
+     * @param duration the duration of the lecture
+     */
+    public Lecture(int id, int attendance,
+                   Time duration, boolean isOnline, int year) {
+        this.id = id;
+        this.attendance = attendance;
+        this.startTime = null;
         this.duration = duration;
         this.isOnline = isOnline;
         this.year = year;
