@@ -1,5 +1,6 @@
 package nl.tudelft.unischeduler.authentication;
 
+import java.util.Optional;
 import lombok.Data;
 import nl.tudelft.unischeduler.user.User;
 import nl.tudelft.unischeduler.user.UserRepository;
@@ -8,8 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @Data

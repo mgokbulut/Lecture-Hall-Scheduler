@@ -41,11 +41,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers("authentication/**")
             .permitAll()
-            .antMatchers("/test","/schedule-edit/authenticationdemo")
+            .antMatchers("/test", "/schedule-edit/authenticationdemo")
             .hasAnyRole("STUDENT", "TEACHER", "ADMIN")
             .antMatchers("/schedule-edit/teacherdemo")
             .hasAnyRole("TEACHER", "ADMIN")
-            .antMatchers("/user/**","/schedule-edit/admindemo")
+            .antMatchers("/user/**", "/schedule-edit/admindemo")
             .hasAnyRole("ADMIN")
             .and().sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
