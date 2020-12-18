@@ -38,6 +38,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
+@Disabled
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 @ContextConfiguration(classes = UserController.class)
 @AutoConfigureMockMvc
