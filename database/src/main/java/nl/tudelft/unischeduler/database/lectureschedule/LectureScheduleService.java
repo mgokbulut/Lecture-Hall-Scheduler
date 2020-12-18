@@ -14,6 +14,7 @@ import nl.tudelft.unischeduler.database.schedule.Schedule;
 import nl.tudelft.unischeduler.database.schedule.ScheduleRepository;
 import nl.tudelft.unischeduler.database.user.UserRepository;
 import nl.tudelft.unischeduler.database.user.UserService;
+import nl.tudelft.unischeduler.database.usercourse.UserCourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,15 @@ public class LectureScheduleService {
     @Autowired
     private transient UserService userService;
 
+    public LectureScheduleService(LectureScheduleRepository lectureScheduleRepository, ScheduleRepository scheduleRepository,
+                                  UserRepository userRepository, LectureRepository lectureRepository,
+                                  ClassroomRepository classroomRepository, UserService userService){
+        this.lectureScheduleRepository = lectureScheduleRepository;
+        this.scheduleRepository = scheduleRepository;
+        this.userRepository = userRepository;
+        this.lectureRepository = lectureRepository;
+        this.classroomRepository = classroomRepository;
+    }
 
     /**
      *  Removes the Lecture from all the LectureSchedules
@@ -53,11 +63,9 @@ public class LectureScheduleService {
         try {
             lectureScheduleRepository.deleteLectureSchedulesByLectureId(lectureId);
             return ResponseEntity.ok().build();
-            //return "Lecture successfully deleted from all the schedules";
         } catch (Exception a) {
             a.printStackTrace();
             return ResponseEntity.badRequest().build();
-            //return "Issue with deletion of a lecture from schedules";
         }
     }
 
@@ -122,8 +130,6 @@ public class LectureScheduleService {
                     .map(LectureSchedule::getLectureId)
                     .filter(lectureIds::contains)
                     .collect(Collectors.toList());
-
-            System.out.println(lectureSchedulesToDelete.toString());
 
             for (Long id : lectureSchedulesToDelete) {
                 lectureScheduleRepository
@@ -258,10 +264,10 @@ public class LectureScheduleService {
             return lectureRepository
                     .findAllByCourse(courseId)
                     .stream()
-                    .map(x->new Object[]
+                    .map(x -> new Object[]
                             {x, classroomRepository.findById(x.getClassroom()).get()})
                     .collect(Collectors.toList());
-        } catch(Exception a) {
+        } catch (Exception a) {
             System.err.println("No such object in DB");
             a.printStackTrace();
             return null;

@@ -40,27 +40,20 @@ public class LectureScheduleControllerTest {
     @Autowired
     private transient WebApplicationContext webApplicationContext;
 
-    @MockBean
-    private transient LectureScheduleService lectureScheduleService;
-
     private final transient ObjectMapper objectMapper =
             new ObjectMapper().registerModule(new JavaTimeModule());
 
     private transient MockMvc mockMvc;
 
-    private transient LectureSchedule lectureSchedule = new LectureSchedule(0L, 1L);
-
-    @MockBean //not sure if this is needed
+    @MockBean
     private transient LectureScheduleRepository lectureScheduleRepository;
 
-    @MockBean //not sure if this is needed
+    @MockBean
     private transient ScheduleRepository scheduleRepository;
 
     private final transient Timestamp timestamp = new Timestamp(new GregorianCalendar(
             2020, Calendar.DECEMBER, 1).getTimeInMillis());
 
-    //private final transient User user =
-    // new User("a.kuba@student.tudelft.nl","STUDENT",true,timestamp);
 
     @BeforeEach
     public void setup() {
@@ -82,21 +75,6 @@ public class LectureScheduleControllerTest {
                 .content(objectMapper.writeValueAsString(lectureSchedule)))
                 .andExpect(status().isOk());
     }
-
-    //    @Test
-    //    public void removeLectureFromScheduleTest() throws Exception {
-    //        String uri = "/lectureSchedules/remove/0";
-    //        Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L,1L));
-    ////        when(lectureScheduleService.removeLectureFromSchedule(0L))
-    ////                .thenReturn((lectureSchedule));
-    // "Lecture successfully deleted from all the schedules");
-    //
-    //
-    //        mockMvc.perform(delete(uri, lectureSchedule.get().getLectureId())
-    //                .contentType(MediaType.APPLICATION_JSON_VALUE)
-    //                .content(objectMapper.writeValueAsString(lectureSchedule)))
-    //                .andExpect(status().isNoContent());
-    //    }
 
     @Test
     public void  cancelStudentAttendanceTest() throws Exception{
@@ -134,6 +112,36 @@ public class LectureScheduleControllerTest {
         Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
 
         mockMvc.perform(delete(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lectureSchedule)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getTeacherScheduleTest() throws Exception{
+        String uri = "/lectureSchedules/teacher/byarar";
+        Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
+
+        mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lectureSchedule)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getStudentsInLectureTest() throws Exception{
+        String uri = "/lectureSchedules/studentsLecture/1";
+        Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
+
+        mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(lectureSchedule)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getAllLecturesInCourseTest() throws Exception{
+        String uri = "/lectureSchedules/course/1";
+        Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
+
+        mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(lectureSchedule)))
                 .andExpect(status().isOk());
     }
