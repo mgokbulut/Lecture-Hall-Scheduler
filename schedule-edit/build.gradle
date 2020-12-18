@@ -60,6 +60,7 @@ test {
 		includes = ['nl.tudelft.unischeduler.scheduleedit.*']
 		excludes = []
 	}
+	systemProperty 'eureka.client.enabled', 'false'
 }
 
 repositories {

@@ -25,7 +25,7 @@ import org.mockito.Mockito;
 @Data
 public class ScheduleEditModuleTests {
 
-    private final ZoneId zoneId = ZoneId.of("UTC+01:00");
+    private final ZoneId zoneId = ZoneId.of("UTC+00:00");
     private final String testId = "testId";
     Clock fixedClock;
     Instant instant;
@@ -49,7 +49,7 @@ public class ScheduleEditModuleTests {
                 teacherService,
                 studentService);
         LocalDateTime start = LocalDateTime.ofInstant(instant, zoneId);
-        LocalDateTime until = LocalDate.parse("2000-01-14").atStartOfDay();
+        LocalDateTime until = LocalDateTime.parse("2000-01-15T12:00:00");
 
         module.reportTeacherSick(testId);
 
@@ -115,7 +115,7 @@ public class ScheduleEditModuleTests {
                 teacherService,
                 studentService);
         LocalDateTime start = LocalDateTime.ofInstant(instant, zoneId);
-        LocalDateTime until = LocalDate.parse("2000-01-15").atTime(13, 0);
+        LocalDateTime until = LocalDate.parse("2000-01-15").atTime(12, 0);
 
         module.reportStudentSick(testId);
 
