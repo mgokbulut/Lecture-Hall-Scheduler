@@ -3,14 +3,18 @@ package nl.tudelft.unischeduler.scheduleedit.services;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Date;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
 import org.springframework.stereotype.Service;
 
 /**
  * This package acts as a placeholder until the communication Part is worked out.
  */
+@EqualsAndHashCode(callSuper = true)
 @Service
-public class StudentService {
+@Data
+public class StudentService extends DatabaseService {
 
     /**
      * Adds an entry into the sick log where the user is specified to be sick at this date.

@@ -3,13 +3,18 @@ package nl.tudelft.unischeduler.scheduleedit.services;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.stereotype.Service;
 
 /**
  * This package acts as a placeholder until the communication Part is worked out.
  */
+@EqualsAndHashCode(callSuper = true)
 @Service
-public class TeacherService {
+@Data
+public class TeacherService extends DatabaseService {
 
     /**
      * Marks all the lectures of the lecturer during the timeslot as online.
