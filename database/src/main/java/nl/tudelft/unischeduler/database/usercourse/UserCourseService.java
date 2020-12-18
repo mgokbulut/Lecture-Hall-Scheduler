@@ -1,11 +1,8 @@
 package nl.tudelft.unischeduler.database.usercourse;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
 import nl.tudelft.unischeduler.database.classroom.ClassroomRepository;
 import nl.tudelft.unischeduler.database.lecture.LectureRepository;
 import nl.tudelft.unischeduler.database.user.User;
@@ -13,6 +10,7 @@ import nl.tudelft.unischeduler.database.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 
 @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
 @Service
@@ -30,8 +28,18 @@ public class UserCourseService {
     @Autowired
     private transient ClassroomRepository classroomRepository;
 
-    public UserCourseService(UserCourseRepository userCourseRepository, UserRepository userRepository,
-                             LectureRepository lectureRepository, ClassroomRepository classroomRepository){
+    /**
+     * Constructor.
+     *
+     * @param userCourseRepository input repository
+     * @param userRepository input repository
+     * @param lectureRepository input repository
+     * @param classroomRepository input repository
+     */
+    public UserCourseService(UserCourseRepository userCourseRepository,
+                             UserRepository userRepository,
+                             LectureRepository lectureRepository,
+                             ClassroomRepository classroomRepository) {
         this.userCourseRepository = userCourseRepository;
         this.userRepository = userRepository;
         this.lectureRepository = lectureRepository;
@@ -53,11 +61,11 @@ public class UserCourseService {
                     .collect(Collectors.toList());
             System.out.println(netIds);
             List<User> ret = new ArrayList<>();
-            for (String netId : netIds){
+            for (String netId : netIds) {
                 System.out.println(netId);
                 User user = userRepository.findByNetId(netId).get();
                 System.out.println(user);
-                if(user.isInterested()){
+                if (user.isInterested()) {
                     ret.add(user);
                 }
             }

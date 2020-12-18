@@ -1,9 +1,7 @@
 package nl.tudelft.unischeduler.database.usercourse;
 
-import lombok.Data;
-
 import java.io.Serializable;
-import java.util.Objects;
+import lombok.Data;
 
 @Data
 public class UserCourseId implements Serializable {
@@ -16,7 +14,7 @@ public class UserCourseId implements Serializable {
     /**
      * This method initialises the UserCourseId object.
      */
-    public UserCourseId(){
+    public UserCourseId() {
 
     }
 

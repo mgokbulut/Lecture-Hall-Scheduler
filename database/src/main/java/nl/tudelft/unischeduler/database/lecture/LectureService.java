@@ -21,7 +21,7 @@ public class LectureService {
     @Autowired
     private transient CourseRepository courseRepository;
 
-    public LectureService(LectureRepository lectureRepository, CourseRepository courseRepository){
+    public LectureService(LectureRepository lectureRepository, CourseRepository courseRepository) {
         this.lectureRepository = lectureRepository;
         this.courseRepository = courseRepository;
     }

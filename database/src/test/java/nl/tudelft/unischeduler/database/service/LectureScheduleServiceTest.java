@@ -216,7 +216,6 @@ public class LectureScheduleServiceTest {
 
     @Test
     public void getStudentsInLectureTest() {
-        Classroom classroom = new Classroom(30, "Test", "Building", 1);
         when(lectureScheduleRepository.findAllByLectureId(0L))
                 .thenReturn(List.of(lectureSchedules.get(0)));
 
@@ -227,14 +226,14 @@ public class LectureScheduleServiceTest {
                 Optional.of(users.get(0)));
 
         when(userService.getUser(users.get(0).getNetId()))
-                .thenReturn(new Object[]{users.get(0), classroom});
+                .thenReturn(new Object[]{users.get(0), true});
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
                 userRepository, lectureRepository, classroomRepository, userService);
 
-        //userService is null
-        Assertions.assertNull(lectureScheduleService.getStudentsInLecture(0L));
+        Assertions.assertTrue(Arrays.equals(new Object[]{users.get(0), true},
+                lectureScheduleService.getStudentsInLecture(0L).get(0)));
     }
 
     @Test
@@ -253,6 +252,21 @@ public class LectureScheduleServiceTest {
 
         Assertions.assertTrue(Arrays.equals(new Object[]{lectures.get(2), classroom},
                 lectureScheduleService.getAllLecturesInCourse(2L).get(0)));
+    }
+
+    @Test
+    public void getAllLecturesInCourseTestFail() {
+        when(lectureRepository.findAllByCourse(2L))
+                .thenReturn(List.of(lectures.get(2)));
+        when(classroomRepository.findById(1L)).thenReturn(
+                Optional.empty());
+
+        LectureScheduleService lectureScheduleService = new LectureScheduleService(
+                lectureScheduleRepository, scheduleRepository,
+                userRepository, lectureRepository, classroomRepository, userService);
+
+
+        Assertions.assertNull(lectureScheduleService.getAllLecturesInCourse(2L));
     }
 
 }
