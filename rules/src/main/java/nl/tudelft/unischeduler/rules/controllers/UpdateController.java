@@ -33,21 +33,9 @@ public class UpdateController {
         parser.writeRules(newRules);
         module.setRules(newRules);
 
-        verifyLectures();
+        module.verifyLectures();
 
         System.out.println("updated the rules: \n" + newRules);
-    }
-
-    public boolean verifyLectures() {
-
-        Lecture[] lectures = databaseService.getLectures();
-        Lecture[] toRemove = module.verifyLectures(lectures);
-
-        for(int i = 0; i < toRemove.length; i++) {
-            databaseService.removeLectureFromSchedule(toRemove[i].getId());
-            databaseService.removeRoomFromLecture(toRemove[i].getId());
-        }
-        return toRemove.length == 0;
     }
 }
 

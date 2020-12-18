@@ -154,4 +154,16 @@ public class RulesModule {
         return ret2;
 
     }
+
+    public boolean verifyLectures() {
+
+        Lecture[] lectures = databaseService.getLectures();
+        Lecture[] toRemove = verifyLectures(lectures);
+
+        for(int i = 0; i < toRemove.length; i++) {
+            databaseService.removeLectureFromSchedule(toRemove[i].getId());
+            databaseService.removeRoomFromLecture(toRemove[i].getId());
+        }
+        return toRemove.length == 0;
+    }
 }
