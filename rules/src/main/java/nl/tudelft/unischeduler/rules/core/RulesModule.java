@@ -26,6 +26,11 @@ public class RulesModule {
     @Autowired
     private DatabaseService databaseService;
 
+    /**
+     * Sets the ruleset as the standard rules for the rulesModule.
+     *
+     * @param rules The new rules to set.
+     */
     public void setRules(Ruleset rules) {
         this.rules = rules;
         setBreakTime(rules.getBreakTime());
@@ -46,10 +51,10 @@ public class RulesModule {
         while (index < thresholds.length) {
 
             if (init < thresholds[index][0]) {
-                index --;
+                index--;
                 break;
             }
-            if(index + 1 >= thresholds.length) {
+            if (index + 1 >= thresholds.length) {
                 break;
             }
             index++;
@@ -107,6 +112,12 @@ public class RulesModule {
                 || (start1 == start2);
     }
 
+    /**
+     * Tests to see if any of the lectures on the database overlap with the current one.
+     *
+     * @param lecture The lecture to test for.
+     * @return true if there is space else false.
+     */
     public boolean overlap(Lecture lecture) {
         Lecture[] lectures = databaseService.getLectures();
 
@@ -142,7 +153,8 @@ public class RulesModule {
 
             int attendance = lectures[i].getAttendance();
             boolean overCapacity = getCapacity(lectures[i].getRoom().getCapacity()) < attendance;
-            boolean overlapping = (lectures[i].getRoom().equals(lectures[(i + 1) % lectures.length].getRoom())
+            boolean overlapping = (lectures[i].getRoom().equals(lectures[(i + 1)
+                    % lectures.length].getRoom())
                     && overlap(lectures[i], lectures[(i + 1) % lectures.length]));
             if (overCapacity
                     || overlapping) {
@@ -155,12 +167,18 @@ public class RulesModule {
 
     }
 
+    /**
+     * Verifies if all the lectures currently stored on the database
+     * are still adhering to the rules.
+     *
+     * @return true iff this is still te case.
+     */
     public boolean verifyLectures() {
 
         Lecture[] lectures = databaseService.getLectures();
         Lecture[] toRemove = verifyLectures(lectures);
 
-        for(int i = 0; i < toRemove.length; i++) {
+        for (int i = 0; i < toRemove.length; i++) {
             databaseService.removeLectureFromSchedule(toRemove[i].getId());
             databaseService.removeRoomFromLecture(toRemove[i].getId());
         }
