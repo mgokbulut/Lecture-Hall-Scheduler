@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import nl.tudelft.unischeduler.scheduleedit.core.ScheduleEditModule;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +34,8 @@ public class StudentController {
      */
     @PutMapping(value = "{studentNetId}/sick", params = {"until"})
     public void cancelAttendance(@PathVariable String studentNetId,
-                                 @RequestParam LocalDateTime until)
+                                 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                         LocalDateTime until)
             throws IOException {
         core.reportStudentSick(studentNetId, until);
     }

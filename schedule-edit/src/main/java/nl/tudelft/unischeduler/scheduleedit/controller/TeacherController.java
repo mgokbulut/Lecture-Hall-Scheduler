@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import nl.tudelft.unischeduler.scheduleedit.core.ScheduleEditModule;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +33,10 @@ public class TeacherController {
      * @throws ConnectionException When the connection to the database service fails.
      */
     @PutMapping(value = "{teacherNetId}/sick", params = {"until"})
-    public void cancelLectures(@PathVariable String teacherNetId, @RequestParam LocalDateTime until)
+    public void cancelLectures(@PathVariable String teacherNetId,
+                               @RequestParam
+                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                       LocalDateTime until)
             throws IOException {
         core.reportTeacherSick(teacherNetId, until);
     }
