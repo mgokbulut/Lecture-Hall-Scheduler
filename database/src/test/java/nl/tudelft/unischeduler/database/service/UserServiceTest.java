@@ -20,6 +20,7 @@ import java.util.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class UserServiceTest {
 
     private transient List<User> users;
