@@ -1,5 +1,6 @@
 package nl.tudelft.unischeduler.scheduleedit.integration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import lombok.Data;
 import nl.tudelft.unischeduler.scheduleedit.controller.CourseController;
@@ -32,6 +33,8 @@ public abstract class ControllerTest {
     protected MockMvc mockMvc;
     public MockWebServer server;
 
+    @Autowired
+    protected ObjectMapper objectMapper;
 
     @Autowired protected WebClient.Builder webClientBuilder;
     @Autowired protected CourseService courseService;

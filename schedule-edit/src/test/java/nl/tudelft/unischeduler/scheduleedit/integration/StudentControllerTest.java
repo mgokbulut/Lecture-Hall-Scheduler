@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.jupiter.api.Test;
@@ -18,8 +16,7 @@ public class StudentControllerTest extends ControllerTest {
     public void canclePastTest() throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/student/{studentNetId}/sick", "student")
-                        .param("until",
-                                String.valueOf(LocalDateTime.now().plus(2, ChronoUnit.DAYS)))
+                        .param("until", "2000-10-31T01:30:00.000-05:00")
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().is(400));
     }
