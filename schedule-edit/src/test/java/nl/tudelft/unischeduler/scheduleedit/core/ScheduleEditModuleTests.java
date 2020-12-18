@@ -1,5 +1,6 @@
 package nl.tudelft.unischeduler.scheduleedit.core;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
@@ -168,7 +169,7 @@ public class ScheduleEditModuleTests {
 
         module.addStudentGroupLecture(testIds, 1L);
 
-        verify(courseService, times(1)).addStudentToCourse(any(String.class), eq(1L));
+        verify(courseService, times(1)).addStudentsToCourse(any(), eq(1L));
         verifyNoMoreInteractions(courseService);
     }
 
@@ -193,5 +194,24 @@ public class ScheduleEditModuleTests {
 
         assertEquals(DayOfWeek.MONDAY, expected.getDayOfWeek());
         assertEquals(expected, module.calculateStartOfWeek(2004, 53));
+    }
+
+    @Test
+    public void pathParamConstructEmptyTest() {
+        assertThat(CourseService.constructPathParam(Collections.emptyList())).isNull();
+    }
+
+    @Test
+    public void pathParamConstructSingleTest() {
+        assertThat(CourseService.constructPathParam(Collections.singletonList("netId")))
+                .isEqualTo("netId");
+    }
+
+    @Test
+    public void pathParamConstructMultipleTest() {
+        List<String> list = List.of("netID", "netID2", "netID3");
+        assertThat(CourseService.constructPathParam(list))
+                .isNotNull()
+                .isEqualTo("netID,netID2,netID3");
     }
 }

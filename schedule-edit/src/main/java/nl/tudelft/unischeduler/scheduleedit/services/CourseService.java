@@ -3,6 +3,7 @@ package nl.tudelft.unischeduler.scheduleedit.services;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -47,9 +48,22 @@ public class CourseService extends DatabaseService{
         return extractLong(response);
     }
 
-    public void addStudentToCourse(String netId, long courseId) throws IOException {
+    public static String constructPathParam(List<String> strings) {
+        if(strings == null || strings.size() == 0) {
+            return null;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(strings.get(0));
+        for (String string : strings.subList(1, strings.size())) {
+            stringBuilder.append(",");
+            stringBuilder.append(string);
+        }
+        return stringBuilder.toString();
+    }
+
+    public void addStudentsToCourse(List<String> netIds, long courseId) throws IOException {
         ResponseEntity<Void> response = webClient.put()
-                .uri("/lectureSchedules/{netId}/{lectureId}", netId, courseId)
+                .uri("/courses/assignStudents/{netIdsFormat}/{lectureId}", constructPathParam(netIds), courseId)
                 .retrieve()
                 .toBodilessEntity()
                 .block();

@@ -141,8 +141,6 @@ public class ScheduleEditModule {
      */
     public void addStudentGroupLecture(List<String> students, long courseId)
             throws IOException {
-        for(String studentNetId : students) {
-            courseService.addStudentToCourse(studentNetId, courseId);
-        }
+        courseService.addStudentsToCourse(students, courseId);
     }
 }
