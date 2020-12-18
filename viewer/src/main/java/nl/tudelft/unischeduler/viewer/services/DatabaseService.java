@@ -6,14 +6,12 @@ import lombok.NonNull;
 import nl.tudelft.unischeduler.viewer.entities.Classroom;
 import nl.tudelft.unischeduler.viewer.entities.Lecture;
 import nl.tudelft.unischeduler.viewer.entities.User;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,7 +32,7 @@ public class DatabaseService {
         webClient = webClientBuilder.build();
     }
 
-    public Lecture[] getStudentSchedule(String netId) {
+    public ResponseEntity<Lecture[]> getStudentSchedule(String netId) {
         List<Object[]> result = webClientBuilder.build()
                 .get()
                 .uri("lectureSchedules/" + netId)
@@ -44,10 +42,10 @@ public class DatabaseService {
                 .collectList()
                 .block();
 
-        return getLectures(result);
+        return ResponseEntity.ok(getLectures(result));
     }
 
-    public Lecture[] getTeacherSchedule(String netId) {
+    public ResponseEntity<Lecture[]> getTeacherSchedule(String netId) {
         List<Object[]> result = webClientBuilder.build()
                 .get()
                 .uri("lectureSchedules/teacher/" + netId)
@@ -57,12 +55,10 @@ public class DatabaseService {
                 .collectList()
                 .block();
 
-        return getLectures(result);
+        return ResponseEntity.ok(getLectures(result));
     }
 
-
-
-    public Lecture[] getPossibleLectures(String netId) {
+    public ResponseEntity<Lecture[]> getPossibleLectures(String netId) {
         List<Object[]> result = webClientBuilder.build()
                 .get()
                 .uri("userCourseService/possibleLectures/" + netId)
@@ -72,10 +68,10 @@ public class DatabaseService {
                 .collectList()
                 .block();
 
-        return getLectures(result);
+        return ResponseEntity.ok(getLectures(result));
     }
 
-    public Lecture[] getLecturesInCourse(int courseId) {
+    public ResponseEntity<Lecture[]> getLecturesInCourse(int courseId) {
         List<Object[]> result = webClientBuilder.build()
                 .get()
                 .uri("lectureSchedules/course/" + String.valueOf(courseId))
@@ -85,10 +81,10 @@ public class DatabaseService {
                 .collectList()
                 .block();
 
-        return getLectures(result);
+        return ResponseEntity.ok(getLectures(result));
     }
 
-    public User[] getStudentsInLecture(int lectureId) {
+    public ResponseEntity<User[]> getStudentsInLecture(int lectureId) {
         List<Object[]> result = webClientBuilder.build()
                 .get()
                 .uri("lectureSchedules/studentsLecture/" + String.valueOf(lectureId))
@@ -98,7 +94,7 @@ public class DatabaseService {
                 .collectList()
                 .block();
 
-        return getUsers(result);
+        return ResponseEntity.ok(getUsers(result));
     }
 
     public User[] getUsers(List<Object[]> result) {

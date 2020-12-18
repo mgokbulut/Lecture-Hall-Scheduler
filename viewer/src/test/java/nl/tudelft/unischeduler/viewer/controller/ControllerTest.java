@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,22 +21,27 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @ContextConfiguration(classes = UserController.class)
-@ComponentScan(basePackages = {"nl.tudelft.unischeduler.scheduleedit"})
+@ComponentScan(basePackages = {"nl/tudelft/unischeduler/viewer"})
 @AutoConfigureMockMvc
 @WebMvcTest
-@Data
 public abstract class ControllerTest {
 
     @Autowired
     protected WebApplicationContext wac;
+
+    @Autowired
     protected MockMvc mockMvc;
     public MockWebServer server;
 
     @Autowired
     protected ObjectMapper objectMapper;
 
-    @Autowired protected WebClient.Builder webClientBuilder;
-    @Autowired protected DatabaseService databaseService;
+    @Autowired
+    protected WebClient.Builder webClientBuilder;
+
+    @Autowired
+    @MockBean
+    protected DatabaseService databaseService;
 
     @BeforeEach
     void beforeEach() throws IOException {

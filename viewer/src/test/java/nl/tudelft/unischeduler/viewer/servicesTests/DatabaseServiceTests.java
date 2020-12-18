@@ -130,9 +130,8 @@ public class DatabaseServiceTests {
                 .collectList()
                 .block())
                 .thenReturn(lectures);
-        Lecture[] expected = databaseService.getStudentSchedule(netId);
+        Lecture[] expected = databaseService.getStudentSchedule(netId).getBody();
         Lecture[] actual = databaseService.getLectures(lectures);
         assertEquals(expected, actual);
     }
-
 }
