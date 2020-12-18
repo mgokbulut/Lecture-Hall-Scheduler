@@ -3,7 +3,9 @@ package nl.tudelft.unischeduler.database.entity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import nl.tudelft.unischeduler.database.lectureschedule.LectureSchedule;
+import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleId;
 import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleRepository;
+import nl.tudelft.unischeduler.database.schedule.Schedule;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -32,5 +34,13 @@ public class LectureScheduleTest {
         LectureSchedule lectureSchedule = new LectureSchedule(1L, 1L);
         LectureSchedule test = new LectureSchedule(1L, 1L);
         assertEquals(lectureSchedule, test);
+    }
+
+    @Test
+    public void constructorTest() {
+        assertEquals(new LectureScheduleId().getLectureId(),
+                new LectureScheduleId().getLectureId());
+        assertEquals(new LectureScheduleId().getScheduleId(),
+                new LectureScheduleId().getScheduleId());
     }
 }

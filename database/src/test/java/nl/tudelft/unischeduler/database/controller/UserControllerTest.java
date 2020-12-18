@@ -7,11 +7,12 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
@@ -42,6 +44,9 @@ public class UserControllerTest {
     @Autowired
     @MockBean
     private transient UserService userService;
+
+    private final transient ObjectMapper objectMapper =
+            new ObjectMapper().registerModule(new JavaTimeModule());
 
     private transient MockMvc mockMvc;
 
@@ -66,7 +71,7 @@ public class UserControllerTest {
         String uri = "/users/all";
         mockMvc.perform(get(uri).contentType(APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$").exists())
-                .andDo(print())
+                //.andDo(print())
                 .andExpect(jsonPath("$[0].netId", is("a.baran@student.tudelft.nl")))
                 .andExpect(jsonPath("$[0].type", is("STUDENT")))
                 .andExpect(jsonPath("$[0].interested", is(true)))
@@ -81,5 +86,15 @@ public class UserControllerTest {
 
         verify(userService, times(1)).getAllUsers();
         verifyNoMoreInteractions(userService);
+    }
+
+    @Test
+    public void getUserTest() throws Exception {
+        String uri = "/users/a.baran@student.tudelft.nl";
+        User user = new User("a.baran@student.tudelft.nl", "STUDENT", true, timestamp);
+
+        mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isOk());
     }
 }

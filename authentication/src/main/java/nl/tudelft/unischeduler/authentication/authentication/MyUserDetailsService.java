@@ -1,6 +1,7 @@
 package nl.tudelft.unischeduler.authentication.authentication;
 
 import java.util.Optional;
+import lombok.Data;
 import nl.tudelft.unischeduler.authentication.user.User;
 import nl.tudelft.unischeduler.authentication.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@Data
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
@@ -23,13 +25,5 @@ public class MyUserDetailsService implements UserDetailsService {
             + netId + " not found"));
 
         return user.map(MyUserDetails::new).get();
-    }
-
-    public UserRepository getUserRepository() {
-        return userRepository;
-    }
-
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
     }
 }

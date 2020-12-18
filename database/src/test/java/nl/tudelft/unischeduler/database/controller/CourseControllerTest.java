@@ -7,10 +7,13 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.util.ArrayList;
 import java.util.List;
 import nl.tudelft.unischeduler.database.course.Course;
@@ -22,10 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
-
 
 
 @ContextConfiguration(classes = CourseController.class)
@@ -38,6 +41,9 @@ public class CourseControllerTest {
     @Autowired
     @MockBean
     private transient CourseService courseService;
+
+    private final transient ObjectMapper objectMapper =
+            new ObjectMapper().registerModule(new JavaTimeModule());
 
     private transient MockMvc mockMvc;
 
@@ -89,5 +95,15 @@ public class CourseControllerTest {
 
         verify(courseService, times(1)).getCourse(1L);
         verifyNoMoreInteractions(courseService);
+    }
+
+    @Test
+    public void createCourseTest() throws Exception {
+        String uri = "/courses/create/ADS/1";
+        Course course = new Course(0L, "ADS", 1);
+
+        mockMvc.perform(put(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(course)))
+                .andExpect(status().isOk());
     }
 }

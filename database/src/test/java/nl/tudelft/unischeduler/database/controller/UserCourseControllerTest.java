@@ -7,24 +7,31 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import nl.tudelft.unischeduler.database.course.Course;
 import nl.tudelft.unischeduler.database.user.User;
 import nl.tudelft.unischeduler.database.usercourse.UserCourseController;
 import nl.tudelft.unischeduler.database.usercourse.UserCourseService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
@@ -42,6 +49,9 @@ public class UserCourseControllerTest {
     @Autowired
     @MockBean
     private transient UserCourseService userCourseService;
+
+    private final transient ObjectMapper objectMapper =
+            new ObjectMapper().registerModule(new JavaTimeModule());
 
     private transient MockMvc mockMvc;
 
@@ -82,5 +92,16 @@ public class UserCourseControllerTest {
 
         verify(userCourseService, times(1)).getStudentsInCourse(0L);
         verifyNoMoreInteractions(userCourseService);
+    }
+
+    @Test
+    public void addStudentToCourseTest() throws Exception {
+        String uri = "/userCourses/assignStudents/testStudent/1";
+        Course course = new Course(1L, "Test", 1);
+
+        mockMvc.perform(put(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(course)))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }
