@@ -1,16 +1,19 @@
 package nl.tudelft.unischeduler.scheduleedit.services;
 
 import java.io.IOException;
+import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
  * This package acts as a placeholder until the communication Part is worked out.
  */
 @Service
-public class CourseService {
+public class CourseService extends DatabaseService{
 
     /**
      * Creates a course and marks it to be scheduled by the schedule generate module.
@@ -20,19 +23,38 @@ public class CourseService {
      * @return The generated id of the course.
      */
     public long createCourse(String name, int year) throws IOException {
-        //TODO: this is a stub, and in the future should actually send the data.
-        return -1;
+        ResponseEntity<Long> response = webClient.put()
+                .uri("/courses/" + name + "/" + year)
+                .retrieve()
+                .toEntity(Long.class)
+                .block();
+        verifyStatusCode(response);
+        return extractLong(response);
     }
 
     public long createLecture(long courseId,
                               String teacher,
                               LocalDateTime startTime,
                               Duration duration) throws IOException {
-        //TODO: this is a stub, and in the future should actually send the data.
-        return -1;
+        ResponseEntity<Long> response = webClient.put()
+                .uri("/lectures/create/{courseId}/{teacher}/{startTime}/{duration}/{movedOnline}",
+                        courseId,
+                        teacher,
+                        startTime,
+                        duration)
+                .retrieve()
+                .toEntity(Long.class)
+                .block();
+        verifyStatusCode(response);
+        return extractLong(response);
     }
 
-    public void addStudentToCourse(List<String> netIdList, long courseId) throws IOException {
-        //TODO: this is a stub, and in the future should actually send the data.
+    public void addStudentToCourse(String netId, long courseId) throws IOException {
+        ResponseEntity<Void> response = webClient.put()
+                .uri("/lectureSchedules/{netId}/{lectureId}", netId, courseId)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+        verifyStatusCode(response);
     }
 }

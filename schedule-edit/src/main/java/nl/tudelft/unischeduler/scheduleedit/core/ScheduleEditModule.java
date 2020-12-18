@@ -85,12 +85,8 @@ public class ScheduleEditModule {
      * @return the id of the newly created course.
      * @throws ConnectionException When the connection with the database fails.
      */
-    public long createCourse(String courseName, int year) throws ConnectionException {
-        try {
-            return courseService.createCourse(courseName, year);
-        } catch (IOException e) {
-            throw createException(e);
-        }
+    public long createCourse(String courseName, int year) throws IOException {
+        return courseService.createCourse(courseName, year);
     }
 
     /**
@@ -131,13 +127,9 @@ public class ScheduleEditModule {
                               int year,
                               int week,
                               Duration duration)
-            throws ConnectionException {
+            throws IOException {
         LocalDateTime startWeek = calculateStartOfWeek(year, week).atStartOfDay();
-        try {
-            return courseService.createLecture(courseId, teacherNetId, startWeek, duration);
-        } catch (IOException e) {
-            throw createException(e);
-        }
+        return courseService.createLecture(courseId, teacherNetId, startWeek, duration);
     }
 
     /**
@@ -148,15 +140,9 @@ public class ScheduleEditModule {
      * @throws ConnectionException When the connection with the database fails.
      */
     public void addStudentGroupLecture(List<String> students, long courseId)
-            throws ConnectionException {
-        try {
-            courseService.addStudentToCourse(students, courseId);
-        } catch (IOException e) {
-            throw createException(e);
+            throws IOException {
+        for(String studentNetId : students) {
+            courseService.addStudentToCourse(studentNetId, courseId);
         }
-    }
-
-    private ConnectionException createException(IOException exception) {
-        return new ConnectionException("The connection with the database failed", exception);
     }
 }

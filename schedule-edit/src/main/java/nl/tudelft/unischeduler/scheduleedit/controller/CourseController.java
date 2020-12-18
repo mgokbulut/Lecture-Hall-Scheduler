@@ -1,5 +1,6 @@
 package nl.tudelft.unischeduler.scheduleedit.controller;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class CourseController {
 
     @PostMapping
     public long createCourse(@RequestParam String courseName, @RequestParam int year)
-            throws ConnectionException {
+            throws IOException {
         return core.createCourse(courseName, year);
     }
 
@@ -31,13 +32,13 @@ public class CourseController {
     public long createLecture(@RequestParam long courseId,
                               @RequestParam String teacherNetId,
                               @RequestParam int year, @RequestParam int week,
-                              @RequestParam Duration duration) throws ConnectionException {
+                              @RequestParam Duration duration) throws IOException {
         return core.createLecture(courseId, teacherNetId, year, week, duration);
     }
 
     @PutMapping
     public void addStudentToLecture(@RequestBody List<String> studentNetId,
-                                    @RequestParam long courseId) throws ConnectionException {
+                                    @RequestParam long courseId) throws IOException {
         core.addStudentGroupLecture(studentNetId, courseId);
     }
 }

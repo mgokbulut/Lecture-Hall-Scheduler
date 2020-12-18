@@ -35,7 +35,7 @@ public abstract class DatabaseService {
      * @param response the response object gotten from the webclient.
      * @throws IOException When response is null or the status code != 200.
      */
-    public void verifyStatusCode(ResponseEntity<Void> response) throws IOException {
+    public void verifyStatusCode(ResponseEntity<?> response) throws IOException {
         if (response == null) {
             throw new ConnectionException("the response was null");
         }
@@ -46,7 +46,17 @@ public abstract class DatabaseService {
             case NOT_FOUND:
                 throw new NotFoundException();
             default:
+                System.err.println("unknown response code: " + status);
                 throw new ConnectionException("The connection with the database failed");
         }
+    }
+
+    protected long extractLong(ResponseEntity<Long> response) throws IOException {
+        verifyStatusCode(response);
+        Long result = response.getBody();
+        if (result == null) {
+            throw new ConnectionException("The response body was null");
+        }
+        return result;
     }
 }
