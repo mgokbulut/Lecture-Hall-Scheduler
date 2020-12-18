@@ -40,6 +40,9 @@ public class LectureScheduleControllerTest {
     @Autowired
     private transient WebApplicationContext webApplicationContext;
 
+    @MockBean
+    private transient LectureScheduleService lectureScheduleService;
+
     private final transient ObjectMapper objectMapper =
             new ObjectMapper().registerModule(new JavaTimeModule());
 

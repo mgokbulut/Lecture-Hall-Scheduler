@@ -105,16 +105,14 @@ public class UserCourseService {
      */
     public List<Object []> getPossibleLectures(String netId) {
         try {
-            var a = userCourseRepository
+            return userCourseRepository
                     .findAllByNetId(netId)
                     .stream()
                     .map(UserCourse::getCourseId)
                     .flatMap(x -> lectureRepository.findAllByCourse(x).stream())
                     .map(x -> new Object[]{x, classroomRepository.findById(x.getClassroom()).get()})
                     .collect(Collectors.toList());
-            System.out.println(Arrays.toString(a.get(0)));
-            return a;
-        } catch(Exception a) {
+        } catch (Exception a) {
             System.err.println("No such object in DB");
             a.printStackTrace();
             return null;

@@ -31,7 +31,6 @@ public class UserCourseController {
         return userCourseService.addStudentToCourse(netIds, courseId);
     }
 
-    //TODO: test again
     @GetMapping(path = "/userCourseService/possibleLectures/{netId}")
     public @ResponseBody
     List<Object []> getPossibleLectures(@PathVariable String netId) {

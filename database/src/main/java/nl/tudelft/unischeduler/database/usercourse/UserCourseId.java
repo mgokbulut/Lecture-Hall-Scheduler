@@ -1,8 +1,11 @@
 package nl.tudelft.unischeduler.database.usercourse;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+@Data
 public class UserCourseId implements Serializable {
     private String netId;
     private Long courseId;
@@ -28,37 +31,4 @@ public class UserCourseId implements Serializable {
         this.courseId = courseId;
     }
 
-    public String getNetId() {
-        return netId;
-    }
-
-    public void setNetId(String netId) {
-        this.netId = netId;
-    }
-
-    public Long getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof UserCourseId)) {
-            return false;
-        }
-        UserCourseId that = (UserCourseId) o;
-        return netId.equals(that.netId)
-                && courseId.equals(that.courseId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(netId, courseId);
-    }
 }

@@ -21,6 +21,11 @@ public class LectureService {
     @Autowired
     private transient CourseRepository courseRepository;
 
+    public LectureService(LectureRepository lectureRepository, CourseRepository courseRepository){
+        this.lectureRepository = lectureRepository;
+        this.courseRepository = courseRepository;
+    }
+
     /**
      * Returns a list containing an Array of size 2 with
      * every lecture and the course a lecture is in.
@@ -28,13 +33,19 @@ public class LectureService {
      * @return List of Objects (os size 2) with Lecture and Course objects
      */
     public List<Object []>  getLecturesWithCourses() {
-        var lectures = lectureRepository.findAll();
-        List<Object []> lecturesWithCourses = new ArrayList<>();
-        for (Lecture lecture : lectures) {
-            Object [] obj = {lecture,  courseRepository.findById(lecture.getCourse())};
-            lecturesWithCourses.add(obj);
+        try {
+            var lectures = lectureRepository.findAll();
+            List<Object []> lecturesWithCourses = new ArrayList<>();
+
+            for (Lecture lecture : lectures) {
+                lecturesWithCourses.add(new Object[]{lecture,
+                        courseRepository.findById(lecture.getCourse()).get()});
+            }
+            return lecturesWithCourses;
+        } catch (Exception a) {
+            a.printStackTrace();
+            return null;
         }
-        return lecturesWithCourses;
     }
 
     /**
@@ -46,7 +57,7 @@ public class LectureService {
     public ResponseEntity<?> setClassroomToEmpty(Long lectureId) {
         Optional<Lecture> temp = lectureRepository.findById(lectureId);
         if (temp.isEmpty()) {
-            System.out.println("LectureID not present in the DB");
+            System.err.println("LectureID not present in the DB");
             return ResponseEntity.notFound().build();
         } else {
             try {
@@ -54,12 +65,12 @@ public class LectureService {
                 lecture.setClassroom(-1L);
                 lecture.setMovedOnline(true);
                 lectureRepository.save(lecture);
+                return ResponseEntity.ok(lecture);
             } catch (Exception e) {
-                System.out.println("Something went wrong in setClassroomToEmpty method");
+                System.err.println("Something went wrong in setClassroomToEmpty method");
                 e.printStackTrace();
                 return ResponseEntity.badRequest().build();
             }
-            return ResponseEntity.ok().build();
         }
     }
 
@@ -98,11 +109,11 @@ public class LectureService {
                 Lecture lecture = temp.get();
                 lecture.setStartTimeDate(t);
                 lectureRepository.save(lecture);
+                return ResponseEntity.ok(lecture);
             } catch (Exception e) {
                 System.out.println("Something went wrong in getLecturesInRoomOnDay method");
                 return ResponseEntity.badRequest().build();
             }
-            return ResponseEntity.ok().build();
         }
     }
 
@@ -123,11 +134,11 @@ public class LectureService {
                 Lecture lecture = temp.get();
                 lecture.setClassroom(classroomId);
                 lectureRepository.save(lecture);
+                return ResponseEntity.ok(lecture);
             } catch (Exception e) {
                 System.out.println("Something went wrong in assignRoomToLecture method");
                 return ResponseEntity.badRequest().build();
             }
-            return ResponseEntity.ok().build();
         }
     }
 

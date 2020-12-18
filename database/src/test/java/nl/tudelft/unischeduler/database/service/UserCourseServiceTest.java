@@ -132,4 +132,32 @@ public class UserCourseServiceTest {
         Assertions.assertTrue(Arrays.equals(new Object[]{lectures.get(2), classroom},
                 userCourseService.getPossibleLectures("a.baran@student.tudelft.nl").get(0)));
     }
+
+    @Test
+    public void getPossibleLecturesTestFail(){
+        Classroom classroom = new Classroom(30, "Test", "Building", 1);
+        when(userCourseRepository.findAllByNetId("a.baran@student.tudelft.nl"))
+                .thenReturn(List.of(userCourses.get(0), userCourses.get(2)));
+        when(lectureRepository.findAllByCourse(2L))
+                .thenReturn(List.of(lectures.get(2)));
+        when(classroomRepository.findById(10L)).thenReturn(
+                Optional.of(classroom));
+
+        UserCourseService userCourseService = new UserCourseService(
+                userCourseRepository, userRepository, lectureRepository, classroomRepository);
+
+        Assertions.assertNull(userCourseService.getPossibleLectures("a.baran@student.tudelft.nl"));
+    }
+
+    @Test
+    public void getStudentsInCourseTestFail(){
+        when(userCourseRepository.findAllByCourseId(1L)).thenReturn(List.of(userCourses.get(0)));
+        when(userRepository.findByNetId("a.baran@student.tudelft.nl"))
+                .thenReturn(Optional.empty());
+
+        UserCourseService userCourseService = new UserCourseService(
+                userCourseRepository, userRepository, lectureRepository, classroomRepository);
+
+        Assertions.assertNull(userCourseService.getStudentsInCourse(1L));
+    }
 }

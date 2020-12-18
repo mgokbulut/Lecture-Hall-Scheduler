@@ -105,7 +105,7 @@ public class LectureControllerTest {
     }
 
 
-    @Disabled
+    //@Disabled
     @Test
     public void getLecturesInCourse() throws Exception {
         when(lectureService.getLecturesInCourse(0L, timestamp,
