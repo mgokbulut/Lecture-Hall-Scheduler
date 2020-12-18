@@ -2,12 +2,10 @@ package nl.tudelft.unischeduler.scheduleedit.core;
 
 import java.io.IOException;
 import java.time.Clock;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
 import nl.tudelft.unischeduler.scheduleedit.exception.IllegalDateException;
 import nl.tudelft.unischeduler.scheduleedit.services.StudentService;
 import nl.tudelft.unischeduler.scheduleedit.services.TeacherService;
@@ -41,16 +39,13 @@ public class ScheduleEditModule {
      * @param until The LocalDate until the teacher is sick (inclusive).
      */
     public void reportTeacherSick(String teacherNetId, LocalDateTime until)
-            throws IllegalDateException, ConnectionException {
+            throws IllegalDateException, IOException {
         LocalDateTime now = checkBeforeNow(until);
-        try {
-            teacherService.cancelLectures(teacherNetId, now, until);
-        } catch (IOException e) {
-            throw new ConnectionException("The connection with the database failed", e);
-        }
+        teacherService.cancelLectures(teacherNetId, now, until);
+
     }
 
-    public void reportTeacherSick(String teacherNetId) throws ConnectionException {
+    public void reportTeacherSick(String teacherNetId) throws IOException {
         LocalDateTime until = LocalDateTime.now(clock).plus(14, ChronoUnit.DAYS);
         reportTeacherSick(teacherNetId, until);
     }
@@ -62,17 +57,14 @@ public class ScheduleEditModule {
      * @param until The LocalDate until the teacher is sick (inclusive).
      */
     public void reportStudentSick(String studentNetId, LocalDateTime until)
-            throws IllegalDateException, ConnectionException {
+            throws IllegalDateException, IOException {
         LocalDateTime now = checkBeforeNow(until);
-        try {
-            studentService.cancelStudentAttendance(studentNetId, now, until);
-            studentService.setUserSick(studentNetId, now);
-        } catch (IOException e) {
-            throw new ConnectionException("The connection with the database failed", e);
-        }
+        studentService.cancelStudentAttendance(studentNetId, now, until);
+        studentService.setUserSick(studentNetId, now);
+
     }
 
-    public void reportStudentSick(String studentNetId) throws ConnectionException {
+    public void reportStudentSick(String studentNetId) throws IOException {
         LocalDateTime until = LocalDateTime.now(clock).plus(14, ChronoUnit.DAYS);
         reportStudentSick(studentNetId, until);
     }

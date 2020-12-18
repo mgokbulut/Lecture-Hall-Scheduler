@@ -1,5 +1,6 @@
 package nl.tudelft.unischeduler.scheduleedit.controller;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,14 +34,14 @@ public class StudentController {
     @PutMapping(value = "/{studentNetId}/sick", params = {"until"})
     public void cancelAttendance(@PathVariable String studentNetId,
                                  @RequestParam LocalDateTime until)
-            throws ConnectionException {
+            throws IOException {
         core.reportStudentSick(studentNetId, until);
     }
 
 
     @PutMapping("/{studentNetId}/sick")
     public void cancelLecturesStandard(@PathVariable String studentNetId)
-            throws ConnectionException {
+            throws IOException {
         core.reportStudentSick(studentNetId);
     }
 }

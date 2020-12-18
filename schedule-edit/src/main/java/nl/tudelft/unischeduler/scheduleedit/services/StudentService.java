@@ -2,11 +2,12 @@ package nl.tudelft.unischeduler.scheduleedit.services;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,13 +26,14 @@ public class StudentService extends DatabaseService {
      * @throws ConnectionException When the connection to the database service fails.
      */
     public void setUserSick(String netId, LocalDateTime startTime) throws IOException {
-        webClientBuilder.build().put()
-                .uri("/sickLogs/new/"
+        ResponseEntity<Void> response = webClient.put()
+                .uri("sickLogs/new/"
                         + netId
                         + "/" + Timestamp.valueOf(startTime))
                 .retrieve()
                 .toBodilessEntity()
                 .block();
+        verifyStatusCode(response);
     }
 
     /**
@@ -45,13 +47,14 @@ public class StudentService extends DatabaseService {
      */
     public void cancelStudentAttendance(String studentNetId, LocalDateTime start, LocalDateTime end)
             throws IOException {
-        webClientBuilder.build().delete()
-                .uri("/lectureSchedules/remove/"
+        ResponseEntity<Void> response = webClient.delete()
+                .uri("lectureSchedules/remove/"
                         + studentNetId + "/"
                         + Timestamp.valueOf(start) + "/"
                         + Timestamp.valueOf(end))
                 .retrieve()
                 .toBodilessEntity()
                 .block();
+        verifyStatusCode(response);
     }
 }

@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import lombok.Data;
-import nl.tudelft.unischeduler.scheduleedit.exception.ConnectionException;
 import nl.tudelft.unischeduler.scheduleedit.exception.IllegalDateException;
 import nl.tudelft.unischeduler.scheduleedit.services.StudentService;
 import nl.tudelft.unischeduler.scheduleedit.services.TeacherService;
@@ -97,19 +96,6 @@ public class ScheduleEditModuleTests {
     }
 
     @Test
-    public void databaseTeacherThrowsTest() throws IOException {
-        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
-                teacherService,
-                studentService);
-        Mockito.doThrow(new IOException())
-                .when(teacherService).cancelLectures(any(), any(), any());
-
-        Assertions.assertThrows(ConnectionException.class, () -> {
-            module.reportTeacherSick(testId);
-        });
-    }
-
-    @Test
     public void reportStudentTest() throws IOException {
         ScheduleEditModule module = new ScheduleEditModule(fixedClock,
                 teacherService,
@@ -160,19 +146,5 @@ public class ScheduleEditModuleTests {
         });
 
         verify(studentService, never()).cancelStudentAttendance(any(), any(), any());
-    }
-
-    @Test
-    public void databaseStudentThrowsTest() throws IOException {
-        ScheduleEditModule module = new ScheduleEditModule(fixedClock,
-                teacherService,
-                studentService);
-
-        Mockito.doThrow(new IOException())
-                .when(studentService).cancelStudentAttendance(any(), any(), any());
-
-        Assertions.assertThrows(ConnectionException.class, () -> {
-            module.reportStudentSick(testId);
-        });
     }
 }
