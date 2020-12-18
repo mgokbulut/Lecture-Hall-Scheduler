@@ -24,6 +24,7 @@ public class CourseController {
     @PostMapping
     public long createCourse(@RequestParam String courseName, @RequestParam int year)
             throws IOException {
+        //returns the id of the course
         return core.createCourse(courseName, year);
     }
 
