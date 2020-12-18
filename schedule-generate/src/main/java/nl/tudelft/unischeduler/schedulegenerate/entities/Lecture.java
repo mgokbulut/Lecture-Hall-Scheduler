@@ -26,13 +26,14 @@ public class Lecture implements Comparable<Lecture> {
      * @param duration the duration of the lecture
      */
     public Lecture(int id, int attendance, Timestamp startTime,
-                   Time duration, boolean isOnline, int year) {
+                   Time duration, boolean isOnline, int year, Room room) {
         this.id = id;
         this.attendance = attendance;
         this.startTime = startTime;
         this.duration = duration;
         this.isOnline = isOnline;
         this.year = year;
+        this.room = room;
     }
 
     /**
@@ -50,6 +51,7 @@ public class Lecture implements Comparable<Lecture> {
         this.duration = duration;
         this.isOnline = isOnline;
         this.year = year;
+        this.room = null;
     }
 
     public int getId() {

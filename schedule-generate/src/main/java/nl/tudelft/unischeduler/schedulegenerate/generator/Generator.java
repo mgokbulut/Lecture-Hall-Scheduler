@@ -58,7 +58,8 @@ public class Generator {
         // easy-to-access datastructure.
         List<List<Lecture>> timeTable = createTimeTable(lectures, currentTime, numOfDays);
 
-        scheduling(lectures, timeTable, currentTime, numOfDays);
+        scheduling(lectures, timeTable, currentTime, numOfDays,
+                apiCommunicator.getRooms(), apiCommunicator.getCourses());
     }
 
     /**
@@ -150,18 +151,17 @@ public class Generator {
      */
     public void scheduling(ArrayList<Lecture> lectures,
                             List<List<Lecture>> timeTable, Timestamp currentTime,
-                            int numOfDays) {
+                            int numOfDays, ArrayList<Room> rooms, ArrayList<Course> courses) {
         // TODO change this to a proper template online room, ask Kuba
         Room onlineRoom = new Room(0, Integer.MAX_VALUE, "online_room");
         // this value is placeholder until we find a better solution, should work
         int maxIterationMultiplier = 2;
-        // get all the rooms available on campus
-        ArrayList<Room> rooms = apiCommunicator.getRooms();
-
-        // get all the courses
-        ArrayList<Course> courses = apiCommunicator.getCourses();
+        int maxNumberOfYears = 3;
         // and separate them per year
         List<List<Course>> coursesPerYear = new ArrayList<>();
+        for (int i = 0; i < maxNumberOfYears; i++) {
+            coursesPerYear.add(new ArrayList<>());
+        }
         for (int i = 0; i < courses.size(); i++) {
             Course c = courses.get(i);
             coursesPerYear.get(c.getYear()).add(c);
@@ -259,7 +259,7 @@ public class Generator {
         }
     }
 
-    private Room findRoom(ArrayList<Room> rooms, Timestamp date,
+    public Room findRoom(ArrayList<Room> rooms, Timestamp date,
                           Lecture lecture, List<List<Lecture>> timeTable,
                           Timestamp currentTime, int numOfDays) {
         // sort in descending order
@@ -277,6 +277,7 @@ public class Generator {
                 lecture.setStartTime(time);
                 lecture.setRoom(currRoom);
                 int day = calDistance(currentTime, time);
+                System.out.println(day);
                 timeTable.get(day).add(lecture);
                 return currRoom;
             }
@@ -336,7 +337,7 @@ public class Generator {
      * @param currentTime the starting time of the whole scheduling system
      * @return earliest time when the room is not busy
      */
-    private Timestamp isFree(Timestamp timeslot, Room room,
+    public Timestamp isFree(Timestamp timeslot, Room room,
                              Lecture lecture, List<List<Lecture>> timeTable,
                              Timestamp currentTime, int day) {
         List<Lecture> lectures = timeTable.get(day);
@@ -354,7 +355,7 @@ public class Generator {
         return found;
     }
 
-    private int getCapacity(Room room) {
+    public int getCapacity(Room room) {
         // TODO make an API call here to find out the rule for capacity
         // for now we don't take the rules into account
         return room.getCapacity();
@@ -369,7 +370,7 @@ public class Generator {
      * @param scheduledLecture the already-scheduled lecture we want to check against
      * @return whether there would be overlap should the lecture be scheduled at this time
      */
-    private boolean overlap(Lecture lecture,
+    public boolean overlap(Lecture lecture,
                             Timestamp potentialStartTime, Lecture scheduledLecture) {
         Timestamp scheduledLectureEndTime = scheduledLecture.computeEndTime();
         long interval = getIntervalBetweenLectures();
