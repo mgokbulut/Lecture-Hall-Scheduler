@@ -1,30 +1,35 @@
 package nl.tudelft.unischeduler.viewer.services;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NonNull;
+import lombok.NoArgsConstructor;
 import nl.tudelft.unischeduler.viewer.entities.Classroom;
 import nl.tudelft.unischeduler.viewer.entities.Lecture;
 import nl.tudelft.unischeduler.viewer.entities.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @Service
 public class DatabaseService {
 
-    @NonNull
+    @Autowired
     private WebClient.Builder webClientBuilder;
 
     protected WebClient webClient;
+
+    public DatabaseService(WebClient.Builder webClientBuilder) {
+        this.webClientBuilder = webClientBuilder;
+    }
 
     @PostConstruct
     public void setUp() {
