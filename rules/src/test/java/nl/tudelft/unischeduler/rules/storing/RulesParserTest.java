@@ -1,6 +1,8 @@
 package nl.tudelft.unischeduler.rules.storing;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
@@ -41,4 +43,15 @@ public class RulesParserTest {
         }
     }
 
+    @Test
+    public void deleteNonExistentTest() throws IOException {
+        File file = new File("src/test/resources/non-existing.json");
+        file.deleteOnExit();
+        ObjectMapper objectMapper = new ObjectMapper();
+        RulesParser parser = new RulesParser(file, objectMapper);
+        assertThat(parser.delete()).isFalse();
+        file.createNewFile();
+        assertThat(parser.delete()).isTrue();
+        assertThat(file.exists()).isFalse();
+    }
 }

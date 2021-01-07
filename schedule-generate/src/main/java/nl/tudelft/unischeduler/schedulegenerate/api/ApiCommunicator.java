@@ -21,7 +21,7 @@ public class ApiCommunicator {
     //      path = "/courses/all"
 
     public ArrayList<Course> getCourses() {
-        return null;
+        return new ArrayList<>();
     }
 
     //  getStudentsInCourse(Long courseId): //wait till the DB is changed
@@ -84,6 +84,13 @@ public class ApiCommunicator {
         return 0L;
     }
 
+    /**
+     * Returns whether the student is allowed to be on campus
+     * given Covid rules.
+     *
+     * @param s the student in question
+     * @return whether he's allowed on campus
+     */
     public boolean allowedOnCampus(Student s) {
         // TODO API call to rules module to know if student is allowed to be on campus
         // he wouldn't be allowed to if he's had corona recently for example
