@@ -3,10 +3,27 @@ package nl.tudelft.unischeduler.database.triggers;
 public class StudentNotifier extends UserNotifier {
 
   @Override
-  // we're going to first implement being notified when a class is moved online
-  public boolean update(int lectureId, String action) {
-    
-    return false;
+  public boolean moved_online(int lectureId) {
+    // make the api call
+    return true;
+  }
+
+  @Override
+  public boolean date_change(int lectureId) {
+    // make the api call
+    return true;
+  }
+
+  @Override
+  public boolean time_change(int lectureId) {
+    // make the api call
+    return true;
+  }
+
+  @Override
+  public boolean moved_on_campus(int lectureId) {
+    // make the api call
+    return true;
   }
 
 }
