@@ -16,11 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 @Service
 public class SysInteractor {
 
     @Autowired
-    private UserRepository userRepository;
+    private transient UserRepository userRepository;
 
     @Autowired
     protected transient WebClient.Builder webClientBuilder;

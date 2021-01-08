@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
@@ -216,7 +217,7 @@ public class SysInteractController {
      * @return returns json error message
      */
     public static String exception_message(String statusCode, String message, String path) {
-        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss", Locale.ENGLISH).format(new Date());
         JSONObject res = new JSONObject();
         res.put("timestamp", timeStamp);
         res.put("status", statusCode);
