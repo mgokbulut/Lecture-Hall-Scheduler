@@ -13,7 +13,7 @@ public class RulesApplication {
 
     @Bean
     @LoadBalanced
-    public WebClient.Builder getWebClientBuilder(){
+    public WebClient.Builder getWebClientBuilder() {
         return WebClient.builder();
     }
 

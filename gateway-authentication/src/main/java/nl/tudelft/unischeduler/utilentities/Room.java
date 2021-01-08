@@ -1,9 +1,7 @@
 package nl.tudelft.unischeduler.utilentities;
 
 import java.util.Objects;
-import javax.persistence.Entity;
 
-@Entity
 public class Room implements Comparable<Room> {
     private int id;
     private int capacity;

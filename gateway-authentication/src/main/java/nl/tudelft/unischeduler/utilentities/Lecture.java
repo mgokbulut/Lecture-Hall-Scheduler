@@ -2,9 +2,7 @@ package nl.tudelft.unischeduler.utilentities;
 
 import java.sql.Time;
 import java.sql.Timestamp;
-import javax.persistence.Entity;
 
-@Entity
 public class Lecture implements Comparable<Lecture> {
 
     private int id;

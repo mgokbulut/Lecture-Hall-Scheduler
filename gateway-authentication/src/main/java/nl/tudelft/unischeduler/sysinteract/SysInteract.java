@@ -2,14 +2,12 @@ package nl.tudelft.unischeduler.sysinteract;
 
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.Entity;
 import nl.tudelft.unischeduler.user.User;
 
 /**
  * This object models an interaction between the user and the rest of the system.
  * It models a request to do something, such as add a course to the schedule
  */
-@Entity
 public class SysInteract {
 
 
