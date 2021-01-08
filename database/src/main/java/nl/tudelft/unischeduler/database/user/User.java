@@ -14,6 +14,9 @@ import lombok.Data;
 @AllArgsConstructor
 @Table(name = "app_user", schema = "schedulingDB")
 public class User {
+    public static String TEACHER = "TEACHER";
+    public static String STUDENT = "STUDENT";
+
     @Id
     @Column(name = "net_id", nullable = false, unique = true)
     private String netId;

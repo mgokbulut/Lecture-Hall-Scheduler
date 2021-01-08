@@ -3,10 +3,8 @@ package nl.tudelft.unischeduler.utilentities;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.Entity;
 import nl.tudelft.unischeduler.user.User;
 
-@Entity
 public class Course {
 
     private Long id;
@@ -49,6 +47,7 @@ public class Course {
      * @param classesPerWeek how many lectures per week
      */
     public Course(String name, int year, int classesPerWeek) {
+        this.id = -1L;
         this.name = name;
         this.year = year;
         this.students = new HashSet<User>();
