@@ -4,8 +4,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 import nl.tudelft.unischeduler.user.User;
+import nl.tudelft.unischeduler.user.UserRepository;
 import nl.tudelft.unischeduler.utilentities.Course;
 import nl.tudelft.unischeduler.utilentities.Lecture;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class SysInteractor {
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     protected transient WebClient.Builder webClientBuilder;
@@ -30,50 +35,40 @@ public class SysInteractor {
     /**
      * Registers a new course to the system.
      *
-     * @param user   the user trying to register the course
      * @param course the course the user is trying to register
      * @return whether the addition was successful
      */
-    public String addCourse(User user, Course course) throws URISyntaxException {
-        // first we need to check that the user is the correct role
-        if (checkFaculty(user)) {
-            if (user != null && course != null) {
-                webClient
-                    .post()
-                    .uri(new URI(
-                        "http://schedule-edit-service/course?courseName=" + course.getName()
-                            + "&year" + course.getYear()))
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .bodyToMono(Long.class)
-                    .block();
-            }
-            return "400";
-
+    public String addCourse(Course course) throws URISyntaxException {
+        if (course != null) {
+            webClient
+                .post()
+                .uri(new URI(
+                    "http://schedule-edit-service/course?courseName=" + course.getName()
+                        + "&year" + course.getYear()))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(Long.class)
+                .block();
+            return "{ \"status\": \"200\" }";
         }
-        return unauthorizedAccess();
+        return "{ \"status\": \"400\" }";
     }
 
     /**
      * Registers a new user to the system.
      *
-     * @param admin         the user who has the right to add new users
      * @param userToBeAdded the user to be added to the system
      * @return whether the change was successful
      */
-    public String addUser(User admin, User userToBeAdded) {
-        if (checkFaculty(admin)) {
-            String response = webClient.post().uri("http://gateway-service/authentication/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromObject(userToBeAdded))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-            System.out.println("it does work!");
-            return response;
-        }
-        return unauthorizedAccess();
+    public String addUser(User userToBeAdded) {
+        String response = webClient.post().uri("http://gateway-service/authentication/register")
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(BodyInserters.fromObject(userToBeAdded))
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .bodyToMono(String.class)
+            .block();
+        return response;
     }
 
     /**
@@ -95,26 +90,27 @@ public class SysInteractor {
     /**
      * Reports to the system that the user has corona.
      *
-     * @param user the user who is self-reporting
+     * @param username the user who is self-reporting
      * @return whether the change was successful
      */
-    public String reportCorona(User user) throws URISyntaxException {
+    public String reportCorona(String username) throws URISyntaxException {
+        Optional<User> optional = userRepository.findByNetId(username);
+        User user = optional.get();
         if (user.getType() == User.ROLE_STUDENT) {
             webClient.put()
                 .uri(new URI("http://schedule-edit-service/student/"
                     + user.getNetId() + "/sick"));
                 //.block();
-            return "200";
+            return "{ \"status\": \"200\" }";
             //System.out.println("workful!");
         } else if (user.getType() == User.ROLE_TEACHER) {
             webClient.put()
                 .uri(new URI("http://schedule-edit-service/teacher/"
                     + user.getNetId() + "/sick"));
                 //.block();
-            return "200";
+            return "{ \"status\": \"200\" }";
         }
-        // TODO throw exception of invalid user type for this action
-        return unauthorizedAccess();
+        return "{ \"status\": \"400\" }";
     }
 
     /**
@@ -137,48 +133,48 @@ public class SysInteractor {
      * Returns all the infromation that concerns a course,
      * including all students who are signed-up to attend it.
      *
-     * @param user   the user making the request
      * @param course the course queried for
      * @return the course's information
      */
-    public Object[] courseInformation(User user, Course course) throws URISyntaxException {
-        if (checkStaff(user)) {
-            // TODO poll database to find lecture information and return it
-            // /lectureSchedules/course/{courseId}
-            List<Lecture> res = webClient
-                .get()
-                .uri(new URI(
-                    "http://viewer-service/lectureSchedules/course/"
-                        + course.getId()))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToFlux(Lecture.class)
-                .collectList()
-                .block();
-            List<User> students = webClient
-                .get()
-                .uri(new URI(
-                    "http://database-service/userCourses/" + course.getId()))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToFlux(User.class)
-                .collectList()
-                .block();
-            Object[] o = new Object[]{res,students};
-            return o;
-        }
-        return new Object[0];
+    public Object[] courseInformation(Course course) throws URISyntaxException {
+        // TODO poll database to find lecture information and return it
+        // /lectureSchedules/course/{courseId}
+        //Optional<User> optional = userRepository.findByNetId(username);
+        //User user = optional.get();
+        List<Lecture> res = webClient
+            .get()
+            .uri(new URI(
+                "http://viewer-service/lectureSchedules/course/"
+                    + course.getId()))
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .bodyToFlux(Lecture.class)
+            .collectList()
+            .block();
+        List<User> students = webClient
+            .get()
+            .uri(new URI(
+                "http://database-service/userCourses/" + course.getId()))
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .bodyToFlux(User.class)
+            .collectList()
+            .block();
+        Object[] o = new Object[]{res,students};
+        return o;
     }
 
     /**
      * returns a list of all lectures a student is scheduled to attend
      * in person.
      *
-     * @param user          the user making the request
+     * @param username the user making the request
      * @return a list of all lectures
      * @throws URISyntaxException
      */
-    public Lecture[] studentSchedule(User user) throws URISyntaxException {
+    public Lecture[] studentSchedule(String username) throws URISyntaxException {
+        Optional<User> optional = userRepository.findByNetId(username);
+        User user = optional.get();
         List<Lecture> res = webClient
                 .get()
                 .uri(new URI(
@@ -195,31 +191,28 @@ public class SysInteractor {
      * returns a list of all lectures a student is scheduled to attend
      * in person.
      *
-     * @param user          the user making the request, specifically a teacher
+     * @param username the user making the request, specifically a teacher
      * @return a list of all lectures taught by the teacher
      * @throws URISyntaxException
      */
-    public Lecture[] teacherSchedule(User user) throws URISyntaxException {
-        if(checkStaff(user)){
-            List<Lecture> res = webClient
-                    .get()
-                    .uri(new URI(
-                            "http://viewer-service/teacher/" + user.getNetId()))
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .bodyToFlux(Lecture.class)
-                    .collectList()
-                    .block();
-            return res.toArray(new Lecture[res.size()]);
-        }
-        return new Lecture[0];
-
+    public Lecture[] teacherSchedule(String username) throws URISyntaxException {
+        Optional<User> optional = userRepository.findByNetId(username);
+        User user = optional.get();
+        List<Lecture> res = webClient
+                .get()
+                .uri(new URI(
+                        "http://viewer-service/teacher/" + user.getNetId()))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToFlux(Lecture.class)
+                .collectList()
+                .block();
+        return res.toArray(new Lecture[res.size()]);
     }
 
     /**
      *creates a new lecture using the parameters given.
      *
-     * @param user              the user making the request, must be a teacher or faculty member
      * @param courseId          the id of the course this lecture will belong to
      * @param teacherNetId      the id of the teacher teaching this lecture
      * @param year              the year of this lecture
@@ -228,16 +221,13 @@ public class SysInteractor {
      * @return
      * @throws URISyntaxException
      */
-    public String createLecture(User user, long courseId, String teacherNetId, int year,
+    public String createLecture(long courseId, String teacherNetId, int year,
                                 int week, Duration duration) throws URISyntaxException {
-        if(checkStaff(user) || checkFaculty(user)) {
-            webClient.put()
-                    .uri(new URI("http://schedule-edit-service/lecture/"
-                            + courseId + teacherNetId + year + week + duration));
-            //.block();
-            return "200";
-        }
-        return "403";
+        webClient.put()
+                .uri(new URI("http://schedule-edit-service/lecture/"
+                        + courseId + teacherNetId + year + week + duration));
+        //.block();
+        return "{ \"status\": \"200\" }";
     }
 
     /**
@@ -307,14 +297,14 @@ public class SysInteractor {
      * @param user the user we want to check
      * @return whether the user is a faculty member
      */
-    private boolean checkFaculty(User user) {
-        // first we need to check that the user is the correct role
-        if (user.getType() == User.ROLE_FAC_MEMBER) {
-            return true;
-        }
-        // endpoint should then return an error message
-        return false;
-    }
+//    private boolean checkFaculty(User user) {
+//        // first we need to check that the user is the correct role
+//        if (user.getType() == User.ROLE_FAC_MEMBER) {
+//            return true;
+//        }
+//        // endpoint should then return an error message
+//        return false;
+//    }
 
     /**
      * Helper method that checks whether the user is a
