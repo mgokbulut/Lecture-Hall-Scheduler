@@ -17,30 +17,30 @@ public class UserService {
     @Autowired
     private AuthenticationService authenticationService;
 
-    /**
-     * Register user method.
-     *
-     * @param user input username
-     * @return result of operation
-     */
-    public String register(User user) {
-        Optional<User> tmp = userRepository.findById(user.getNetId());
-        if (!tmp.isEmpty()) {
-            return "{message:\"This NetID already exists\"}";
-        } else {
-            try {
-                MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-                messageDigest.update(user.getPassword().getBytes());
-                String stringHash = new String(messageDigest.digest());
-                user.setPassword(stringHash);
-                userRepository.save(user);
-            } catch (Exception e) {
-                System.out.println("Something went wrong in register method");
-                return null;
-            }
-            return "{message:\"Successfully registered\"}";
-        }
-    }
+    //    /**
+    //     * Register user method.
+    //     *
+    //     * @param user input username
+    //     * @return result of operation
+    //     */
+    //    public String register(User user) {
+    //        Optional<User> tmp = userRepository.findById(user.getNetId());
+    //        if (!tmp.isEmpty()) {
+    //            return "{message:\"This NetID already exists\"}";
+    //        } else {
+    //            try {
+    //                MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+    //                messageDigest.update(user.getPassword().getBytes());
+    //                String stringHash = new String(messageDigest.digest());
+    //                user.setPassword(stringHash);
+    //                userRepository.save(user);
+    //            } catch (Exception e) {
+    //                System.out.println("Something went wrong in register method");
+    //                return null;
+    //            }
+    //            return "{message:\"Successfully registered\"}";
+    //        }
+    //    }
 
     /**
      * Login user method.
@@ -58,30 +58,6 @@ public class UserService {
                 .createAuthenticationToken(user.getNetId(), user.getPassword());
             if (token == null) {
                 return "{message:\"Invalid credentials\"}";
-            }
-            return "{token:\"" + token + "\"}";
-        } catch (Exception e) {
-            System.out.println("There was a problem in login route in User Service");
-        }
-        return null;
-    }
-
-    /**
-     * Login user method as api.
-     *
-     * @param user the user supplied to this method
-     * @return returns error message or authentication token
-     */
-    public String loginApi(User user) {
-        try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            messageDigest.update(user.getPassword().getBytes());
-            String stringHash = new String(messageDigest.digest());
-            user.setPassword(stringHash);
-            String token = authenticationService
-                .createAuthenticationToken(user.getNetId(), user.getPassword());
-            if (token == null) {
-                return null;
             }
             return "{token:\"" + token + "\"}";
         } catch (Exception e) {
