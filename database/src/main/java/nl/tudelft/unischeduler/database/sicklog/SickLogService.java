@@ -2,8 +2,16 @@ package nl.tudelft.unischeduler.database.sicklog;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import nl.tudelft.unischeduler.database.course.CourseService;
+import nl.tudelft.unischeduler.database.lectureschedule.LectureSchedule;
+import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleService;
+import nl.tudelft.unischeduler.database.triggers.LectureSubscriber;
+import nl.tudelft.unischeduler.database.user.User;
+import nl.tudelft.unischeduler.database.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,6 +23,15 @@ public class SickLogService {
 
     @Autowired
     private transient SickLogRepository sickLogRepository;
+
+    @Autowired
+    private transient UserService userService;
+
+    @Autowired
+    private transient LectureSubscriber lectureSubscriber;
+
+    @Autowired
+    private transient LectureScheduleService lectureScheduleService;
 
     public SickLogService(SickLogRepository sickLogRepository) {
         this.sickLogRepository = sickLogRepository;
@@ -37,6 +54,24 @@ public class SickLogService {
                     .findAllByUserAndReportSickAndFinished(
                             netId, new Date(reportSick.getTime()), false);
             if (optionalSickLog.isPresent()) {
+                // notify classmates if teacher is sick
+                try {
+                    SickLog sickPerson = optionalSickLog.get();
+                    User u = (User) userService.getUser(sickPerson.getUser())[0];
+                    if (u.getType().equals(User.TEACHER)) {
+                        List<Object[]> scheduleObjects =
+                                lectureScheduleService.getTeacherSchedule(u.getNetId());
+                        for (int i = 0; i < scheduleObjects.size(); i++) {
+                            LectureSchedule lecture = (LectureSchedule) scheduleObjects.get(i)[0];
+                            String[] actions = new String[1];
+                            actions[0] = LectureSubscriber.MOVED_ONLINE;
+                            lectureSubscriber.update(lecture.getLectureId(),
+                                    actions, LectureSubscriber.TEACHER);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 return ResponseEntity.notFound().build();
             }
             SickLog sickLog = new SickLog(netId, new Date(reportSick.getTime()), false);
