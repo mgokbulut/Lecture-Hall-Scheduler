@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class TeacherNotifier extends UserNotifier {
 
     @Override
-    public boolean moved_online(int lectureId, String actor) throws IOException {
+    protected boolean moved_online(long lectureId, String actor) throws IOException {
         // make the api call
         if (!actor.equals(LectureSubscriber.TEACHER)) {
             ResponseEntity<Void> response = webClient.post()
@@ -30,7 +30,7 @@ public class TeacherNotifier extends UserNotifier {
     }
 
     @Override
-    public boolean date_change(int lectureId, String actor) throws IOException {
+    protected boolean date_change(long lectureId, String actor) throws IOException {
         // make the api call
         if (!actor.equals(LectureSubscriber.TEACHER)) {
             ResponseEntity<Void> response = webClient.post()
@@ -47,7 +47,7 @@ public class TeacherNotifier extends UserNotifier {
     }
 
     @Override
-    public boolean time_change(int lectureId, String actor) throws IOException {
+    protected boolean time_change(long lectureId, String actor) throws IOException {
         // make the api call
         if (!actor.equals(LectureSubscriber.TEACHER)) {
             ResponseEntity<Void> response = webClient.post()
@@ -64,7 +64,7 @@ public class TeacherNotifier extends UserNotifier {
     }
 
     @Override
-    public boolean moved_on_campus(int lectureId, String actor) throws IOException {
+    protected boolean moved_on_campus(long lectureId, String actor) throws IOException {
         // make the api call
         if (!actor.equals(LectureSubscriber.TEACHER)) {
             ResponseEntity<Void> response = webClient.post()
@@ -77,6 +77,12 @@ public class TeacherNotifier extends UserNotifier {
             verifyStatusCode(response);
             return true;
         }
+        return true;
+    }
+
+
+    protected boolean student_assigned_to_course
+            (long lectureId, String actor) throws IOException {
         return true;
     }
 

@@ -26,9 +26,9 @@ public abstract class UserNotifier implements LectureSubscriber {
 
     private String netId;
 
-    private HashSet<Integer> lectureIds;
+    private HashSet<Long> lectureIds;
 
-    public HashSet<Integer> getLectureIds;
+    public HashSet<Long> getLectureIds;
 
     public String getNetId() {
         return this.netId;
@@ -38,7 +38,7 @@ public abstract class UserNotifier implements LectureSubscriber {
         this.netId = netId;
     }
 
-    public void setLectureIds(HashSet<Integer> lectureIds) {
+    public void setLectureIds(HashSet<Long> lectureIds) {
         this.lectureIds = lectureIds;
     }
 
@@ -76,9 +76,9 @@ public abstract class UserNotifier implements LectureSubscriber {
      *
      * @param ids the IDs of the lectures
      */
-    public void addLectureIds(List<Integer> ids) {
+    public void addLectureIds(List<Long> ids) {
         for (int i = 0; i < ids.size(); i++) {
-            int id = ids.get(i);
+            long id = ids.get(i);
             if (!lectureIds.contains(id)) {
                 lectureIds.add(id);
             }
@@ -94,7 +94,7 @@ public abstract class UserNotifier implements LectureSubscriber {
      * @param actor the cause of the update
      * @return whether the update was successful
      */
-    public boolean update(int lectureId, String[] actions, String actor) {
+    public boolean update(long lectureId, String[] actions, String actor) {
         boolean worked = true;
         for (int i = 0; i < actions.length; i++) {
             String action = actions[i];
@@ -112,7 +112,7 @@ public abstract class UserNotifier implements LectureSubscriber {
      * @param actor the cause of the update
      * @return whether it worked or not
      */
-    public boolean update(int lectureId, String action, String actor) {
+    public boolean update(long lectureId, String action, String actor) {
         try {
             if (lectureIds.contains(lectureId)) {
                 // add here for any new one
@@ -134,6 +134,10 @@ public abstract class UserNotifier implements LectureSubscriber {
                         this.moved_on_campus(lectureId, actor);
                         break;
 
+                    case LectureSubscriber.STUDENT_ASSIGNED_TO_COURSE:
+                        this.student_assigned_to_course(lectureId, actor);
+                        break;
+
                     default: return false;
                 }
             }
@@ -144,12 +148,15 @@ public abstract class UserNotifier implements LectureSubscriber {
         return true;
     }
 
-    public abstract boolean moved_online(int lectureId, String actor) throws IOException;
+    protected abstract boolean moved_online(long lectureId, String actor) throws IOException;
 
-    public abstract boolean date_change(int lectureId, String actor) throws IOException;
+    protected abstract boolean date_change(long lectureId, String actor) throws IOException;
 
-    public abstract boolean time_change(int lectureId, String actor) throws IOException;
+    protected abstract boolean time_change(long lectureId, String actor) throws IOException;
 
-    public abstract boolean moved_on_campus(int lectureId, String actor) throws IOException;
+    protected abstract boolean moved_on_campus(long lectureId, String actor) throws IOException;
+
+    protected abstract boolean student_assigned_to_course
+            (long lectureId, String actor) throws IOException;
 
 }
