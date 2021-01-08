@@ -47,6 +47,7 @@ public class Course {
      * @param classesPerWeek how many lectures per week
      */
     public Course(String name, int year, int classesPerWeek) {
+        this.id = -1L;
         this.name = name;
         this.year = year;
         this.students = new HashSet<User>();
