@@ -36,6 +36,29 @@ public abstract class UserNotifier implements LectureSubscriber {
   }
 
   // meant to be extended by subclasses where need be
-  public abstract boolean update(int lectureId, String action);
+  public boolean update(int lectureId, String action) {
+    if (lectureIds.contains(lectureId)) {
+      // add here for any new one
+      switch (action) {
+
+        case LectureSubscriber.MOVED_ONLINE: this.moved_online(lectureId);
+
+        case LectureSubscriber.DATE_CHANGE: this.date_change(lectureId);
+
+        case LectureSubscriber.TIME_CHANGE: this.time_change(lectureId);
+
+        case LectureSubscriber.MOVED_ON_CAMPUS: this.moved_on_campus(lectureId);
+      }
+    }
+    return true;
+  };
+
+  public abstract boolean moved_online(int lectureId);
+
+  public abstract boolean date_change(int lectureId);
+
+  public abstract boolean time_change(int lectureId);
+
+  public abstract boolean moved_on_campus(int lectureId);
 
 }
