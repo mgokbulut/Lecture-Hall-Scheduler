@@ -40,18 +40,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
             .authorizeRequests()
             .antMatchers("authentication/**")
+            .permitAll()
+            .antMatchers("/system/report_corona", "/system/course_information",
+                "/system/student_schedule")
             .hasAnyRole("STUDENT", "TEACHER", "ADMIN")
-            .antMatchers("/system/report_corona", "/system/course_information", "/system/student_schedule", )
-            .hasAnyRole("TEACHER", "ADMIN")
             .antMatchers("/system/add_course", "/system/teacher_schedule", "/system/create_lecture")
+            .hasAnyRole("TEACHER", "ADMIN")
+            .antMatchers("/system/add_user", "/schedule-edit/**",
+                "/database/**", "/rules/**", "/schedule-generate/**", "/viewer-module/**",
+                "/user/**", "/users")
             .hasAnyRole("ADMIN")
-            .antMatchers("/system/add_user", "/viewer/**", "/schedule-edit/**", "/user/**", "/users")
-//            .hasAnyRole("STUDENT", "TEACHER", "ADMIN")
-//            .antMatchers("/schedule-edit/teacherdemo")
-//            .hasAnyRole("TEACHER", "ADMIN")
-//            .antMatchers("/user/**", "/schedule-edit/admindemo", "/schedule-edit/**",
-//                "/database/**", "/rules/**", "/schedule-generate/**", "/viewer-module/**")
-//            .hasAnyRole("ADMIN")
             .and().sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

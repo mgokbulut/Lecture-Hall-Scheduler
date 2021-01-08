@@ -71,21 +71,21 @@ public class SysInteractor {
         return response;
     }
 
-    /**
-     * Registers a new classroom to the system.
-     *
-     * @param user the user trying to add a new classroom
-     * @param room the room to be added
-     * @return whether the change was successful
-     */
-//    public String addClassroom(User user, Room room) {
-//        if (checkFaculty(user)) {
-//            // TODO add room to DB
-//            System.out.println("working!");
-//        }
-//        unauthorizedAccess();
-//        return "";
-//    }
+    //    /**
+    //     * Registers a new classroom to the system.
+    //     *
+    //     * @param user the user trying to add a new classroom
+    //     * @param room the room to be added
+    //     * @return whether the change was successful
+    //     */
+    //    public String addClassroom(User user, Room room) {
+    //        if (checkFaculty(user)) {
+    //            // TODO add room to DB
+    //            System.out.println("working!");
+    //        }
+    //        unauthorizedAccess();
+    //        return "";
+    //    }
 
     /**
      * Reports to the system that the user has corona.
@@ -100,34 +100,34 @@ public class SysInteractor {
             webClient.put()
                 .uri(new URI("http://schedule-edit-service/student/"
                     + user.getNetId() + "/sick"));
-                //.block();
+            //.block();
             return "{ \"status\": \"200\" }";
             //System.out.println("workful!");
         } else if (user.getType() == User.ROLE_TEACHER) {
             webClient.put()
                 .uri(new URI("http://schedule-edit-service/teacher/"
                     + user.getNetId() + "/sick"));
-                //.block();
+            //.block();
             return "{ \"status\": \"200\" }";
         }
         return "{ \"status\": \"400\" }";
     }
 
-    /**
-     * Checks whether the COVID rules are being followed.
-     *
-     * @param user the user who is checking
-     * @return whether the rules are being followed or not
-     */
-//    public String stateOfRuleFollowing(User user) {
-//        if (checkFaculty(user)) {
-//            // TODO poll rules module to know if we're following all the rules
-//            // (not a must-have)
-//            System.out.println("workable!");
-//        }
-//        unauthorizedAccess();
-//        return "";
-//    }
+    //    /**
+    //     * Checks whether the COVID rules are being followed.
+    //     *
+    //     * @param user the user who is checking
+    //     * @return whether the rules are being followed or not
+    //     */
+    //    public String stateOfRuleFollowing(User user) {
+    //        if (checkFaculty(user)) {
+    //            // TODO poll rules module to know if we're following all the rules
+    //            // (not a must-have)
+    //            System.out.println("workable!");
+    //        }
+    //        unauthorizedAccess();
+    //        return "";
+    //    }
 
     /**
      * Returns all the infromation that concerns a course,
@@ -160,7 +160,7 @@ public class SysInteractor {
             .bodyToFlux(User.class)
             .collectList()
             .block();
-        Object[] o = new Object[]{res,students};
+        Object[] o = new Object[] {res, students};
         return o;
     }
 
@@ -170,20 +170,20 @@ public class SysInteractor {
      *
      * @param username the user making the request
      * @return a list of all lectures
-     * @throws URISyntaxException
+     * @throws URISyntaxException exception
      */
     public Lecture[] studentSchedule(String username) throws URISyntaxException {
         Optional<User> optional = userRepository.findByNetId(username);
         User user = optional.get();
         List<Lecture> res = webClient
-                .get()
-                .uri(new URI(
-                        "http://viewer-service/" + user.getNetId()))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToFlux(Lecture.class)
-                .collectList()
-                .block();
+            .get()
+            .uri(new URI(
+                "http://viewer-service/" + user.getNetId()))
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .bodyToFlux(Lecture.class)
+            .collectList()
+            .block();
         return res.toArray(new Lecture[res.size()]);
     }
 
@@ -193,118 +193,118 @@ public class SysInteractor {
      *
      * @param username the user making the request, specifically a teacher
      * @return a list of all lectures taught by the teacher
-     * @throws URISyntaxException
+     * @throws URISyntaxException exception
      */
     public Lecture[] teacherSchedule(String username) throws URISyntaxException {
         Optional<User> optional = userRepository.findByNetId(username);
         User user = optional.get();
         List<Lecture> res = webClient
-                .get()
-                .uri(new URI(
-                        "http://viewer-service/teacher/" + user.getNetId()))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToFlux(Lecture.class)
-                .collectList()
-                .block();
+            .get()
+            .uri(new URI(
+                "http://viewer-service/teacher/" + user.getNetId()))
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .bodyToFlux(Lecture.class)
+            .collectList()
+            .block();
         return res.toArray(new Lecture[res.size()]);
     }
 
     /**
-     *creates a new lecture using the parameters given.
+     * creates a new lecture using the parameters given.
      *
-     * @param courseId          the id of the course this lecture will belong to
-     * @param teacherNetId      the id of the teacher teaching this lecture
-     * @param year              the year of this lecture
-     * @param week              the week of this lecture
-     * @param duration          the duration of this lecture
-     * @return
-     * @throws URISyntaxException
+     * @param courseId     the id of the course this lecture will belong to
+     * @param teacherNetId the id of the teacher teaching this lecture
+     * @param year         the year of this lecture
+     * @param week         the week of this lecture
+     * @param duration     the duration of this lecture
+     * @return returns status code
+     * @throws URISyntaxException exception
      */
     public String createLecture(long courseId, String teacherNetId, int year,
                                 int week, Duration duration) throws URISyntaxException {
         webClient.put()
-                .uri(new URI("http://schedule-edit-service/lecture/"
-                        + courseId + teacherNetId + year + week + duration));
+            .uri(new URI("http://schedule-edit-service/lecture/"
+                + courseId + teacherNetId + year + week + duration));
         //.block();
         return "{ \"status\": \"200\" }";
     }
 
-    /**
-     * adds the given lists of students to a lecture
-     * @param user
-     * @param studentNetIds
-     * @param courseId
-     * @return
-     * @throws URISyntaxException
-     */
-//    public String addStudentsToLecture(User user, List<String> studentNetIds, long courseId)
-//            throws URISyntaxException {
-//        if(checkStaff(user) || checkFaculty(user)) {
-//            webClient.put()
-//                    .uri(new URI("http://schedule-edit-service/student/"
-//                            + courseId))
-//            .body(BodyInserters.fromValue(studentNetIds));
-//            //.block();
-//            return "200";
-//        }
-//        return "403";
-//    }
+    //    /**
+    //     * Adds the given lists of students to a lecture.
+    //     *
+    //     * @param user user
+    //     * @param studentNetIds studentNetIds
+    //     * @param courseId courseId
+    //     * @return
+    //     * @throws URISyntaxException
+    //     */
+    //    public String addStudentsToLecture(User user, List<String> studentNetIds, long courseId)
+    //            throws URISyntaxException {
+    //        if(checkStaff(user) || checkFaculty(user)) {
+    //            webClient.put()
+    //                    .uri(new URI("http://schedule-edit-service/student/"
+    //                            + courseId))
+    //            .body(BodyInserters.fromValue(studentNetIds));
+    //            //.block();
+    //            return "200";
+    //        }
+    //        return "403";
+    //    }
 
 
+    //    /**
+    //     * Returns the information of a lecture, including enrolled students.
+    //     *
+    //     * @param user          the user making the request
+    //     * @param course        the corresponding course of the lecture
+    //     * @param lectureNumber nth lecture of the course we want info for
+    //     * @return the lecture's information
+    //     */
+    //    public Object lectureInformation(User user, Course course, int lectureNumber)
+    //        throws URISyntaxException {
+    //        if (checkStaff(user)) {
+    //            // TODO poll database to find lecture information and return it
+    //            // /lectureSchedules/course/{courseId}
+    //            Lecture[] res = webClient
+    //                .get()
+    //                .uri(new URI(
+    //                    "http://viewer-service/lectureSchedules/course/"
+    //                        + course.getId()))
+    //                .accept(MediaType.APPLICATION_JSON)
+    //                .retrieve()
+    //                .bodyToMono(Lecture[].class)
+    //                .block();
+    //            List<User> students = webClient
+    //                .get()
+    //                .uri(new URI(
+    //                    "http://database-service/userCourses/" + course.getId()))
+    //                .accept(MediaType.APPLICATION_JSON)
+    //                .retrieve()
+    //                .bodyToFlux(User.class)
+    //                .collectList()
+    //                .block();
+    //            Object[] o = new Object[]{res,students};
+    //            return o;
+    //        }
+    //        return null;
+    //    }
 
-    /**
-     * Returns the information of a lecture, including enrolled students.
-     *
-     * @param user          the user making the request
-     * @param course        the corresponding course of the lecture
-     * @param lectureNumber nth lecture of the course we want info for
-     * @return the lecture's information
-     */
-//    public Object lectureInformation(User user, Course course, int lectureNumber)
-//        throws URISyntaxException {
-//        if (checkStaff(user)) {
-//            // TODO poll database to find lecture information and return it
-//            // /lectureSchedules/course/{courseId}
-//            Lecture[] res = webClient
-//                .get()
-//                .uri(new URI(
-//                    "http://viewer-service/lectureSchedules/course/"
-//                        + course.getId()))
-//                .accept(MediaType.APPLICATION_JSON)
-//                .retrieve()
-//                .bodyToMono(Lecture[].class)
-//                .block();
-//            List<User> students = webClient
-//                .get()
-//                .uri(new URI(
-//                    "http://database-service/userCourses/" + course.getId()))
-//                .accept(MediaType.APPLICATION_JSON)
-//                .retrieve()
-//                .bodyToFlux(User.class)
-//                .collectList()
-//                .block();
-//            Object[] o = new Object[]{res,students};
-//            return o;
-//        }
-//        return null;
-//    }
 
-
-    /**
-     * Helper method that checks whether a user is a faculty member.
-     *
-     * @param user the user we want to check
-     * @return whether the user is a faculty member
-     */
-//    private boolean checkFaculty(User user) {
-//        // first we need to check that the user is the correct role
-//        if (user.getType() == User.ROLE_FAC_MEMBER) {
-//            return true;
-//        }
-//        // endpoint should then return an error message
-//        return false;
-//    }
+    //    /**
+    //     * Helper method that checks whether a user is a faculty member.
+    //     *
+    //     * @param user the user we want to check
+    //     * @return whether the user is a faculty member
+    //     */
+    //    private boolean checkFaculty(User user) {
+    //        // first we need to check that the user is the correct role
+    //        if (user.getType() == User.ROLE_FAC_MEMBER) {
+    //            return true;
+    //        }
+    //        // endpoint should then return an error message
+    //        return false;
+    //    }
 
     /**
      * Helper method that checks whether the user is a

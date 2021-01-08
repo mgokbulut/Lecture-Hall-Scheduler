@@ -1,7 +1,10 @@
 package nl.tudelft.unischeduler.sysinteract;
 
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Date;
+import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,10 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URISyntaxException;
-import java.time.Duration;
-import java.util.Iterator;
-
 @RestController
 public class SysInteractController {
 
@@ -39,6 +38,12 @@ public class SysInteractController {
     @Autowired
     private transient SysInteractor sysInteractor;
 
+    /**
+     * Adds a course.
+     *
+     * @param sysInteraction request body
+     * @return returns status code
+     */
     @PostMapping(path = "/system/add_course", produces = MediaType.APPLICATION_JSON_VALUE)
     public String addCourse(@RequestBody SysInteract sysInteraction) {
         try {
@@ -53,6 +58,13 @@ public class SysInteractController {
         }
     }
 
+    /**
+     * Adds a user.
+     *
+     * @param sysInteraction request body
+     * @param request http request object
+     * @return returns status code
+     */
     @PostMapping(path = "/system/add_user", produces = MediaType.APPLICATION_JSON_VALUE)
     public String addUser(@RequestBody SysInteract sysInteraction, HttpServletRequest request) {
         try {
@@ -65,6 +77,12 @@ public class SysInteractController {
         }
     }
 
+    /**
+     * Reports Corona.
+     *
+     * @param request http request object
+     * @return returns status code
+     */
     @PostMapping(path = "/system/report_corona", produces = MediaType.APPLICATION_JSON_VALUE)
     public String reportCorona(HttpServletRequest request) {
         try {
@@ -75,11 +93,18 @@ public class SysInteractController {
             return exception_message("404", "URI Syntax Exception", "/system/report_corona");
         } catch (ClassCastException e) {
             e.printStackTrace();
-            return exception_message("404", "could not parse request body", "/system/report_corona");
+            return exception_message("404", "could not parse request body",
+                "/system/report_corona");
         }
 
     }
 
+    /**
+     * Adds a course.
+     *
+     * @param sysInteraction request body
+     * @return returns status code
+     */
     @PostMapping(path = "/system/course_information", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object[] courseInformation(@RequestBody SysInteract sysInteraction) {
         try {
@@ -87,21 +112,27 @@ public class SysInteractController {
             return sysInteractor.courseInformation(course);
         } catch (URISyntaxException e) {
             e.printStackTrace();
-            return new Object[] {exception_message("404", "URI Syntax Exception", "/system/course_information")};
+            return new Object[] {
+                exception_message("404", "URI Syntax Exception", "/system/course_information")};
         } catch (ClassCastException e) {
             e.printStackTrace();
-            return new Object[] {exception_message("404", "could not parse request body", "/system/course_information")};
+            return new Object[] {exception_message("404", "could not parse request body",
+                "/system/course_information")};
         }
-
-
     }
 
+    /**
+     * Gets student schedule.
+     *
+     * @param request http request object
+     * @return returns status code
+     */
     @PostMapping(path = "/system/student_schedule", produces = MediaType.APPLICATION_JSON_VALUE)
     public Lecture[] studentSchedule(HttpServletRequest request) {
         try {
             String username = extract_username(request);
             return sysInteractor.studentSchedule(username);
-        }  catch (URISyntaxException e) {
+        } catch (URISyntaxException e) {
             e.printStackTrace();
             return null;
         } catch (ClassCastException e) {
@@ -111,6 +142,12 @@ public class SysInteractController {
 
     }
 
+    /**
+     * Gets teacher schedule.
+     *
+     * @param request http request object
+     * @return returns status code
+     */
     @PostMapping(path = "/system/teacher_schedule", produces = MediaType.APPLICATION_JSON_VALUE)
     public Lecture[] teacherSchedule(HttpServletRequest request) {
         try {
@@ -122,6 +159,12 @@ public class SysInteractController {
 
     }
 
+    /**
+     * Creates a lecture.
+     *
+     * @param sysInteraction http request object
+     * @return returns status code
+     */
     @PostMapping(path = "/system/create_lecture", produces = MediaType.APPLICATION_JSON_VALUE)
     public String createLecture(@RequestBody SysInteract sysInteraction) {
         try {
@@ -138,6 +181,12 @@ public class SysInteractController {
 
     }
 
+    /**
+     * Extracts username from jwt token.
+     *
+     * @param request http request object
+     * @return returns username
+     */
     public String extract_username(HttpServletRequest request) {
         final String authorizationHeader = request.getHeader("Authorization");
         String username = "";
@@ -153,11 +202,20 @@ public class SysInteractController {
         }
         return username;
     }
-    public static String exception_message(String status_code, String message, String path) {
+
+    /**
+     * Creates a json error message.
+     *
+     * @param statusCode status code
+     * @param message message
+     * @param path path
+     * @return returns json error message
+     */
+    public static String exception_message(String statusCode, String message, String path) {
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
         JSONObject res = new JSONObject();
         res.put("timestamp", timeStamp);
-        res.put("status", status_code);
+        res.put("status", statusCode);
         res.put("error", "Bad Request");
         res.put("message", message);
         res.put("path", path);
