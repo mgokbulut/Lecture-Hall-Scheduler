@@ -38,6 +38,10 @@ public class SysInteractController {
     @Autowired
     private transient SysInteractor sysInteractor;
 
+    public static final String NOT_FOUND = "404";
+    public static final String PARSING_ERROR_MESSAGE = "could not parse request body";
+    public static final String URI_EXCEPTION = "could not parse request body";
+
     /**
      * Adds a course.
      *
@@ -51,10 +55,10 @@ public class SysInteractController {
             return sysInteractor.addCourse(course);
         } catch (URISyntaxException e) {
             e.printStackTrace();
-            return exception_message("404", "URI Syntax Exception", "/system/add_course");
+            return exception_message(NOT_FOUND, "URI Syntax Exception", "/system/add_course");
         } catch (ClassCastException e) {
             e.printStackTrace();
-            return exception_message("404", "could not parse request body", "/system/add_course");
+            return exception_message(NOT_FOUND, PARSING_ERROR_MESSAGE, "/system/add_course");
         }
     }
 
@@ -73,7 +77,7 @@ public class SysInteractController {
             return sysInteractor.addUser(user);
         } catch (ClassCastException e) {
             e.printStackTrace();
-            return exception_message("404", "could not parse request body", "/system/add_user");
+            return exception_message(NOT_FOUND, PARSING_ERROR_MESSAGE, "/system/add_user");
         }
     }
 
@@ -90,10 +94,10 @@ public class SysInteractController {
             return sysInteractor.reportCorona(username);
         } catch (URISyntaxException e) {
             e.printStackTrace();
-            return exception_message("404", "URI Syntax Exception", "/system/report_corona");
+            return exception_message(NOT_FOUND, "URI Syntax Exception", "/system/report_corona");
         } catch (ClassCastException e) {
             e.printStackTrace();
-            return exception_message("404", "could not parse request body",
+            return exception_message(NOT_FOUND, PARSING_ERROR_MESSAGE,
                 "/system/report_corona");
         }
 
@@ -113,10 +117,10 @@ public class SysInteractController {
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return new Object[] {
-                exception_message("404", "URI Syntax Exception", "/system/course_information")};
+                exception_message(NOT_FOUND, "URI Syntax Exception", "/system/course_information")};
         } catch (ClassCastException e) {
             e.printStackTrace();
-            return new Object[] {exception_message("404", "could not parse request body",
+            return new Object[] {exception_message(NOT_FOUND, PARSING_ERROR_MESSAGE,
                 "/system/course_information")};
         }
     }
