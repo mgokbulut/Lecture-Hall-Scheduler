@@ -3,10 +3,11 @@ package nl.tudelft.unischeduler.database.triggers;
 import java.io.IOException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-
+@Primary
 @EqualsAndHashCode(callSuper = true)
 @Service
 @Data
