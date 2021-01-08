@@ -44,7 +44,7 @@ public abstract class UserNotifier implements LectureSubscriber {
 
     @PostConstruct
     public void setUp() {
-        webClientBuilder.baseUrl("http://gateway-authentication");
+        webClientBuilder.baseUrl("http://gateway-service");
         webClient = webClientBuilder.build();
     }
 
