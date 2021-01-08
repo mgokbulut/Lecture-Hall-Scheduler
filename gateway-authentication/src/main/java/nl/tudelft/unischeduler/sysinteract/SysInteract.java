@@ -1,5 +1,6 @@
 package nl.tudelft.unischeduler.sysinteract;
 
+import java.util.Dictionary;
 import java.util.List;
 import java.util.Objects;
 import nl.tudelft.unischeduler.user.User;
@@ -10,14 +11,14 @@ import nl.tudelft.unischeduler.user.User;
  */
 public class SysInteract {
 
-    private transient List<Object> args;
+    private transient Dictionary args;
 
     /***
      * <p>This method initialises the SysInteract object.</p>
      *
      * @param args a list of all arguments needed for the requested call
      */
-    public SysInteract(List<Object> args) {
+    public SysInteract(Dictionary args) {
         this.args = args;
     }
 
@@ -28,11 +29,11 @@ public class SysInteract {
 
     }
 
-    public List<Object> getArgs() {
+    public Dictionary getArgs() {
         return args;
     }
 
-    public void setArgs(List<Object> args) {
+    public void setArgs(Dictionary args) {
         this.args = args;
     }
 

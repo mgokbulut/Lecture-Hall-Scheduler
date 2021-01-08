@@ -13,6 +13,8 @@ import net.minidev.json.JSONObject;
 import nl.tudelft.unischeduler.authentication.JwtUtil;
 import nl.tudelft.unischeduler.authentication.MyUserDetailsService;
 import nl.tudelft.unischeduler.user.User;
+import nl.tudelft.unischeduler.utilentities.ArgsBuilder;
+import nl.tudelft.unischeduler.utilentities.Arguments;
 import nl.tudelft.unischeduler.utilentities.Course;
 import nl.tudelft.unischeduler.utilentities.Lecture;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +54,12 @@ public class SysInteractController {
     @PostMapping(path = "/system/add_course", produces = MediaType.APPLICATION_JSON_VALUE)
     public String addCourse(@RequestBody SysInteract sysInteraction) {
         try {
-            Course course = (Course) sysInteraction.getArgs().get(0);
+            ArgsBuilder builder = new ArgsBuilder(sysInteraction.getArgs());
+            builder.buildCourse();
+            Arguments args = builder.getResult();
+
+            Course course = args.getCourse();
+
             return sysInteractor.addCourse(course);
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -73,7 +80,12 @@ public class SysInteractController {
     @PostMapping(path = "/system/add_user", produces = MediaType.APPLICATION_JSON_VALUE)
     public String addUser(@RequestBody SysInteract sysInteraction, HttpServletRequest request) {
         try {
-            User user = (User) sysInteraction.getArgs().get(0);
+            ArgsBuilder builder = new ArgsBuilder(sysInteraction.getArgs());
+            builder.buildUser();
+            Arguments args = builder.getResult();
+
+            User user = args.getUser();
+
             return sysInteractor.addUser(user);
         } catch (ClassCastException e) {
             e.printStackTrace();
@@ -91,13 +103,6 @@ public class SysInteractController {
     public String reportCorona(HttpServletRequest request) {
         try {
             String username = extract_username(request);
-            System.out.println(username);
-            System.out.println(username);
-            System.out.println(username);
-            System.out.println(username);
-            System.out.println(username);
-            System.out.println(username);
-            System.out.println(username);
             return sysInteractor.reportCorona(username);
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -119,7 +124,12 @@ public class SysInteractController {
     @PostMapping(path = "/system/course_information", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object[] courseInformation(@RequestBody SysInteract sysInteraction) {
         try {
-            Course course = (Course) sysInteraction.getArgs().get(0);
+            ArgsBuilder builder = new ArgsBuilder(sysInteraction.getArgs());
+            builder.buildCourse();
+            Arguments args = builder.getResult();
+
+            Course course = args.getCourse();
+
             return sysInteractor.courseInformation(course);
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -179,12 +189,18 @@ public class SysInteractController {
     @PostMapping(path = "/system/create_lecture", produces = MediaType.APPLICATION_JSON_VALUE)
     public String createLecture(@RequestBody SysInteract sysInteraction) {
         try {
-            Iterator<Object> it = sysInteraction.getArgs().iterator();
-            long courseId = (Long) it.next();
-            String teacherNetId = (String) it.next();
-            int year = (Integer) it.next();
-            int week = (Integer) it.next();
-            Duration duration = (Duration) it.next();
+            ArgsBuilder builder = new ArgsBuilder(sysInteraction.getArgs());
+            builder.buildLecture();
+            builder.buildCourse();
+
+            Arguments args = builder.getResult();
+
+            long courseId = args.getCourseId();
+            String teacherNetId = args.getNetId();
+            int year = args.getCourse().getYear();
+            int week = args.getLecture().getWeek();
+            Duration duration = args.getLecture().getDuration();
+
             return sysInteractor.createLecture(courseId, teacherNetId, year, week, duration);
         } catch (URISyntaxException e) {
             return null;
