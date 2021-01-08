@@ -1,4 +1,4 @@
-package nl.tudelft.unischeduler.scheduleedit.exception;
+package nl.tudelft.unischeduler.database.exception;
 
 import java.io.IOException;
 import org.springframework.http.HttpStatus;
