@@ -156,7 +156,7 @@ public abstract class UserNotifier implements LectureSubscriber {
 
     protected abstract boolean moved_on_campus(long lectureId, String actor) throws IOException;
 
-    protected abstract boolean student_assigned_to_course
-            (long lectureId, String actor) throws IOException;
+    protected abstract boolean student_assigned_to_course(long lectureId,
+                                                          String actor) throws IOException;
 
 }

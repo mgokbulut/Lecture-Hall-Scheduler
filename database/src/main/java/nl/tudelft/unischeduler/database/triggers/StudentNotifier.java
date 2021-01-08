@@ -68,8 +68,8 @@ public class StudentNotifier extends UserNotifier {
         return true;
     }
 
-    protected boolean student_assigned_to_course
-            (long lectureId, String actor) throws IOException {
+    protected boolean student_assigned_to_course(long lectureId,
+                                                 String actor) throws IOException {
         ResponseEntity<Void> response = webClient.post()
                 .uri("notification/student_assigned_to_course"
                         + "/" + this.getNetId()

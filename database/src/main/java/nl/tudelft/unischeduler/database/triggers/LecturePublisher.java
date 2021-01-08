@@ -3,17 +3,24 @@ package nl.tudelft.unischeduler.database.triggers;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import org.springframework.stereotype.Service;
 
+@Service
 public class LecturePublisher {
 
-    private Set<LectureSubscriber> subscribers;
+    private transient Set<LectureSubscriber> subscribers;
 
     public LecturePublisher() {
         this.subscribers = new HashSet<>();
     }
 
+    /**
+     * Adds a subscriber to the list, if not already there.
+     *
+     * @param sub the concerned subscriber
+     */
     public void addSubscriber(LectureSubscriber sub) {
-        if(!this.subscribers.contains(sub)) {
+        if (!this.subscribers.contains(sub)) {
             this.subscribers.add(sub);
         }
     }
@@ -22,11 +29,18 @@ public class LecturePublisher {
         this.subscribers.remove(sub);
     }
 
-    public void notifySubscribers(long lectureId, String[] action, String author) {
+    /**
+     * Sends update to all subscribers.
+     *
+     * @param lectureId the concerned lecture
+     * @param actions the actions to be notified for
+     * @param author the cause of the actions
+     */
+    public void notifySubscribers(long lectureId, String[] actions, String author) {
         Iterator<LectureSubscriber> it = this.subscribers.iterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             LectureSubscriber sub = it.next();
-            sub.update(lectureId, action, author);
+            sub.update(lectureId, actions, author);
         }
     }
 

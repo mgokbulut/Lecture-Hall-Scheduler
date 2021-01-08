@@ -5,7 +5,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import nl.tudelft.unischeduler.database.course.CourseService;
 import nl.tudelft.unischeduler.database.lectureschedule.LectureSchedule;
 import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleService;
@@ -63,8 +62,7 @@ public class SickLogService {
                                 lectureScheduleService.getTeacherSchedule(u.getNetId());
                         for (int i = 0; i < scheduleObjects.size(); i++) {
                             LectureSchedule lecture = (LectureSchedule) scheduleObjects.get(i)[0];
-                            String[] actions = new String[1];
-                            actions[0] = LectureSubscriber.MOVED_ONLINE;
+                            String[] actions = {LectureSubscriber.MOVED_ONLINE};
                             lectureSubscriber.update(lecture.getLectureId(),
                                     actions, LectureSubscriber.TEACHER);
                         }

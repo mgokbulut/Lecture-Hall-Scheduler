@@ -81,8 +81,8 @@ public class TeacherNotifier extends UserNotifier {
     }
 
 
-    protected boolean student_assigned_to_course
-            (long lectureId, String actor) throws IOException {
+    protected boolean student_assigned_to_course(long lectureId,
+                                                 String actor) throws IOException {
         return true;
     }
 
