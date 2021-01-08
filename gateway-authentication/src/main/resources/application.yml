@@ -18,18 +18,18 @@ zuul:
 #      path: /database/**
 #      serviceId: database-service
 #      stripPrefix: true
-    rules:
-      path: /rules/**
-      serviceId: rules-service
-      stripPrefix: true
+#    rules:
+#      path: /rules/**
+#      serviceId: rules-service
+#      stripPrefix: true
     schedule-edit:
       path: /schedule-edit/**
       serviceId: schedule-edit-service
       stripPrefix: true
-    schedule-generate:
-      path: /schedule-generate/**
-      serviceId: schedule-generate-service
-      stripPrefix: true
+#    schedule-generate:
+#      path: /schedule-generate/**
+#      serviceId: schedule-generate-service
+#      stripPrefix: true
     viewer:
       path: /viewer/**
       serviceId: viewer-service

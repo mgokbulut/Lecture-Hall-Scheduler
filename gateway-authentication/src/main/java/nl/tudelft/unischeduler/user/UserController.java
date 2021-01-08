@@ -20,10 +20,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(path = "/register")
-    public String register(@RequestBody User user) {
-        return userService.register(user);
-    }
+    //    @PostMapping(path = "/register")
+    //    public String register(@RequestBody User user) {
+    //        return userService.register(user);
+    //    }
 
     @PostMapping(path = "/login")
     public String login(@RequestBody User user) {
