@@ -305,22 +305,28 @@ public class Generator {
         // sort in descending order
         Collections.sort(rooms);
         Collections.reverse(rooms);
+        Timestamp time = null;
+        Room currRoom = null;
         // for each room
         for (int i = 0; i < rooms.size(); i++) {
-            Room currRoom = rooms.get(i);
+            currRoom = rooms.get(i);
             // get the earliest time when it is free
-            Timestamp time = getEarliestTime(currRoom, lecture);
+            time = getEarliestTime(currRoom, lecture);
             // if there is none, return null
-            if (time != null) {
-                // otherwise update the relevant values
-                lecture.setStartTime(time);
-                lecture.setRoom(currRoom);
-                int day = calDistance(currentTime, time);
-                System.out.println(day);
-                timeTable.get(day).add(lecture);
-                return currRoom;
-            }
+            if (time != null) break;
+
         }
+
+        if (time != null) {
+            // otherwise update the relevant values
+            lecture.setStartTime(time);
+            lecture.setRoom(currRoom);
+            int day = calDistance(currentTime, time);
+            System.out.println(day);
+            timeTable.get(day).add(lecture);
+            return currRoom;
+        }
+
         return null;
     }
 
@@ -348,13 +354,12 @@ public class Generator {
             Timestamp nextTime = isFree(dayStartTime, room, lecture, day);
             Timestamp nextTimeWithDuration = new Timestamp(nextTime.getTime()
                     + lecture.getDuration().getTime());
-            if (nextTimeWithDuration.after(endOfDay)) {
-                dayStartTime = nextDay(dayStartTime);
-                day++;
-                continue;
-            } else {
-                return nextTime;
-            }
+
+            if (!nextTimeWithDuration.after(endOfDay)) return nextTime;
+
+            dayStartTime = nextDay(dayStartTime);
+            day++;
+
         }
         return null;
     }
@@ -378,10 +383,10 @@ public class Generator {
         for (int i = 0; i < lectures.size(); i++) {
             Lecture l = lectures.get(i);
             if ((overlap(lecture, found, l) && l.getRoom().equals(room))
-                || l.getYear() == lecture.getYear()) {
+                || l.getYear() == lecture.getYear())
                 found = new Timestamp(l.computeEndTime().getTime()
                         + intervalBetweenLectures);
-            }
+
         }
         return found;
     }
