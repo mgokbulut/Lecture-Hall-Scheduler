@@ -40,43 +40,43 @@ public class DatabaseService {
                 .block();
     }
 
-//    /**
-//     * Retrieves a lsit of all students in a lecture.
-//     *
-//     * @param lectureId The id that specifies the lecture.
-//     * @return A list of all the students in the lecture.
-//     */
-//    public Student[] getStudentsInLecture(int lectureId) {
-//        List<Student> list = webClientBuilder.build()
-//                .get()
-//                .uri("lectureSchedules/students/" + lectureId)
-//                .accept(MediaType.APPLICATION_JSON)
-//                .retrieve()
-//                .bodyToFlux(Student.class)
-//                .collectList()
-//                .block();
-//        Student[] result = new Student[list.size()];
-//
-//        return result;
-//    }
-//
-//    /**
-//     * Removes the student with netId from the lecture.
-//     *
-//     * @param netId The netId of the student which to remove.
-//     * @param lectureId The id of the lecture from which to remove.
-//     * @return true if it succeeded otherwise false.
-//     */
-//    public boolean removeStudentFromLecture(String netId, int lectureId) {
-//        String result = webClientBuilder.build()
-//                .delete()
-//                .uri("lectureSchedules/remove/" + netId + "/" + lectureId)
-//                .accept(MediaType.APPLICATION_JSON)
-//                .retrieve()
-//                .bodyToMono(String.class)
-//                .block();
-//        return result != null && result.equals("true");
-//    }
+    /**
+     * Retrieves a lsit of all students in a lecture.
+     *
+     * @param lectureId The id that specifies the lecture.
+     * @return A list of all the students in the lecture.
+     */
+    public Student[] getStudentsInLecture(int lectureId) {
+        List<Student> list = webClientBuilder.build()
+                .get()
+                .uri("lectureSchedules/students/" + lectureId)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToFlux(Student.class)
+                .collectList()
+                .block();
+        Student[] result = new Student[list.size()];
+
+        return result;
+    }
+
+    /**
+     * Removes the student with netId from the lecture.
+     *
+     * @param netId The netId of the student which to remove.
+     * @param lectureId The id of the lecture from which to remove.
+     * @return true if it succeeded otherwise false.
+     */
+    public boolean removeStudentFromLecture(String netId, int lectureId) {
+        String result = webClientBuilder.build()
+                .delete()
+                .uri("lectureSchedules/remove/" + netId + "/" + lectureId)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+        return result != null && result.equals("true");
+    }
 
     /**
      * Retrieves the classroom info of the classroom with the specified id.
