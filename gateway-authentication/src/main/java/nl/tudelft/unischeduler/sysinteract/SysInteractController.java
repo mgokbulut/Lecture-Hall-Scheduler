@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import net.minidev.json.JSONObject;
+import nl.tudelft.unischeduler.authentication.tokenParser;
 import nl.tudelft.unischeduler.utilentities.ArgsBuilder;
 import nl.tudelft.unischeduler.utilentities.Arguments;
 import nl.tudelft.unischeduler.utilentities.Lecture;
@@ -23,7 +24,7 @@ public class SysInteractController {
     private transient SysInteractor sysInteractor;
 
     @Autowired
-    private transient nl.tudelft.unischeduler.authentication.tokenParser tokenParser;
+    private transient tokenParser tokenParser;
 
     public static final String NOT_FOUND = "404";
     public static final String PARSING_ERROR_MESSAGE = "could not parse request body";
