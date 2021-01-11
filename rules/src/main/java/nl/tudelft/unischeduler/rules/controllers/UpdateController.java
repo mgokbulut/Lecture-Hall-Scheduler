@@ -4,9 +4,7 @@ import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import nl.tudelft.unischeduler.rules.core.RulesModule;
-import nl.tudelft.unischeduler.rules.entities.Lecture;
 import nl.tudelft.unischeduler.rules.entities.Ruleset;
-import nl.tudelft.unischeduler.rules.services.DatabaseService;
 import nl.tudelft.unischeduler.rules.storing.RulesParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +18,7 @@ public class UpdateController {
 
     @Autowired private RulesParser parser;
     @Autowired private RulesModule module;
-    @Autowired private DatabaseService databaseService;
+//    @Autowired private DatabaseService databaseService;
 
     /**
      * Updates the current rules file to the newRules passed by the body of the request.

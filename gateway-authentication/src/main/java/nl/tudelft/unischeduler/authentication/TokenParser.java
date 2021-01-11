@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
-public class tokenParser {
+public class TokenParser {
     @Autowired
     @Getter
     @Setter
@@ -29,10 +29,9 @@ public class tokenParser {
     public String extract_username(HttpServletRequest request) {
         final String authorizationHeader = request.getHeader("Authorization");
         String username = "";
-        String jwt = "";
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt += authorizationHeader.substring(7);
+            String jwt = authorizationHeader.substring(7);
             username += jwtUtil.extractUsername(jwt);
         }
         if (!username.equals("")
@@ -40,11 +39,6 @@ public class tokenParser {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
             userDetails.getUsername(); // passes the PMD
         }
-        //        try {
-        //            jwt += "";
-        //        } catch (Exception e) {
-        //            System.out.println("This is just unnecessary!!!!");
-        //        }
 
         return username;
     }

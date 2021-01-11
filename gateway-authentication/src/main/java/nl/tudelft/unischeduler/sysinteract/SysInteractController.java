@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import net.minidev.json.JSONObject;
-import nl.tudelft.unischeduler.authentication.tokenParser;
+import nl.tudelft.unischeduler.authentication.TokenParser;
 import nl.tudelft.unischeduler.utilentities.ArgsBuilder;
 import nl.tudelft.unischeduler.utilentities.Arguments;
 import nl.tudelft.unischeduler.utilentities.Lecture;
@@ -24,7 +24,7 @@ public class SysInteractController {
     private transient SysInteractor sysInteractor;
 
     @Autowired
-    private transient tokenParser tokenParser;
+    private transient TokenParser tokenParser;
 
     public static final String NOT_FOUND = "404";
     public static final String PARSING_ERROR_MESSAGE = "could not parse request body";
@@ -42,7 +42,6 @@ public class SysInteractController {
             ArgsBuilder builder = new ArgsBuilder(sysInteraction.getArgs());
             builder.buildCourse();
             Arguments args = builder.getResult();
-
 
             return sysInteractor.addCourse(args);
         } catch (URISyntaxException e) {
@@ -95,7 +94,6 @@ public class SysInteractController {
             return exception_message(NOT_FOUND, PARSING_ERROR_MESSAGE,
                 "/system/report_corona");
         }
-
     }
 
     /**
@@ -135,14 +133,10 @@ public class SysInteractController {
         try {
             String username = tokenParser.extract_username(request);
             return sysInteractor.studentSchedule(username);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return null;
-        } catch (ClassCastException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-
     }
 
     /**
@@ -187,7 +181,6 @@ public class SysInteractController {
         } catch (URISyntaxException e) {
             return null;
         }
-
     }
 
 
@@ -209,14 +202,5 @@ public class SysInteractController {
         res.put("message", message);
         res.put("path", path);
         return res.toString();
-        /*
-        ("{\n\t"
-            + "\"timestamp\": \"" + timeStamp + "\"" + "\n\t"
-            + "\"status\": \"" + status_code + "\"" + "\n\t"
-            + "\"error\": \"" + "Bad Request" + "\"" + "\n\t"
-            + "\"message\": \"" + message + "\"," + "\n\t"
-            + "\"path\": \"" + path + "\"" + "\n\t"
-            + "}");
-         */
     }
 }

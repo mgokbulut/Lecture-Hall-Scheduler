@@ -67,7 +67,7 @@ public class SysInteractor {
         User user = args.getUser();
         String response = webClient.post().uri("http://gateway-service/authentication/register")
             .contentType(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromObject(userToBeAdded))
+            .body(BodyInserters.fromObject(user))
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .bodyToMono(String.class)

@@ -40,7 +40,7 @@ public class DatabaseService {
     public ResponseEntity<Lecture[]> getStudentSchedule(String netId) {
         List<Object[]> result = webClientBuilder.build()
                 .get()
-                .uri("lectureSchedules/" + netId)
+                .uri("lectureSchedules/student/" + netId)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToFlux(Object[].class)
