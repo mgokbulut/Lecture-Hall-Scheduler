@@ -81,9 +81,9 @@ public class Util {
     }
 
     static ArrayList<Course> createListCourses() {
-        ArrayList<Course> cs = new ArrayList<>();
         Student g = new Student("georgeclooney", "STUDENT",
                 true, new Date(makeBasicStartTime().getTime()));
+        ArrayList<Course> cs = new ArrayList<>();
         Student r = new Student("ronaldmcdonald", "STUDENT",
                 true, new Date(makeBasicStartTime().getTime()));
         Set<Student> sets = new HashSet<>();

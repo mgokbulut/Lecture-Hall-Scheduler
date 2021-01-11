@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
+import lombok.Data;
 import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
@@ -24,13 +25,50 @@ import org.springframework.stereotype.Service;
 // has to work, therefore we suppress it.
 @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
 @Service
+@Data
 public class Generator {
 
+    private Timestamp currentTime;
+
+    private int numOfDays;
+
+    private static int NUMOFDAYS = 5;
+
+    private List<List<Lecture>> timeTable;
+
+    @Autowired
     private final transient ApiCommunicator apiCommunicator;
 
+    /**
+     * Constructor for the generator. Takes the next monday as starting point.
+     *
+     * @param apiCommunicator the communi
+     */
     public Generator(ApiCommunicator apiCommunicator) {
+
         this.apiCommunicator = apiCommunicator;
+
+        // take next monday, set as class attribute
+        Date date = new Date();
+        Timestamp now = new Timestamp(date.getTime());
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(now.getTime());
+        while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+            now = nextDay(now);
+            cal.setTimeInMillis(now.getTime());
+        }
+        this.currentTime = now;
+        this.numOfDays = NUMOFDAYS;
+        this.timeTable = new ArrayList<>();
     }
+
+//    public void setCurrentTime(Timestamp currTime) {
+//        this.currentTime = currTime;
+//    }
+//
+//    public void setTimeTable(List<List<Lecture>> timeTable) {
+//        this.currentTime = currTime;
+//    }
 
     /**
      * Generates a full schedule by adding it to the database using API calls.
@@ -56,9 +94,9 @@ public class Generator {
 
         // Now we need to know which lectures are on which days in an
         // easy-to-access datastructure.
-        List<List<Lecture>> timeTable = createTimeTable(lectures, currentTime, numOfDays);
+        this.timeTable = createTimeTable(lectures, currentTime, numOfDays);
 
-        scheduling(lectures, timeTable, currentTime, numOfDays,
+        scheduling(lectures,
                 apiCommunicator.getRooms(), apiCommunicator.getCourses());
     }
 
@@ -129,7 +167,7 @@ public class Generator {
      * @param t the timestamp you want to add a day to
      * @return a new timestamp that is set to one day later
      */
-    public Timestamp nextDay(Timestamp t) {
+    public static Timestamp nextDay(Timestamp t) {
         Calendar cal1 = Calendar.getInstance();
 
         cal1.setTimeInMillis(t.getTime());
@@ -147,11 +185,9 @@ public class Generator {
      * This is tested based on whether they are assigned a room or not.
      *
      * @param lectures list containing every lecture there is
-     * @param timeTable list of lists containing all lectures, per day
      */
     public void scheduling(ArrayList<Lecture> lectures,
-                            List<List<Lecture>> timeTable, Timestamp currentTime,
-                            int numOfDays, ArrayList<Room> rooms, ArrayList<Course> courses) {
+                           ArrayList<Room> rooms, ArrayList<Course> courses) {
         // TODO change this to a proper template online room, ask Kuba
         Room onlineRoom = new Room(0, Integer.MAX_VALUE, "online_room");
         // this value is placeholder until we find a better solution, should work
@@ -193,14 +229,12 @@ public class Generator {
                     // if the lecture is not assigned in the schedule yet
                     if (l.getRoom() == null && !(l.getIsOnline())) {
                         // then we want to assign it a room
-                        Room room = findRoom(rooms, currentTime, l, timeTable,
-                                currentTime, numOfDays);
+                        Room room = findRoom(rooms, l);
                         // if no room was found (no space or bug)
                         if (room == null) {
                             // then we want to move it online
                             // so we set its time, its room, and its isOnline
-                            l.setStartTime(getEarliestTime(room, l, timeTable,
-                                    currentTime, numOfDays));
+                            l.setStartTime(getEarliestTime(room, l));
                             l.setRoom(onlineRoom);
                             l.setIsOnline(true);
                             apiCommunicator.assignRoomToLecture(l.getId(), onlineRoom.getId());
@@ -259,9 +293,15 @@ public class Generator {
         }
     }
 
-    public Room findRoom(ArrayList<Room> rooms, Timestamp date,
-                          Lecture lecture, List<List<Lecture>> timeTable,
-                          Timestamp currentTime, int numOfDays) {
+    /**
+     * Finds a room with free time.
+     *
+     * @param rooms the list of available rooms
+     * @param lecture the lecture we're trying to place
+     * @return a room, if one was found, with free space
+     */
+    public Room findRoom(ArrayList<Room> rooms,
+                          Lecture lecture) {
         // sort in descending order
         Collections.sort(rooms);
         Collections.reverse(rooms);
@@ -269,8 +309,7 @@ public class Generator {
         for (int i = 0; i < rooms.size(); i++) {
             Room currRoom = rooms.get(i);
             // get the earliest time when it is free
-            Timestamp time = getEarliestTime(currRoom, lecture, timeTable,
-                    currentTime, numOfDays);
+            Timestamp time = getEarliestTime(currRoom, lecture);
             // if there is none, return null
             if (time != null) {
                 // otherwise update the relevant values
@@ -291,13 +330,9 @@ public class Generator {
      *
      * @param room which room we're checking for
      * @param lecture which lecture we would like to add
-     * @param timeTable the timetable with lectures listed per day
-     * @param currentTime the starting time of the whole scheduling system
      * @return time when we can schedule the lecture
      */
-    public Timestamp getEarliestTime(Room room, Lecture lecture,
-                                      List<List<Lecture>> timeTable, Timestamp currentTime,
-                                      int numOfDays) {
+    public Timestamp getEarliestTime(Room room, Lecture lecture) {
         // this part will need the most testing as it is complex to work with timestamps
         int day = 0;
         Calendar c = Calendar.getInstance();
@@ -310,8 +345,7 @@ public class Generator {
             c.set(Calendar.HOUR_OF_DAY, 17);
             c.set(Calendar.MINUTE, 45);
             Timestamp endOfDay = new Timestamp(c.getTimeInMillis());
-            Timestamp nextTime = isFree(dayStartTime, room, lecture,
-                                        timeTable, currentTime, day);
+            Timestamp nextTime = isFree(dayStartTime, room, lecture, day);
             Timestamp nextTimeWithDuration = new Timestamp(nextTime.getTime()
                     + lecture.getDuration().getTime());
             if (nextTimeWithDuration.after(endOfDay)) {
@@ -333,13 +367,10 @@ public class Generator {
      * @param timeslot which day we're checking for
      * @param room which room we're checking for
      * @param lecture which lecture we would like to add
-     * @param timeTable the timetable with lectures listed per day
-     * @param currentTime the starting time of the whole scheduling system
      * @return earliest time when the room is not busy
      */
     public Timestamp isFree(Timestamp timeslot, Room room,
-                             Lecture lecture, List<List<Lecture>> timeTable,
-                             Timestamp currentTime, int day) {
+                             Lecture lecture, int day) {
         List<Lecture> lectures = timeTable.get(day);
         long intervalBetweenLectures = getIntervalBetweenLectures();
 
@@ -355,6 +386,12 @@ public class Generator {
         return found;
     }
 
+    /**
+     * Returns the capacity of a room, following the corona rules regulations.
+     *
+     * @param room the room to check capacity for
+     * @return the number of places for students
+     */
     public int getCapacity(Room room) {
         // TODO make an API call here to find out the rule for capacity
         // for now we don't take the rules into account

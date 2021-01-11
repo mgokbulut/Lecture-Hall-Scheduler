@@ -18,9 +18,8 @@ import static nl.tudelft.unischeduler.schedulegenerate.GeneratorTests.Util.creat
 import static nl.tudelft.unischeduler.schedulegenerate.GeneratorTests.Util.createListLectures;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -125,9 +124,10 @@ public class GeneratorTests {
         lr.add(r);
         lr.add(rr);
         Exception e = null;
+        test.setTimeTable(timet);
+        test.setCurrentTime(makeBasicStartTime());
         try {
-            test.scheduling(l, timet, makeBasicStartTime(), 5, lr,
-                    createListCourses());
+            test.scheduling(l, lr, createListCourses());
         } catch (Exception a) {
             e = a;
         }
@@ -147,9 +147,11 @@ public class GeneratorTests {
         lr.add(rr);
         Timestamp basic = makeBasicStartTime();
         ArrayList<Course> lcs = createListCourses();
-        spy.scheduling(l, timet, basic, 5, lr,
+        test.setTimeTable(timet);
+        test.setCurrentTime(basic);
+        spy.scheduling(l, lr,
                 lcs);
-        verify(spy).scheduling(l, timet, basic, 5, lr,
+        verify(spy).scheduling(l, lr,
                 lcs);
     }
 
@@ -160,11 +162,13 @@ public class GeneratorTests {
                 makeBasicStartTime(), makeTimeLength(2),
                 false, 1, r);
         List<List<Lecture>> tt = new ArrayList<>();
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             tt.add(new ArrayList<>());
         }
         Generator g = makeGenerator();
-        Timestamp t = g.getEarliestTime(r, l, tt, makeBasicStartTime(), 5);
+        g.setCurrentTime(makeBasicStartTime());
+        g.setTimeTable(tt);
+        Timestamp t = g.getEarliestTime(r, l);
         assertEquals(makeBasicStartTime().getTime(), t.getTime());
     }
 
@@ -208,8 +212,10 @@ public class GeneratorTests {
         Generator test = makeGenerator();
         Room r = makeRoom();
         Timestamp t = makeBasicStartTime();
+        test.setCurrentTime(t);
+        test.setTimeTable(tt);
         Timestamp min = new Timestamp(t.getTime() + makeTimeLength(2).getTime());
-        Timestamp tmp = test.isFree(t, r, ls.get(0), tt, t, 0);
+        Timestamp tmp = test.isFree(t, r, ls.get(0), 0);
         Timestamp max = new Timestamp(t.getTime() + makeTimeLength(3).getTime());
         assertTrue(tmp.getTime() >= min.getTime());
         assertTrue(tmp.before(max));
@@ -222,19 +228,21 @@ public class GeneratorTests {
         ArrayList<Room> lr = new ArrayList<>();
         lr.add(r);
         lr.add(rr);
+        ArrayList<List<Lecture>> tt = new ArrayList<>(); // timetable
+        int n = 5;
+        for (int i = 0; i < n; i++) {
+            tt.add(new ArrayList<>());
+        }
         Timestamp t = makeBasicStartTime();
         Lecture l = createListLectures().get(0);
         List<Lecture> lsc = createListLecturesScheduled();
-        ArrayList<List<Lecture>> tt = new ArrayList<>(); // timetable
-        int n = 5;
-        for(int i = 0; i < n; i++) {
-            tt.add(new ArrayList<>());
-        }
         lsc.remove(2);
         lsc.remove(1);
         tt.add(lsc);
         Generator test = makeGenerator();
-        Room room = test.findRoom(lr, t, l, tt, t, n);
+        test.setTimeTable(tt);
+        test.setCurrentTime(t);
+        Room room = test.findRoom(lr, l);
         assertEquals(room, r);
     }
 }
