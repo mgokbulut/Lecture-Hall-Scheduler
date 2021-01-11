@@ -25,4 +25,10 @@ public class UserController {
     Object[] getUser(@PathVariable String netId) {
         return userService.getUser(netId);
     }
+
+    @GetMapping(path = "/lectureSchedules/studentsLecture/{lectureId}")
+    public @ResponseBody
+    List<Object []> getStudentsInLecture(@PathVariable Long lectureId) {
+        return userService.getStudentsInLecture(lectureId);
+    }
 }

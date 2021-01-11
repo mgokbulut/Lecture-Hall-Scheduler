@@ -44,9 +44,6 @@ public class LectureScheduleServiceTest {
     private final transient LectureScheduleRepository lectureScheduleRepository =
             Mockito.mock(LectureScheduleRepository.class);
 
-    private final transient UserRepository userRepository =
-            Mockito.mock(UserRepository.class);
-
     private final transient LectureRepository lectureRepository =
             Mockito.mock(LectureRepository.class);
 
@@ -55,9 +52,6 @@ public class LectureScheduleServiceTest {
 
     private final transient ScheduleRepository scheduleRepository =
             Mockito.mock(ScheduleRepository.class);
-
-    private final  transient UserService userService =
-            Mockito.mock(UserService.class);
 
     private final transient Timestamp timestamp = new Timestamp(new GregorianCalendar(
             2020, Calendar.DECEMBER, 1, 0, 0).getTimeInMillis());
@@ -106,7 +100,7 @@ public class LectureScheduleServiceTest {
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
 
         Assertions.assertEquals(new ResponseEntity<>(
@@ -121,7 +115,7 @@ public class LectureScheduleServiceTest {
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
 
         lectureScheduleService.removeLectureFromSchedule(1L);
@@ -144,7 +138,7 @@ public class LectureScheduleServiceTest {
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
 
         lectureScheduleService.cancelStudentAttendance("a.baran@student.tudelft.nl", timestamp,
@@ -165,7 +159,7 @@ public class LectureScheduleServiceTest {
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
 
         lectureScheduleService.removeStudentFromLecture("a.baran@student.tudelft.nl", 0L);
@@ -189,7 +183,7 @@ public class LectureScheduleServiceTest {
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
 
         Assertions.assertTrue(Arrays.equals(new Object[]{lectures.get(0), classroom},
@@ -207,33 +201,11 @@ public class LectureScheduleServiceTest {
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
 
         Assertions.assertTrue(Arrays.equals(new Object[]{lectures.get(0), classroom},
                 lectureScheduleService.getTeacherSchedule("sanders@tudelft.nl").get(0)));
-    }
-
-    @Test
-    public void getStudentsInLectureTest() {
-        when(lectureScheduleRepository.findAllByLectureId(0L))
-                .thenReturn(List.of(lectureSchedules.get(0)));
-
-        when(scheduleRepository.findById(1L))
-                .thenReturn(Optional.of(new Schedule(1L, "a.baran@student.tudelft.nl")));
-
-        when(userRepository.findByNetId("a.baran@student.tudelft.nl")).thenReturn(
-                Optional.of(users.get(0)));
-
-        when(userService.getUser(users.get(0).getNetId()))
-                .thenReturn(new Object[]{users.get(0), true});
-
-        LectureScheduleService lectureScheduleService = new LectureScheduleService(
-                lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
-
-        Assertions.assertTrue(Arrays.equals(new Object[]{users.get(0), true},
-                lectureScheduleService.getStudentsInLecture(0L).get(0)));
     }
 
     @Test
@@ -247,7 +219,7 @@ public class LectureScheduleServiceTest {
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
 
         Assertions.assertTrue(Arrays.equals(new Object[]{lectures.get(2), classroom},
@@ -263,7 +235,7 @@ public class LectureScheduleServiceTest {
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
 
         Assertions.assertNull(lectureScheduleService.getAllLecturesInCourse(2L));
