@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 import nl.tudelft.unischeduler.user.User;
 import nl.tudelft.unischeduler.user.UserRepository;
+import nl.tudelft.unischeduler.utilentities.Arguments;
 import nl.tudelft.unischeduler.utilentities.Course;
 import nl.tudelft.unischeduler.utilentities.Lecture;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +37,11 @@ public class SysInteractor {
     /**
      * Registers a new course to the system.
      *
-     * @param course the course the user is trying to register
+     * @param args the course the user is trying to register
      * @return whether the addition was successful
      */
-    public String addCourse(Course course) throws URISyntaxException {
+    public String addCourse(Arguments args) throws URISyntaxException {
+        Course course = args.getCourse();
         if (course != null) {
             webClient
                 .post()
@@ -58,10 +60,11 @@ public class SysInteractor {
     /**
      * Registers a new user to the system.
      *
-     * @param userToBeAdded the user to be added to the system
+     * @param args the user to be added to the system
      * @return whether the change was successful
      */
-    public String addUser(User userToBeAdded) {
+    public String addUser(Arguments args) {
+        User user = args.getUser();
         String response = webClient.post().uri("http://gateway-service/authentication/register")
             .contentType(MediaType.APPLICATION_JSON)
             .body(BodyInserters.fromObject(userToBeAdded))
@@ -134,10 +137,11 @@ public class SysInteractor {
      * Returns all the infromation that concerns a course,
      * including all students who are signed-up to attend it.
      *
-     * @param course the course queried for
+     * @param args the course queried for
      * @return the course's information
      */
-    public Object[] courseInformation(Course course) throws URISyntaxException {
+    public Object[] courseInformation(Arguments args) throws URISyntaxException {
+        Course course = args.getCourse();
         // TODO poll database to find lecture information and return it
         // /lectureSchedules/course/{courseId}
         //Optional<User> optional = userRepository.findByNetId(username);

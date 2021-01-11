@@ -4,23 +4,14 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
-import lombok.Getter;
-import lombok.Setter;
 import net.minidev.json.JSONObject;
-import nl.tudelft.unischeduler.authentication.JwtUtil;
-import nl.tudelft.unischeduler.authentication.MyUserDetailsService;
-import nl.tudelft.unischeduler.user.User;
 import nl.tudelft.unischeduler.utilentities.ArgsBuilder;
 import nl.tudelft.unischeduler.utilentities.Arguments;
-import nl.tudelft.unischeduler.utilentities.Course;
 import nl.tudelft.unischeduler.utilentities.Lecture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,17 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class SysInteractController {
 
     @Autowired
-    @Getter
-    @Setter
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    @Getter
-    @Setter
-    private MyUserDetailsService userDetailsService;
-
-    @Autowired
     private transient SysInteractor sysInteractor;
+
+    @Autowired
+    private transient nl.tudelft.unischeduler.authentication.tokenParser tokenParser;
 
     public static final String NOT_FOUND = "404";
     public static final String PARSING_ERROR_MESSAGE = "could not parse request body";
@@ -58,12 +42,11 @@ public class SysInteractController {
             builder.buildCourse();
             Arguments args = builder.getResult();
 
-            Course course = args.getCourse();
 
-            return sysInteractor.addCourse(course);
+            return sysInteractor.addCourse(args);
         } catch (URISyntaxException e) {
             e.printStackTrace();
-            return exception_message(NOT_FOUND, "URI Syntax Exception", "/system/add_course");
+            return exception_message(NOT_FOUND, URI_EXCEPTION, "/system/add_course");
         } catch (ClassCastException e) {
             e.printStackTrace();
             return exception_message(NOT_FOUND, PARSING_ERROR_MESSAGE, "/system/add_course");
@@ -84,9 +67,8 @@ public class SysInteractController {
             builder.buildUser();
             Arguments args = builder.getResult();
 
-            User user = args.getUser();
 
-            return sysInteractor.addUser(user);
+            return sysInteractor.addUser(args);
         } catch (ClassCastException e) {
             e.printStackTrace();
             return exception_message(NOT_FOUND, PARSING_ERROR_MESSAGE, "/system/add_user");
@@ -102,11 +84,11 @@ public class SysInteractController {
     @PostMapping(path = "/system/report_corona", produces = MediaType.APPLICATION_JSON_VALUE)
     public String reportCorona(HttpServletRequest request) {
         try {
-            String username = extract_username(request);
+            String username = tokenParser.extract_username(request);
             return sysInteractor.reportCorona(username);
         } catch (URISyntaxException e) {
             e.printStackTrace();
-            return exception_message(NOT_FOUND, "URI Syntax Exception", "/system/report_corona");
+            return exception_message(NOT_FOUND, URI_EXCEPTION, "/system/report_corona");
         } catch (ClassCastException e) {
             e.printStackTrace();
             return exception_message(NOT_FOUND, PARSING_ERROR_MESSAGE,
@@ -128,13 +110,12 @@ public class SysInteractController {
             builder.buildCourse();
             Arguments args = builder.getResult();
 
-            Course course = args.getCourse();
 
-            return sysInteractor.courseInformation(course);
+            return sysInteractor.courseInformation(args);
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return new Object[] {
-                exception_message(NOT_FOUND, "URI Syntax Exception", "/system/course_information")};
+                exception_message(NOT_FOUND, URI_EXCEPTION, "/system/course_information")};
         } catch (ClassCastException e) {
             e.printStackTrace();
             return new Object[] {exception_message(NOT_FOUND, PARSING_ERROR_MESSAGE,
@@ -151,7 +132,7 @@ public class SysInteractController {
     @PostMapping(path = "/system/student_schedule", produces = MediaType.APPLICATION_JSON_VALUE)
     public Lecture[] studentSchedule(HttpServletRequest request) {
         try {
-            String username = extract_username(request);
+            String username = tokenParser.extract_username(request);
             return sysInteractor.studentSchedule(username);
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -172,7 +153,7 @@ public class SysInteractController {
     @PostMapping(path = "/system/teacher_schedule", produces = MediaType.APPLICATION_JSON_VALUE)
     public Lecture[] teacherSchedule(HttpServletRequest request) {
         try {
-            String username = extract_username(request);
+            String username = tokenParser.extract_username(request);
             return sysInteractor.teacherSchedule(username);
         } catch (URISyntaxException e) {
             return null;
@@ -208,34 +189,6 @@ public class SysInteractController {
 
     }
 
-    /**
-     * Extracts username from jwt token.
-     *
-     * @param request http request object
-     * @return returns username
-     */
-    public String extract_username(HttpServletRequest request) {
-        final String authorizationHeader = request.getHeader("Authorization");
-        String username = "";
-        String jwt = "";
-
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt += authorizationHeader.substring(7);
-            username += jwtUtil.extractUsername(jwt);
-        }
-        if (!username.equals("")
-            && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            userDetails.getUsername(); // passes the PMD
-        }
-        try {
-            jwt += "";
-        } catch (Exception e) {
-            System.out.println("This is just unnecessary!!!!");
-        }
-
-        return username;
-    }
 
     /**
      * Creates a json error message.
