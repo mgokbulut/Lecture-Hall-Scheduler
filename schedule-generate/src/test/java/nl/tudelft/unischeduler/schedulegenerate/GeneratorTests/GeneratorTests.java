@@ -9,7 +9,6 @@ import nl.tudelft.unischeduler.schedulegenerate.entities.Room;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Util;
 import nl.tudelft.unischeduler.schedulegenerate.generator.Generator;
 import org.junit.jupiter.api.Test;
-
 import static nl.tudelft.unischeduler.schedulegenerate.GeneratorTests.Util.makeBasicStartTime;
 import static nl.tudelft.unischeduler.schedulegenerate.GeneratorTests.Util.makeGenerator;
 import static nl.tudelft.unischeduler.schedulegenerate.GeneratorTests.Util.makeRoom;
