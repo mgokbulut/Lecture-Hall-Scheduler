@@ -3,7 +3,9 @@ package nl.tudelft.unischeduler.rules.integration;
 import java.io.IOException;
 import lombok.Data;
 import nl.tudelft.unischeduler.rules.controllers.UpdateController;
-import nl.tudelft.unischeduler.rules.services.DatabaseService;
+import nl.tudelft.unischeduler.rules.services.ClassRoomDatabaseService;
+import nl.tudelft.unischeduler.rules.services.LectureDatabaseService;
+import nl.tudelft.unischeduler.rules.services.StudentDatabaseService;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -30,23 +32,31 @@ public abstract class ControllerTest {
     protected MockMvc mockMvc;
     public MockWebServer server;
     @Autowired
-    protected DatabaseService databaseService;
+    protected ClassRoomDatabaseService classRoomDatabaseService;
+    @Autowired
+    protected LectureDatabaseService lectureDatabaseService;
+    @Autowired
+    protected StudentDatabaseService studentDatabaseService;
     @Autowired
     protected WebClient.Builder webClientBuilder;
 
     protected static final MockResponse standardResponse = new MockResponse().setBody("true");
+
+
 
     @BeforeEach
     void beforeEach() throws IOException {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         server = new MockWebServer();
         server.start();
-        webClientBuilder.baseUrl("http://"
+        WebClient databaseWebClient = webClientBuilder.baseUrl("http://"
                 + server.getHostName()
                 + ":"
                 + server.getPort()
-                + "/");
-        databaseService.setDatabaseWebClient(webClientBuilder.build());
+                + "/").build();
+        classRoomDatabaseService.setDatabaseWebClient(databaseWebClient);
+        lectureDatabaseService.setDatabaseWebClient(databaseWebClient);
+        studentDatabaseService.setDatabaseWebClient(databaseWebClient);
     }
 
     @AfterEach
