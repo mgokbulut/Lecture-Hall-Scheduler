@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import nl.tudelft.unischeduler.viewer.entities.Classroom;
 import nl.tudelft.unischeduler.viewer.entities.Lecture;
@@ -20,6 +21,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @NoArgsConstructor
 @AllArgsConstructor
 @Service
+@EqualsAndHashCode(callSuper=false)
 public class DatabaseService extends ReturnList{
 
     @Autowired
