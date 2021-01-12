@@ -45,8 +45,6 @@ public class DatabaseServiceTests {
 
     //@Autowired
     private transient WebClient.Builder webClientBuilder;
-    //@Autowired
-    private transient  ReturnList returnList;
 
     //@Autowired
     //@MockBean
@@ -85,7 +83,7 @@ public class DatabaseServiceTests {
         webClientBuilder = Mockito.mock(WebClient.Builder.class);
         WebClient webClient = Mockito.mock(WebClient.class);
         //webClientBuilder.baseUrl("http://database-service/");
-        databaseService = new DatabaseService(webClientBuilder, returnList, webClient);
+        databaseService = new DatabaseService(webClientBuilder, webClient);
     }
 
     @Test

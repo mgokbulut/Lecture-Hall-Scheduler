@@ -10,13 +10,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
-@Data
-@Service
 public class ReturnList {
-    @Autowired
-    private WebClient.Builder webClientBuilder;
-
-    public List<Object[]> returnlist(String uri, String id){
+    public List<Object[]> returnList(WebClient.Builder webClientBuilder,String uri, String id){
         return webClientBuilder.build()
                 .get()
                 .uri(uri + id)
