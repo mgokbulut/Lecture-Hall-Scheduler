@@ -47,7 +47,7 @@ public class Generator {
     /**
      * Constructor for the generator. Takes the next monday as starting point.
      *
-     * @param apiCommunicator the communi
+     * @param apiCommunicator the communicator
      */
     public Generator(ApiCommunicator apiCommunicator) {
 
@@ -148,8 +148,8 @@ public class Generator {
             coursesPerYear.get(c.getYear()).add(c);
         }
 
-        int nYears = coursesPerYear.size();
-        schedulingYears(nYears, coursesPerYear, rooms);
+        int numYears = coursesPerYear.size();
+        schedulingYears(numYears, coursesPerYear, rooms);
     }
 
     /**
@@ -359,19 +359,14 @@ public class Generator {
     public Timestamp getEarliestTime(Room room, Lecture lecture) {
         // this part will need the most testing as it is complex to work with timestamps
         int day = 0;
-        Calendar c = Calendar.getInstance();
 
         // end of the day is at 17:45, courses should not end any further than that
         Timestamp dayStartTime = new Timestamp(currentTime.getTime());
         // TODO use API to get window
         while (day < numOfDays) {
-            c.setTimeInMillis(dayStartTime.getTime());
-            c.set(Calendar.HOUR_OF_DAY, 17);
-            c.set(Calendar.MINUTE, 45);
-            Timestamp endOfDay = new Timestamp(c.getTimeInMillis());
+            Timestamp endOfDay = Util.getEndOfDay(dayStartTime);
             Timestamp nextTime = isFree(dayStartTime, room, lecture, day);
-            Timestamp nextTimeWithDuration = new Timestamp(nextTime.getTime()
-                    + lecture.getDuration().getTime());
+            Timestamp nextTimeWithDuration = Util.addClassDurationAndTime(lecture, nextTime);
 
             if (!nextTimeWithDuration.after(endOfDay)) {
                 return nextTime;
@@ -383,6 +378,7 @@ public class Generator {
         }
         return null;
     }
+
 
     /**
      * For a single day and room, tells us the earliest time of the day when
@@ -402,8 +398,7 @@ public class Generator {
         Timestamp found = new Timestamp(timeslot.getTime());
         for (int i = 0; i < lectures.size(); i++) {
             Lecture l = lectures.get(i);
-            if ((Util.overlap(lecture, getIntervalBetweenLectures(), found, l) && l.getRoom().equals(room))
-                || l.getYear() == lecture.getYear()) {
+            if (!Util.areLecturesConflicting(lecture, l, found, room, intervalBetweenLectures)) {
                 found = new Timestamp(l.computeEndTime().getTime()
                         + intervalBetweenLectures);
             }
