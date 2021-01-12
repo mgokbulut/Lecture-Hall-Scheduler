@@ -25,6 +25,9 @@ public class DatabaseService {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
+    @Autowired
+    private ReturnList returnlist;
+
     protected WebClient webClient;
 
     public DatabaseService(WebClient.Builder webClientBuilder) {
@@ -38,66 +41,31 @@ public class DatabaseService {
     }
 
     public ResponseEntity<Lecture[]> getStudentSchedule(String netId) {
-        List<Object[]> result = webClientBuilder.build()
-                .get()
-                .uri("lectureSchedules/" + netId)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToFlux(Object[].class)
-                .collectList()
-                .block();
+        List<Object[]> result = returnlist.returnlist("lectureSchedules/course/", netId);
 
         return ResponseEntity.ok(getLectures(result));
     }
 
     public ResponseEntity<Lecture[]> getTeacherSchedule(String netId) {
-        List<Object[]> result = webClientBuilder.build()
-                .get()
-                .uri("lectureSchedules/teacher/" + netId)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToFlux(Object[].class)
-                .collectList()
-                .block();
+        List<Object[]> result = returnlist.returnlist("lectureSchedules/course/", netId);
 
         return ResponseEntity.ok(getLectures(result));
     }
 
     public ResponseEntity<Lecture[]> getPossibleLectures(String netId) {
-        List<Object[]> result = webClientBuilder.build()
-                .get()
-                .uri("userCourseService/possibleLectures/" + netId)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToFlux(Object[].class)
-                .collectList()
-                .block();
+        List<Object[]> result = returnlist.returnlist("lectureSchedules/course/", netId);
 
         return ResponseEntity.ok(getLectures(result));
     }
 
     public ResponseEntity<Lecture[]> getLecturesInCourse(int courseId) {
-        List<Object[]> result = webClientBuilder.build()
-                .get()
-                .uri("lectureSchedules/course/" + String.valueOf(courseId))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToFlux(Object[].class)
-                .collectList()
-                .block();
+        List<Object[]> result = returnlist.returnlist("lectureSchedules/course/", String.valueOf(courseId));
 
         return ResponseEntity.ok(getLectures(result));
     }
 
     public ResponseEntity<User[]> getStudentsInLecture(int lectureId) {
-        List<Object[]> result = webClientBuilder.build()
-                .get()
-                .uri("lectureSchedules/studentsLecture/" + String.valueOf(lectureId))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToFlux(Object[].class)
-                .collectList()
-                .block();
+        List<Object[]> result = returnlist.returnlist("lectureSchedules/studentsLecture/", String.valueOf(lectureId));
 
         return ResponseEntity.ok(getUsers(result));
     }
