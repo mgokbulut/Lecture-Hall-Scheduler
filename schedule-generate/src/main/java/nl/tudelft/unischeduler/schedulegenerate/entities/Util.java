@@ -70,7 +70,7 @@ public class Util {
      * @param courseStudents set of students enrolled in the course
      * @return whether the operation succeeded
      */
-    public boolean addIfAllowed(Iterator<Student> it, PriorityQueue<Student> studentsQueue,
+    public static boolean addIfAllowed(Iterator<Student> it, PriorityQueue<Student> studentsQueue,
                                 Set<Student> courseStudents, ApiCommunicator apiCom) {
         for (int k = 0; k < courseStudents.size(); k++) {
             Student s = it.next();
@@ -79,6 +79,52 @@ public class Util {
             }
         }
         return true;
+    }
+
+    /**
+     * Computes the lists of students to be added to the lectures, and
+     * the ones that are not selected.
+     *
+     * @param capacity the capacity of the room
+     * @param maxIterations the max number of iterations to go through
+     * @param studentsQueue the queue of students waiting to be scheduled
+     * @param everythingWentWell whether the operation was successful
+     * @param l the lecture in question
+     * @return list containing 1. list of students to add and 2. set of students not selected
+     */
+    public static List<Object> computeStudentsList(int capacity,
+                                                   int maxIterations,
+                                                   PriorityQueue<Student> studentsQueue,
+                                                   Boolean everythingWentWell, Lecture l) {
+        // then we want to add students to it
+        // first we have to figure out which students to add, without duplicates
+        Set<Student> studentsToAdd = new HashSet<>();
+        List<Student> notSelected = new ArrayList<>();
+        int iteration = 0;
+        while (studentsToAdd.size() < capacity
+                && iteration < maxIterations * capacity) {
+            try {
+                Student prioStudent = studentsQueue.remove();
+                // if student wasn't added already, add him
+                if (!studentsToAdd.contains(prioStudent)) {
+                    studentsToAdd.add(prioStudent);
+                    prioStudent.setLastTimeOnCampus(
+                            new Date(l.getStartTime().getTime()));
+                } else {
+                    notSelected.add(prioStudent);
+                }
+            } catch (Exception e) {
+                System.out.println("there was an error "
+                        + "scheduling students to lectures...");
+                System.out.println(e.toString());
+                everythingWentWell = false;
+            }
+            iteration++;
+        }
+        List<Object> li = new ArrayList<>();
+        li.add(studentsToAdd);
+        li.add(notSelected);
+        return li;
     }
 
     /**

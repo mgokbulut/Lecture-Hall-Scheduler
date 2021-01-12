@@ -57,24 +57,26 @@ public class ApiCommunicator {
     //  and Lecture_id
     //  path = "/lectureSchedule/{net_id}/{lectureId}"
 
-    public void assignStudentToLecture(String studentId, int lectureId) {
-
+    public void assignStudentToLecture(Student student, Lecture lecture) {
+        String studentId = student.getNetId();
+        int lectureId = lecture.getId();
     }
 
     //  assignRoomToLecture(Lecture_id, classroom_id): //done
     //  Sets the classroom_id of the given lecture to the given classroom_id
     //      path = "/lectures/setClassroom/{lectureId}/{classroomId}"
 
-    public void assignRoomToLecture(int lectureId, int classroomId) {
-
+    public void assignRoomToLecture(Lecture lecture, Room classroom) {
+        int lectureId = lecture.getId();
+        int classroomId = classroom.getId();
     }
 
     //  setLectureTime(Lecture_id, TimeStamp t): //done
     //  sets the start time of the given lecture to t
     //  path = "/lectures/setTime/{lectureId}/{t}
 
-    public void setLectureTime(int lectureId, Timestamp timeStamp) {
-
+    public void setLectureTime(Lecture lecture, Timestamp timeStamp) {
+        int lectureId = lecture.getId();
     }
 
     // ---- these are API calls for the rules module ----

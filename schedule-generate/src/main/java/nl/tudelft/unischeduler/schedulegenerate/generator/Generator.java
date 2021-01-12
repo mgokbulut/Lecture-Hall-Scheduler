@@ -20,6 +20,7 @@ import nl.tudelft.unischeduler.schedulegenerate.entities.Student;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.tuple.Tuple2;
 
 // These were warnings on getEarliestTime(),
 // they signal an anomaly which is part of the way the method
@@ -212,63 +213,48 @@ public class Generator {
         Room room = findRoom(rooms, l);
         // if no room was found (no space or bug)
         if (room == null) {
-            // then we want to move it online
-            // so we set its time, its room, and its isOnline
-            l.setStartTime(getEarliestTime(room, l));
-            l.setRoom(onlineRoom);
-            l.setIsOnline(true);
-            apiCommunicator.assignRoomToLecture(l.getId(), onlineRoom.getId());
-            // and we assign all students to it
-            Iterator<Student> its = courseStudents.iterator();
-            for (int m = 0; m < courseStudents.size(); m++) {
-                apiCommunicator.assignStudentToLecture(its.next().getNetId(),
-                        l.getId());
-            }
-            return true;
+            return moveOnline(l, room, onlineRoom, apiCommunicator, courseStudents);
         }
         // if a room was found
         // we assign it
         int capacity = getCapacity(room);
-        apiCommunicator.assignRoomToLecture(l.getId(), room.getId());
-        apiCommunicator.setLectureTime(l.getId(), l.getStartTime());
+        apiCommunicator.assignRoomToLecture(l, room);
+        apiCommunicator.setLectureTime(l, l.getStartTime());
 
-        // then we want to add students to it
-        // first we have to figure out which students to add, without duplicates
-        Set<Student> studentsToAdd = new HashSet<>();
-        List<Student> notSelected = new ArrayList<>();
-        int iteration = 0;
-        while (studentsToAdd.size() < capacity
-                && iteration < MAX_ITERATIONS * capacity) {
-            try {
-                Student prioStudent = studentsQueue.remove();
-                // if student wasn't added already, add him
-                if (!studentsToAdd.contains(prioStudent)) {
-                    studentsToAdd.add(prioStudent);
-                    prioStudent.setLastTimeOnCampus(
-                            new Date(l.getStartTime().getTime()));
-                } else {
-                    notSelected.add(prioStudent);
-                }
-            } catch (Exception e) {
-                System.out.println("there was an error "
-                        + "scheduling students to lectures...");
-                System.out.println(e.toString());
-                everythingWentWell = false;
-            }
-            iteration++;
-        }
         // we add back the ones that weren't selected
+        List<Object> retObjects =
+                Util.computeStudentsList(getCapacity(room), MAX_ITERATIONS,
+                        studentsQueue, everythingWentWell, l);
+        List<Student> studentsToAdd = (List<Student>) retObjects.get(0);
+        Set<Student> notSelected = (Set<Student>) retObjects.get(1);
         studentsQueue.addAll(notSelected);
 
         // now we can add the students that were selected
         List<Student> addTheseStudents = new ArrayList<>(studentsToAdd);
         for (int a = 0; a < addTheseStudents.size(); a++) {
             Student s = addTheseStudents.get(a);
-            apiCommunicator.assignStudentToLecture(s.getNetId(), l.getId());
+            apiCommunicator.assignStudentToLecture(s, l);
             s.setLastTimeOnCampus(l.getStartTime());
             studentsQueue.add(s);
         }
         return everythingWentWell;
+    }
+
+    public boolean moveOnline(Lecture l, Room room, Room onlineRoom,
+                                  ApiCommunicator apiCom, Set<Student> courseStudents) {
+        // then we want to move it online
+        // so we set its time, its room, and its isOnline
+        l.setStartTime(getEarliestTime(room, l));
+        l.setRoom(onlineRoom);
+        l.setIsOnline(true);
+        apiCom.assignRoomToLecture(l, onlineRoom);
+        // and we assign all students to it
+        Iterator<Student> its = courseStudents.iterator();
+        for (int m = 0; m < courseStudents.size(); m++) {
+            apiCom.assignStudentToLecture(its.next(),
+                    l);
+        }
+        return true;
     }
 
     /**
