@@ -1,7 +1,9 @@
 package nl.tudelft.unischeduler.schedulegenerate.entities;
 
+import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
+
 import java.sql.Timestamp;
-import java.util.Calendar;
+import java.util.*;
 
 public class Util {
 
@@ -35,6 +37,51 @@ public class Util {
     }
 
     /**
+     * Returns either an assigned room, or null
+     * if the room had no free space for the lecture.
+     *
+     * @param time the time to schedule it at
+     * @param lecture the lecture we want to assign
+     * @param timeTable the timetable of lectures per day
+     * @param currRoom the room to check for
+     * @param currentTime the current time the system is working with
+     * @return either an assigned room, or null
+     */
+    public static Room assignRoomToLecture(Timestamp time, Lecture lecture,
+                                           List<List<Lecture>> timeTable, Room currRoom,
+                                           Timestamp currentTime) {
+        if (time == null) {
+            return null;
+        }
+        // otherwise update the relevant values
+        lecture.setStartTime(time);
+        lecture.setRoom(currRoom);
+        int day = Util.calDistance(currentTime, time);
+        timeTable.get(day).add(lecture);
+        return currRoom;
+    }
+
+    /**
+     * Adds a student to a candidate list, if and only if the rules module says they
+     * are allowed to be on campus.
+     *
+     * @param it iterator through a set of students
+     * @param studentsQueue queue of students, ordered by last seen on campus
+     * @param courseStudents set of students enrolled in the course
+     * @return whether the operation succeeded
+     */
+    public boolean addIfAllowed(Iterator<Student> it, PriorityQueue<Student> studentsQueue,
+                                Set<Student> courseStudents, ApiCommunicator apiCom) {
+        for (int k = 0; k < courseStudents.size(); k++) {
+            Student s = it.next();
+            if (apiCom.allowedOnCampus(s)) {
+                studentsQueue.add(s);
+            }
+        }
+        return true;
+    }
+
+    /**
      * Simply adds a class's duration to a timestamp.
      *
      * @param lecture the lecture whose length we want to add
@@ -59,6 +106,51 @@ public class Util {
         c.set(Calendar.HOUR_OF_DAY, 17);
         c.set(Calendar.MINUTE, 45);
         return new Timestamp(c.getTimeInMillis());
+    }
+
+    /**
+     * Populates a list of lectures from a list of courses, sorted by end time.
+     *
+     * @param courses list of all courses
+     * @param numOfDays how many days we schedule ahead for
+     * @param apiComm the communicator, to get the lectures
+     * @param currentTime the start time of the algorithm
+     * @return the list of lectures, sorted by endtime
+     */
+    public static ArrayList<Lecture> populateLectures(List<Course> courses, int numOfDays,
+                                                      ApiCommunicator apiComm, Timestamp currentTime) {
+        ArrayList<Lecture> lectures = new ArrayList<>();
+
+        // populate the lectures array
+        for (int i = 0; i < courses.size(); i++) {
+            Course course = courses.get(i);
+            ArrayList<Lecture> toAdd =
+                    apiComm.getLecturesInCourse(course.getId(), currentTime, numOfDays);
+            lectures.addAll(toAdd);
+        }
+
+        // sort by end time
+        Collections.sort(lectures);
+        return lectures;
+    }
+
+    /**
+     * Distributes courses into lists for every year of the programme.
+     *
+     * @param courses the courses to be distributed
+     * @param coursesPerYear the list to populate/contain the courses
+     * @param maxNumberOfYears the number of years that are possible
+     */
+    public static void populateCoursesPerYear(List<Course> courses,
+                                              List<List<Course>> coursesPerYear,
+                                              int maxNumberOfYears) {
+        for (int i = 0; i < maxNumberOfYears; i++) {
+            coursesPerYear.add(new ArrayList<>());
+        }
+        for (int i = 0; i < courses.size(); i++) {
+            Course c = courses.get(i);
+            coursesPerYear.get(c.getYear()).add(c);
+        }
     }
 
     /**

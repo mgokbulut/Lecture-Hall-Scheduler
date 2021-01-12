@@ -73,21 +73,9 @@ public class Generator {
      * @param currentTime Time at which to start scheduling
      */
     public void scheduleGenerate(Timestamp currentTime) {
-        int range = 10;
-        int numOfDays = range; // placeholder
         ArrayList<Course> courses = apiCommunicator.getCourses();
-        ArrayList<Lecture> lectures = new ArrayList<>();
-
-        // populate the lectures array
-        for (int i = 0; i < courses.size(); i++) {
-            Course course = courses.get(i);
-            ArrayList<Lecture> toAdd =
-                apiCommunicator.getLecturesInCourse(course.getId(), currentTime, numOfDays);
-            lectures.addAll(toAdd);
-        }
-
-        // sort by end time
-        Collections.sort(lectures);
+        ArrayList<Lecture> lectures = Util.populateLectures(courses, numOfDays,
+                apiCommunicator, currentTime);
 
         // Now we need to know which lectures are on which days in an
         // easy-to-access datastructure.
@@ -140,13 +128,7 @@ public class Generator {
         int maxNumberOfYears = 3;
         // and separate them per year
         List<List<Course>> coursesPerYear = new ArrayList<>();
-        for (int i = 0; i < maxNumberOfYears; i++) {
-            coursesPerYear.add(new ArrayList<>());
-        }
-        for (int i = 0; i < courses.size(); i++) {
-            Course c = courses.get(i);
-            coursesPerYear.get(c.getYear()).add(c);
-        }
+        Util.populateCoursesPerYear(courses, coursesPerYear, maxNumberOfYears);
 
         int numYears = coursesPerYear.size();
         schedulingYears(numYears, coursesPerYear, rooms);
@@ -174,31 +156,11 @@ public class Generator {
                 PriorityQueue<Student> studentsQueue = new PriorityQueue<>();
                 // add a student to the queue if he's allowed to
                 Iterator<Student> it = courseStudents.iterator();
-                addIfAllowed(it, studentsQueue, courseStudents);
+                Util.addIfAllowed(it, studentsQueue, courseStudents, apiCommunicator);
 
                 // for each lecture in the course
                 ArrayList<Lecture> lecturesCurrentCourse = new ArrayList<Lecture>(c.getLectures());
                 schedulingLectures(lecturesCurrentCourse, rooms, courseStudents, studentsQueue);
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Adds a student to a candidate list, if and only if the rules module says they
-     * are allowed to be on campus.
-     *
-     * @param it iterator through a set of students
-     * @param studentsQueue queue of students, ordered by last seen on campus
-     * @param courseStudents set of students enrolled in the course
-     * @return whether the operation succeeded
-     */
-    public boolean addIfAllowed(Iterator<Student> it, PriorityQueue<Student> studentsQueue,
-                                Set<Student> courseStudents) {
-        for (int k = 0; k < courseStudents.size(); k++) {
-            Student s = it.next();
-            if (apiCommunicator.allowedOnCampus(s)) {
-                studentsQueue.add(s);
             }
         }
         return true;
@@ -332,20 +294,8 @@ public class Generator {
             if (time != null) {
                 break;
             }
-
         }
-
-        if (time != null) {
-            // otherwise update the relevant values
-            lecture.setStartTime(time);
-            lecture.setRoom(currRoom);
-            int day = Util.calDistance(currentTime, time);
-            System.out.println(day);
-            timeTable.get(day).add(lecture);
-            return currRoom;
-        }
-
-        return null;
+        return Util.assignRoomToLecture(time, lecture, timeTable, currRoom, currentTime);
     }
 
     /**
@@ -362,7 +312,6 @@ public class Generator {
 
         // end of the day is at 17:45, courses should not end any further than that
         Timestamp dayStartTime = new Timestamp(currentTime.getTime());
-        // TODO use API to get window
         while (day < numOfDays) {
             Timestamp endOfDay = Util.getEndOfDay(dayStartTime);
             Timestamp nextTime = isFree(dayStartTime, room, lecture, day);
