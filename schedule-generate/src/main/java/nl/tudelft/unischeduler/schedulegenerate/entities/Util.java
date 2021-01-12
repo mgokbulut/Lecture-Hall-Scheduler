@@ -35,6 +35,51 @@ public class Util {
     }
 
     /**
+     * Simply adds a class's duration to a timestamp.
+     *
+     * @param lecture the lecture whose length we want to add
+     * @param time the timestamp to add to
+     * @return the timestamp + the lecture's duration
+     */
+    public static Timestamp addClassDurationAndTime(Lecture lecture, Timestamp time) {
+        return new Timestamp(time.getTime()
+                + lecture.getDuration().getTime());
+    }
+
+    /**
+     * Returns the end of the day, as per university standards.
+     * Currently set to 17:45 of the timestamp's day.
+     *
+     * @param time which day to take the end of
+     * @return a timestamp of the same day but at the right hour
+     */
+    public static Timestamp getEndOfDay(Timestamp time) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(time.getTime());
+        c.set(Calendar.HOUR_OF_DAY, 17);
+        c.set(Calendar.MINUTE, 45);
+        return new Timestamp(c.getTimeInMillis());
+    }
+
+    /**
+     * Tells us if we can schedule the lecture at the given time.
+     *
+     * @param lecture1 lecture to be scheduled
+     * @param lecture2 lecture already scheduled (or not)
+     * @param time time at which lecture1 could be scheduled
+     * @param room room for which we are checking
+     * @param intervalBetweenLectures standard interval in minutes between lectures
+     * @return whether lecture1 can be scheduled at the given time without conflict
+     */
+    public static boolean areLecturesConflicting(Lecture lecture1, Lecture lecture2,
+                                                 Timestamp time, Room room,
+                                                 long intervalBetweenLectures) {
+        return !((Util.overlap(lecture1, intervalBetweenLectures, time, lecture2)
+                && lecture2.getRoom().equals(room))
+                || lecture2.getYear() == lecture1.getYear());
+    }
+
+    /**
      * method that increases the timestamp by one day,
      * but only for working days. So if it's friday,
      * the day will be increased to the next monday.
