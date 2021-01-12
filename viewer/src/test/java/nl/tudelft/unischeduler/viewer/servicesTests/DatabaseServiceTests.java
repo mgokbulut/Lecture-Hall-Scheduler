@@ -16,6 +16,7 @@ import nl.tudelft.unischeduler.viewer.entities.Classroom;
 import nl.tudelft.unischeduler.viewer.entities.Lecture;
 import nl.tudelft.unischeduler.viewer.entities.User;
 import nl.tudelft.unischeduler.viewer.services.DatabaseService;
+import nl.tudelft.unischeduler.viewer.services.ReturnList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,8 @@ public class DatabaseServiceTests {
 
     //@Autowired
     private transient WebClient.Builder webClientBuilder;
+    //@Autowired
+    private transient  ReturnList returnList;
 
     //@Autowired
     //@MockBean
@@ -82,7 +85,7 @@ public class DatabaseServiceTests {
         webClientBuilder = Mockito.mock(WebClient.Builder.class);
         WebClient webClient = Mockito.mock(WebClient.class);
         //webClientBuilder.baseUrl("http://database-service/");
-        databaseService = new DatabaseService(webClientBuilder, webClient);
+        databaseService = new DatabaseService(webClientBuilder, returnList, webClient);
     }
 
     @Test
