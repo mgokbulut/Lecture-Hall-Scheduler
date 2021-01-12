@@ -83,7 +83,6 @@ public class Util {
     static ArrayList<Course> createListCourses() {
         Student g = new Student("georgeclooney", "STUDENT",
                 true, new Date(makeBasicStartTime().getTime()));
-        ArrayList<Course> cs = new ArrayList<>();
         Student r = new Student("ronaldmcdonald", "STUDENT",
                 true, new Date(makeBasicStartTime().getTime()));
         Set<Student> sets = new HashSet<>();
@@ -91,6 +90,7 @@ public class Util {
         sets.add(r);
         Set<Lecture> setl = new HashSet<>();
         setl.addAll(createListLecturesScheduled());
+        ArrayList<Course> cs = new ArrayList<>();
         cs.add(new Course(4324L, "CG", sets, setl, 1));
         return cs;
     }
