@@ -7,6 +7,7 @@ import nl.tudelft.unischeduler.rules.services.DatabaseService;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @ContextConfiguration(classes = {UpdateController.class})
 @ComponentScan(basePackages = {"nl.tudelft.unischeduler.rules"})
@@ -30,6 +32,8 @@ public abstract class ControllerTest {
     public MockWebServer server;
     @Autowired
     protected DatabaseService databaseService;
+    @Autowired
+    protected WebClient.Builder webClientBuilder;
 
     protected static final MockResponse standardResponse = new MockResponse().setBody("true");
 
@@ -38,11 +42,12 @@ public abstract class ControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         server = new MockWebServer();
         server.start();
-        databaseService.getWebClientBuilder().baseUrl("http://"
+        webClientBuilder.baseUrl("http://"
                 + server.getHostName()
                 + ":"
                 + server.getPort()
                 + "/");
+        databaseService.setWebClient(webClientBuilder.build());
     }
 
     @AfterEach
