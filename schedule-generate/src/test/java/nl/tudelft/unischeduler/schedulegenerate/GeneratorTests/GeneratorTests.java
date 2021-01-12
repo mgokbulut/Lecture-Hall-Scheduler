@@ -6,6 +6,7 @@ import java.util.List;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Room;
+import nl.tudelft.unischeduler.schedulegenerate.entities.Util;
 import nl.tudelft.unischeduler.schedulegenerate.generator.Generator;
 import org.junit.jupiter.api.Test;
 
@@ -29,8 +30,8 @@ public class GeneratorTests {
     void testDistanceTwoTimestamps1() {
         Timestamp t1 = makeBasicStartTime();
         Timestamp t2 = new Timestamp(t1.getTime() + makeTimeLength(24).getTime());
-        Generator test = makeGenerator();
-        int n1 = test.calDistance(t1, t2);
+        //Generator test = makeGenerator();
+        int n1 = Util.calDistance(t1, t2);
         assertEquals(1, n1);
     }
 
@@ -39,8 +40,8 @@ public class GeneratorTests {
         Timestamp t1 = makeBasicStartTime();
         Timestamp t2 = new Timestamp(t1.getTime() + makeTimeLength(24).getTime());
         Timestamp t3 = new Timestamp(t2.getTime() + makeTimeLength(24).getTime());
-        Generator test = makeGenerator();
-        int n2 = test.calDistance(t1, t3);
+        //Generator test = makeGenerator();
+        int n2 = Util.calDistance(t1, t3);
         assertEquals(2, n2);
     }
 
@@ -51,8 +52,8 @@ public class GeneratorTests {
                 + (4 * makeTimeLength(24).getTime())); // 2020-12-18T05:45:10.430
         Timestamp timeMonday = new Timestamp(timeFriday.getTime()
                 + (3 * makeTimeLength(24).getTime())); // 2020-12-21T02:45:10.430
-        Generator test = makeGenerator();
-        int n1 = test.calDistance(timeFriday, timeMonday);
+        //Generator test = makeGenerator();
+        int n1 = Util.calDistance(timeFriday, timeMonday);
         assertEquals(1, n1);
     }
 
@@ -61,8 +62,8 @@ public class GeneratorTests {
         Timestamp timeMonday = makeBasicStartTime();
         Timestamp timeTuesday = new Timestamp(timeMonday.getTime()
                 + makeTimeLength(24).getTime());
-        Generator test = makeGenerator();
-        Timestamp supposedTuesday = test.nextDay(timeMonday);
+        //Generator test = makeGenerator();
+        Timestamp supposedTuesday = Util.nextDay(timeMonday);
         assertEquals(timeTuesday.getTime(), supposedTuesday.getTime());
     }
 
@@ -73,8 +74,8 @@ public class GeneratorTests {
                 + (4 * makeTimeLength(24).getTime()));
         Timestamp timeMonday = new Timestamp(timeFriday.getTime()
                 + (3 * makeTimeLength(24).getTime()));
-        Generator test = makeGenerator();
-        Timestamp supposedMonday = test.nextDay(timeFriday);
+        //Generator test = makeGenerator();
+        Timestamp supposedMonday = Util.nextDay(timeFriday);
         assertEquals(timeMonday.getTime(), supposedMonday.getTime());
     }
 
@@ -177,7 +178,7 @@ public class GeneratorTests {
         List<Lecture> lsc = createListLecturesScheduled();
         Lecture l = lsc.get(0);
         Generator test = makeGenerator();
-        assertTrue(test.overlap(l, l.getStartTime(), l));
+        assertTrue(Util.overlap(l, test.getIntervalBetweenLectures(), l.getStartTime(), l));
     }
 
     @Test
@@ -186,7 +187,7 @@ public class GeneratorTests {
         Lecture l = lsc.get(0);
         Lecture ll = lsc.get(1);
         Generator test = makeGenerator();
-        assertFalse(test.overlap(l, l.getStartTime(), ll));
+        assertFalse(Util.overlap(l, test.getIntervalBetweenLectures(), l.getStartTime(), ll));
     }
 
     @Test
@@ -198,7 +199,7 @@ public class GeneratorTests {
         Generator test = makeGenerator();
         Timestamp inMiddleOfLec = new Timestamp(makeBasicStartTime().getTime()
                                             + makeTimeLength(1).getTime());
-        assertTrue(test.overlap(l, inMiddleOfLec, ll));
+        assertTrue(Util.overlap(l, test.getIntervalBetweenLectures(), inMiddleOfLec, ll));
     }
 
     @Test
