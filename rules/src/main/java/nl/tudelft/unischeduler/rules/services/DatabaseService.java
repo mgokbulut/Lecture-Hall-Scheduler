@@ -4,7 +4,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import nl.tudelft.unischeduler.rules.entities.Lecture;
 import nl.tudelft.unischeduler.rules.entities.Room;
@@ -15,13 +14,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Data
-@NoArgsConstructor
+@AllArgsConstructor
 @Service
 public class DatabaseService {
 
     private WebClient webClient;
 
-    public DatabaseService(@Autowired WebClient.Builder webClientBuilder) {
+
+    @PostConstruct
+    public void setUp(@Autowired WebClient.Builder webClientBuilder) {
         webClientBuilder.baseUrl("http://database-service/");
         webClient = webClientBuilder.build();
     }
