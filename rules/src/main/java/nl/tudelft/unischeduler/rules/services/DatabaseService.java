@@ -1,10 +1,8 @@
 package nl.tudelft.unischeduler.rules.services;
 
 import java.util.List;
-import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NonNull;
 import nl.tudelft.unischeduler.rules.entities.Lecture;
 import nl.tudelft.unischeduler.rules.entities.Room;
 import nl.tudelft.unischeduler.rules.entities.Student;
@@ -18,14 +16,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 public class DatabaseService {
 
-    private WebClient webClient;
+    @Autowired
+    private WebClient databaseWebClient;
 
-
-    @PostConstruct
-    public void setUp(@Autowired WebClient.Builder webClientBuilder) {
-        webClientBuilder.baseUrl("http://database-service/");
-        webClient = webClientBuilder.build();
-    }
 
     /**
      * Retrieves the student info of the student with the netId from the database.
@@ -34,7 +27,7 @@ public class DatabaseService {
      * @return The student entity corresponding to the netId.
      */
     public Student getStudent(String netId) {
-        return webClient.get()
+        return databaseWebClient.get()
                 .uri("users/" + netId)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -50,7 +43,7 @@ public class DatabaseService {
      * @return A classroom entity that represents the classroom.
      */
     public Room getClassroom(int classroomId) {
-        return webClient.get()
+        return databaseWebClient.get()
                 .uri("classrooms/" + classroomId)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -64,7 +57,7 @@ public class DatabaseService {
      * @return All lectures stored in the database.
      */
     public Lecture[] getLectures() {
-        List<Lecture> list = webClient.get()
+        List<Lecture> list = databaseWebClient.get()
                 .uri("lectures/courses")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -83,7 +76,7 @@ public class DatabaseService {
      * @return true iff the request succeeded.
      */
     public boolean removeRoomFromLecture(int lectureId) {
-        String result = webClient.put()
+        String result = databaseWebClient.put()
                 .uri("lectures/setClassroomToEmpty/" + lectureId)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -99,7 +92,7 @@ public class DatabaseService {
      * @return True iff the request succeeded.
      */
     public boolean removeLectureFromSchedule(int lectureId) {
-        String result = webClient.delete()
+        String result = databaseWebClient.delete()
                 .uri("lectures/remove/" + lectureId)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()

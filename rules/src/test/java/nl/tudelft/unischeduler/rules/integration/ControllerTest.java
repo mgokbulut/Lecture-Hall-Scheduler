@@ -7,7 +7,6 @@ import nl.tudelft.unischeduler.rules.services.DatabaseService;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -47,7 +46,7 @@ public abstract class ControllerTest {
                 + ":"
                 + server.getPort()
                 + "/");
-        databaseService.setWebClient(webClientBuilder.build());
+        databaseService.setDatabaseWebClient(webClientBuilder.build());
     }
 
     @AfterEach
