@@ -57,6 +57,7 @@ public class UpdateControllerTest extends ControllerTest {
         ).andExpect(status().isOk());
         RecordedRequest requestOut = server.takeRequest(30, TimeUnit.SECONDS);
         assertNotNull(requestOut);
-        assertEquals(MediaType.APPLICATION_JSON.toString(), requestOut.getHeader(HttpHeaders.CONTENT_TYPE));
+        assertEquals(MediaType.APPLICATION_JSON.toString(),
+                requestOut.getHeader(HttpHeaders.CONTENT_TYPE));
     }
 }

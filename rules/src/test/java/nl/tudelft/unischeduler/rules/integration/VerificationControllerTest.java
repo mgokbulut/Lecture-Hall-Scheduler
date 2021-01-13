@@ -69,7 +69,8 @@ public class VerificationControllerTest extends ControllerTest {
                 .andReturn().getResponse().getContentAsString();
         RecordedRequest requestOut = server.takeRequest(30, TimeUnit.SECONDS);
         assertNotNull(requestOut);
-        assertEquals(MediaType.APPLICATION_JSON.toString(), requestOut.getHeader(HttpHeaders.CONTENT_TYPE));
+        assertEquals(MediaType.APPLICATION_JSON.toString(),
+                requestOut.getHeader(HttpHeaders.CONTENT_TYPE));
         assertEquals(expected, actual);
     }
 
@@ -87,7 +88,8 @@ public class VerificationControllerTest extends ControllerTest {
                 .andReturn().getResponse().getContentAsString();
         RecordedRequest requestOut = server.takeRequest(30, TimeUnit.SECONDS);
         assertNotNull(requestOut);
-        assertEquals(MediaType.APPLICATION_JSON.toString(), requestOut.getHeader(HttpHeaders.CONTENT_TYPE));
+        assertEquals(MediaType.APPLICATION_JSON.toString(),
+                requestOut.getHeader(HttpHeaders.CONTENT_TYPE));
         assertEquals(expected, actual);
     }
 
@@ -113,7 +115,8 @@ public class VerificationControllerTest extends ControllerTest {
                 .andReturn().getResponse().getContentAsString();
         assertNotNull(requestOut);
         //asserts that the webclient is correctly configured and sends the correct header
-        assertEquals(MediaType.APPLICATION_JSON.toString(), requestOut.getHeader(HttpHeaders.CONTENT_TYPE));
+        assertEquals(MediaType.APPLICATION_JSON.toString(),
+                requestOut.getHeader(HttpHeaders.CONTENT_TYPE));
         assertEquals(expected, actual);
     }
 }
