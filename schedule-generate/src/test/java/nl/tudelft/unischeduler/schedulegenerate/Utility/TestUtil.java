@@ -1,4 +1,4 @@
-package nl.tudelft.unischeduler.schedulegenerate.GeneratorTests;
+package nl.tudelft.unischeduler.schedulegenerate.Utility;
 
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -15,14 +15,14 @@ import nl.tudelft.unischeduler.schedulegenerate.entities.Student;
 import nl.tudelft.unischeduler.schedulegenerate.generator.Generator;
 
 // a class that creates basic entities, useful for unit testing
-public class Util {
+public class TestUtil {
     static String roomName = "testRoom";
 
-    static Room makeRoom() {
+    public static Room makeRoom() {
         return new Room(1, 200, roomName);
     }
 
-    static Timestamp makeBasicStartTime() {
+    public static Timestamp makeBasicStartTime() {
         Calendar c = Calendar.getInstance();
         c.set(Calendar.YEAR, 2020);
         c.set(Calendar.MONTH, Calendar.DECEMBER); // december
@@ -35,19 +35,19 @@ public class Util {
         return new Timestamp(c.getTimeInMillis());
     }
 
-    static Time makeTimeLength(int n) {
+    public static Time makeTimeLength(int n) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(0);
         c.add(Calendar.HOUR_OF_DAY, n);
         return new Time(c.getTimeInMillis());
     }
 
-    static Generator makeGenerator() {
+    public static Generator makeGenerator() {
         Generator gen = new Generator(new ApiCommunicator());
         return gen;
     }
 
-    static ArrayList<Lecture> createListLectures() {
+    public static ArrayList<Lecture> createListLectures() {
         Room r = makeRoom();
         Lecture l1 = new Lecture(324324, 0, null,
                 makeTimeLength(2), false, 1, r);
@@ -62,7 +62,7 @@ public class Util {
         return a;
     }
 
-    static ArrayList<Lecture> createListLecturesScheduled() {
+    public static ArrayList<Lecture> createListLecturesScheduled() {
         Room r = makeRoom();
         Timestamp t1 = makeBasicStartTime();
         Timestamp t2 = new Timestamp(t1.getTime() + makeTimeLength(24).getTime());
@@ -80,7 +80,7 @@ public class Util {
         return a;
     }
 
-    static ArrayList<Course> createListCourses() {
+    public static ArrayList<Course> createListCourses() {
         Student g = new Student("georgeclooney", "STUDENT",
                 true, new Date(makeBasicStartTime().getTime()));
         Student r = new Student("ronaldmcdonald", "STUDENT",
