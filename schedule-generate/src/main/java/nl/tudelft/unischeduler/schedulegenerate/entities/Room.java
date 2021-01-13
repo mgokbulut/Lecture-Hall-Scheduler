@@ -3,7 +3,7 @@ package nl.tudelft.unischeduler.schedulegenerate.entities;
 import java.util.Objects;
 import javax.persistence.Entity;
 
-@Entity
+//@Entity
 public class Room implements Comparable<Room> {
     private int id;
     private int capacity;
