@@ -1,9 +1,11 @@
 package nl.tudelft.unischeduler.rules.services;
 
+import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import nl.tudelft.unischeduler.rules.entities.Room;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -37,11 +39,11 @@ public class ClassRoomDatabaseService {
      * @return true iff the request succeeded.
      */
     public boolean removeRoomFromLecture(int lectureId) {
-        String result = databaseWebClient.put()
+        databaseWebClient.put()
                 .uri("lectures/setClassroomToEmpty/" + lectureId)
                 .retrieve()
-                .bodyToMono(String.class)
+                .toBodilessEntity()
                 .block();
-        return result != null && result.equals("true");
+        return true;
     }
 }
