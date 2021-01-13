@@ -1,0 +1,128 @@
+[
+  {
+    "id": 1,
+    "classroom": 1,
+    "course": 1,
+    "teacher": "sanders@tudelft.nl",
+    "startTimeDate": "2020-12-10T12:00:00.000+00:00",
+    "duration": "03:00:00",
+    "movedOnline": false
+  },
+  {
+    "id": 2,
+    "classroom": 2,
+    "course": 2,
+    "teacher": "sanders@tudelft.nl",
+    "startTimeDate": "2020-12-10T15:00:00.000+00:00",
+    "duration": "03:00:00",
+    "movedOnline": false
+  },
+  {
+    "id": 3,
+    "classroom": 1,
+    "course": 3,
+    "teacher": "a.baran@student.tudelft.nl",
+    "startTimeDate": "2020-12-11T10:00:00.000+00:00",
+    "duration": "03:00:00",
+    "movedOnline": false
+  },
+  {
+    "id": 4,
+    "classroom": 3,
+    "course": 2,
+    "teacher": "anotherteacher@tudelft.nl",
+    "startTimeDate": "2020-12-11T09:00:00.000+00:00",
+    "duration": "03:00:00",
+    "movedOnline": false
+  },
+  {
+    "id": 5,
+    "classroom": 1,
+    "course": 4,
+    "teacher": "anotherteacher@tudelft.nl",
+    "startTimeDate": "2020-12-11T12:00:00.000+00:00",
+    "duration": "03:00:00",
+    "movedOnline": false
+  },
+  {
+    "id": 7,
+    "classroom": 2,
+    "course": 3,
+    "teacher": "anotherteacher@tudelft.nl",
+    "startTimeDate": "2020-12-12T15:00:00.000+00:00",
+    "duration": "03:00:00",
+    "movedOnline": false
+  },
+  {
+    "id": 8,
+    "classroom": 3,
+    "course": 1,
+    "teacher": "anotherteacher@tudelft.nl",
+    "startTimeDate": "2020-12-12T09:00:00.000+00:00",
+    "duration": "03:00:00",
+    "movedOnline": false
+  },
+  {
+    "id": 9,
+    "classroom": 1,
+    "course": 2,
+    "teacher": "anotherteacher@tudelft.nl",
+    "startTimeDate": "2020-12-12T12:00:00.000+00:00",
+    "duration": "03:00:00",
+    "movedOnline": false
+  },
+  {
+    "id": 10,
+    "classroom": 2,
+    "course": 3,
+    "teacher": "anotherteacher@tudelft.nl",
+    "startTimeDate": "2020-12-13T15:00:00.000+00:00",
+    "duration": "03:00:00",
+    "movedOnline": true
+  },
+  {
+    "id": 11,
+    "classroom": 3,
+    "course": 4,
+    "teacher": "anotherteacher@tudelft.nl",
+    "startTimeDate": "2020-12-13T11:00:00.000+00:00",
+    "duration": "03:00:00",
+    "movedOnline": false
+  },
+  {
+    "id": 12,
+    "classroom": 1,
+    "course": 5,
+    "teacher": "anotherteacher@tudelft.nl",
+    "startTimeDate": "2020-12-13T09:00:00.000+00:00",
+    "duration": "03:00:00",
+    "movedOnline": true
+  },
+  {
+    "id": 13,
+    "classroom": 3,
+    "course": 5,
+    "teacher": "sanders@tudelft.nl",
+    "startTimeDate": "2020-12-10T09:00:00.000+00:00",
+    "duration": "03:00:00",
+    "movedOnline": false
+  },
+  {
+    "id": 14,
+    "classroom": 1,
+    "course": 1,
+    "teacher": "teacher@tudelft.nl",
+    "startTimeDate": "2021-01-18T09:00:00.000+00:00",
+    "duration": "02:00:00",
+    "movedOnline": false
+  },
+  {
+    "id": 15,
+    "classroom": -1,
+    "course": 1,
+    "teacher": "teacher@tudelft.nl",
+    "startTimeDate": "2021-01-18T13:00:00.000+00:00",
+    "duration": "02:00:00",
+    "movedOnline": true
+  }
+]
