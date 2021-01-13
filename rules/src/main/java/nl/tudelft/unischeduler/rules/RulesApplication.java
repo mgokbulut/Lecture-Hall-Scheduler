@@ -16,7 +16,8 @@ public class RulesApplication {
     @Bean
     @LoadBalanced
     public WebClient.Builder getWebClientBuilder() {
-        return WebClient.builder().defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE) ;
+        return WebClient.builder()
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
     }
 
     public static void main(String[] args) {
