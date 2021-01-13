@@ -15,7 +15,7 @@ import okhttp3.mockwebserver.MockResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class LectureDatabaseServiceTest extends ServiceTest{
+public class LectureDatabaseServiceTest extends ServiceTest {
     @Getter
     @Setter
     LectureDatabaseService lectureDatabaseService;
@@ -26,8 +26,15 @@ public class LectureDatabaseServiceTest extends ServiceTest{
         lectureDatabaseService = new LectureDatabaseService(databaseWebClient);
     }
 
+    /**
+     * Reads a file to a string.
+     *
+     * @param fileName The path to the file.
+     * @return The string stored in the file.
+     * @throws FileNotFoundException If the file cannot be found.
+     */
     public String readFile(String fileName) throws FileNotFoundException {
-        try(Scanner scanner = new Scanner(new File(fileName))) {
+        try (Scanner scanner = new Scanner(new File(fileName))) {
             return scanner.useDelimiter("\\A").next();
         }
     }
@@ -36,7 +43,6 @@ public class LectureDatabaseServiceTest extends ServiceTest{
     public void getLecturesTest() throws FileNotFoundException {
         String response = readFile("src/test/resources/get-lectures-response.json");
         server.enqueue(new MockResponse()
-
                 .setHeader("Content-Type", "application/json")
                 .setBody(response));
         Lecture[] result = lectureDatabaseService.getLectures();
