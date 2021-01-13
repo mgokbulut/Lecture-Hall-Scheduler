@@ -1,19 +1,24 @@
 package nl.tudelft.unischeduler.rules.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import nl.tudelft.unischeduler.rules.core.RulesModule;
 import nl.tudelft.unischeduler.rules.entities.Ruleset;
 import nl.tudelft.unischeduler.rules.storing.RulesParser;
 import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 public class VerificationControllerTest extends ControllerTest {
@@ -62,7 +67,9 @@ public class VerificationControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-
+        RecordedRequest requestOut = server.takeRequest(30, TimeUnit.SECONDS);
+        assertNotNull(requestOut);
+        assertEquals(MediaType.APPLICATION_JSON.toString(), requestOut.getHeader(HttpHeaders.CONTENT_TYPE));
         assertEquals(expected, actual);
     }
 
@@ -78,7 +85,9 @@ public class VerificationControllerTest extends ControllerTest {
                 MockMvcRequestBuilders.get("/student/" + 1 + "/can-be-scheduled")
         ).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-
+        RecordedRequest requestOut = server.takeRequest(30, TimeUnit.SECONDS);
+        assertNotNull(requestOut);
+        assertEquals(MediaType.APPLICATION_JSON.toString(), requestOut.getHeader(HttpHeaders.CONTENT_TYPE));
         assertEquals(expected, actual);
     }
 
@@ -90,7 +99,7 @@ public class VerificationControllerTest extends ControllerTest {
         );
         String expected = "true";
 
-        String actual = mockMvc.perform(
+        ResultActions response = mockMvc.perform(
                 MockMvcRequestBuilders.post("/lecture/possible")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\":1,\n"
@@ -98,9 +107,13 @@ public class VerificationControllerTest extends ControllerTest {
                                 + "\"startTime\":\"2000-01-01T12:00:00Z\",\n"
                                 + "\"duration\":\"1:00:00\",\n"
                                 + "\"room\":{\"id\":1,\"capacity\":90,\"name\":\"testroom\"}}")
-        ).andExpect(status().isOk())
+        );
+        RecordedRequest requestOut = server.takeRequest(30, TimeUnit.SECONDS);
+        String actual = response.andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-
+        assertNotNull(requestOut);
+        //asserts that the webclient is correctly configured and sends the correct header
+        assertEquals(MediaType.APPLICATION_JSON.toString(), requestOut.getHeader(HttpHeaders.CONTENT_TYPE));
         assertEquals(expected, actual);
     }
 }

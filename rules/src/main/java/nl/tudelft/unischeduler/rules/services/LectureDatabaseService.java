@@ -26,7 +26,6 @@ public class LectureDatabaseService {
     public Lecture[] getLectures() {
         List<Lecture> list = getDatabaseWebClient().get()
                 .uri("lectures/courses")
-                .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToFlux(Lecture.class)
                 .collectList()
@@ -45,7 +44,6 @@ public class LectureDatabaseService {
     public boolean removeLectureFromSchedule(int lectureId) {
         String result = getDatabaseWebClient().delete()
                 .uri("lectures/remove/" + lectureId)
-                .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();

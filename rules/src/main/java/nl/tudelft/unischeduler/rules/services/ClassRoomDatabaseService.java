@@ -25,7 +25,6 @@ public class ClassRoomDatabaseService {
     public Room getClassroom(int classroomId) {
         return databaseWebClient.get()
                 .uri("classrooms/" + classroomId)
-                .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(Room.class)
                 .block();
@@ -40,7 +39,6 @@ public class ClassRoomDatabaseService {
     public boolean removeRoomFromLecture(int lectureId) {
         String result = databaseWebClient.put()
                 .uri("lectures/setClassroomToEmpty/" + lectureId)
-                .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();

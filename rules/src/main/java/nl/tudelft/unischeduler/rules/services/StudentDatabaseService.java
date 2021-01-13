@@ -25,7 +25,6 @@ public class StudentDatabaseService {
     public Student getStudent(String netId) {
         return getDatabaseWebClient().get()
                 .uri("users/" + netId)
-                .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(Student.class)
                 .block();
