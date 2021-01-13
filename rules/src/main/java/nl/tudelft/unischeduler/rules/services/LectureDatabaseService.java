@@ -43,7 +43,7 @@ public class LectureDatabaseService {
      */
     public boolean removeLectureFromSchedule(int lectureId) {
         String result = getDatabaseWebClient().delete()
-                .uri("lectures/remove/" + lectureId)
+                .uri("lectureSchedules/remove/" + lectureId)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
