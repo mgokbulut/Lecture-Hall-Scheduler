@@ -14,9 +14,11 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.sql.Timestamp;
-import java.util.*;
-
-import nl.tudelft.unischeduler.database.lectureschedule.LectureSchedule;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Optional;
 import nl.tudelft.unischeduler.database.user.User;
 import nl.tudelft.unischeduler.database.user.UserController;
 import nl.tudelft.unischeduler.database.user.UserService;
@@ -100,7 +102,8 @@ public class UserControllerTest {
     @Test
     public void getStudentsInLectureTest() throws Exception {
         String uri = "/lectureSchedules/studentsLecture/1";
-        Optional<User> user = Optional.of(new User("a.baran@student.tudelft.nl", "STUDENT", true, timestamp));
+        Optional<User> user = Optional.of(new User(
+                "a.baran@student.tudelft.nl", "STUDENT", true, timestamp));
 
         mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(user)))

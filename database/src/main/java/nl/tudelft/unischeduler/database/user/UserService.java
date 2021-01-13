@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleRepository;
 import nl.tudelft.unischeduler.database.schedule.ScheduleRepository;
 import nl.tudelft.unischeduler.database.sicklog.SickLog;
@@ -28,9 +27,21 @@ public class UserService {
     @Autowired
     private transient ScheduleRepository scheduleRepository;
 
-    public UserService(UserRepository userRepository, SickLogRepository sickLogRepository) {
+    /**
+     * Constructor.
+     *
+     * @param userRepository userRepository
+     * @param sickLogRepository sickLogRepository
+     * @param lectureScheduleRepository lectureScheduleRepository
+     * @param scheduleRepository scheduleRepository
+     */
+    public UserService(UserRepository userRepository, SickLogRepository sickLogRepository,
+                       LectureScheduleRepository lectureScheduleRepository,
+                       ScheduleRepository scheduleRepository) {
         this.userRepository = userRepository;
         this.sickLogRepository = sickLogRepository;
+        this.lectureScheduleRepository = lectureScheduleRepository;
+        this.scheduleRepository = scheduleRepository;
     }
 
     public List<User> getAllUsers() {
@@ -54,8 +65,9 @@ public class UserService {
             if (sickLogs.size() > 0) {
                 //If the date of reported sick + 2 weeks is less than today.
                 //Meaning has 2 weeks passed since the date of reportSick
-                if (sickLogs.get(0).getReportSick()
-                        .getTime() + 1209600000L < Calendar.getInstance().getTimeInMillis()) {
+                long a = sickLogs.get(0).getReportSick().getTime() + 1209600000L;
+                long b = Calendar.getInstance().getTimeInMillis();
+                if (a < b) {
                     finished = true;
                     for (SickLog sickLog : sickLogs) {
                         sickLog.setFinished(true);

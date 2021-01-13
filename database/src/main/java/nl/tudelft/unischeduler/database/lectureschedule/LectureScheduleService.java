@@ -1,7 +1,6 @@
 package nl.tudelft.unischeduler.database.lectureschedule;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,8 +10,6 @@ import nl.tudelft.unischeduler.database.lecture.Lecture;
 import nl.tudelft.unischeduler.database.lecture.LectureRepository;
 import nl.tudelft.unischeduler.database.schedule.Schedule;
 import nl.tudelft.unischeduler.database.schedule.ScheduleRepository;
-import nl.tudelft.unischeduler.database.user.UserRepository;
-import nl.tudelft.unischeduler.database.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -209,7 +206,7 @@ public class LectureScheduleService {
             Optional<Schedule> schedule = scheduleRepository.findByUser(netId);
             if (schedule.isEmpty()) {
                 System.out.println("Schedule with such netId does not exist");
-                return ResponseEntity.noContent().build();
+                return ResponseEntity.notFound().build();
             }
             lectureScheduleRepository
                     .deleteByLectureIdAndScheduleId(lectureId, schedule.get().getId());
