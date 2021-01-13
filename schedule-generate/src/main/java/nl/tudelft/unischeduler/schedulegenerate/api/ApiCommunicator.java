@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+// as this code is very minimal because it is a placeholder,
+// the dataflow anomalies are unwarranted
+@SuppressWarnings("PMD.DataflowAnomalyAnalysis")
 public class ApiCommunicator {
 
     //  ---- following are API calls for database module ----
