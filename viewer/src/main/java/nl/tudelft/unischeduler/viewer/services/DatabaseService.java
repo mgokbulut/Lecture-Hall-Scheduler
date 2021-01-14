@@ -21,7 +21,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @NoArgsConstructor
 @AllArgsConstructor
 @Service
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class DatabaseService extends ReturnList{
 
     @Autowired
