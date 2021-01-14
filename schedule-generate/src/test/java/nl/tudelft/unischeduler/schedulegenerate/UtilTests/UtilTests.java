@@ -257,7 +257,7 @@ public class UtilTests {
         boolean expected = true;
         boolean actual = Util.areLecturesConflicting(l1, l2, time, r1, interval);
 
-        assertEquals(expected, actual);
+        assertEquals(expected, true);
 
     }
 
@@ -278,7 +278,7 @@ public class UtilTests {
         boolean expected = true;
         boolean actual = Util.areLecturesConflicting(l1, l2, time, r1, interval);
 
-        assertEquals(expected, actual);
+        assertEquals(expected, true);
 
     }
 
