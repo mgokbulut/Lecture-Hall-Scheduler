@@ -33,8 +33,6 @@ public class DatabaseService extends ReturnList{
         this.webClientBuilder = webClientBuilder;
     }
 
-    String courseuri = "lectureSchedules/course/";
-
     @PostConstruct
     public void setUp() {
         webClientBuilder.baseUrl("http://database-service");
@@ -42,25 +40,25 @@ public class DatabaseService extends ReturnList{
     }
 
     public ResponseEntity<Lecture[]> getStudentSchedule(String netId) {
-        List<Object[]> result = returnList(webClientBuilder, courseuri, netId);
+        List<Object[]> result = returnList(webClientBuilder, "/lectureSchedules/", netId);
 
         return ResponseEntity.ok(getLectures(result));
     }
 
     public ResponseEntity<Lecture[]> getTeacherSchedule(String netId) {
-        List<Object[]> result = returnList(webClientBuilder, courseuri, netId);
+        List<Object[]> result = returnList(webClientBuilder, "/lectureSchedules/teacher/", netId);
 
         return ResponseEntity.ok(getLectures(result));
     }
 
     public ResponseEntity<Lecture[]> getPossibleLectures(String netId) {
-        List<Object[]> result = returnList(webClientBuilder, courseuri, netId);
+        List<Object[]> result = returnList(webClientBuilder, "/userCourseService/possibleLectures/", netId);
 
         return ResponseEntity.ok(getLectures(result));
     }
 
     public ResponseEntity<Lecture[]> getLecturesInCourse(int courseId) {
-        List<Object[]> result = returnList(webClientBuilder, courseuri, String.valueOf(courseId));
+        List<Object[]> result = returnList(webClientBuilder, "/lectureSchedules/course/", String.valueOf(courseId));
 
         return ResponseEntity.ok(getLectures(result));
     }
