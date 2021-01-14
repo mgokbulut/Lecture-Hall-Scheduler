@@ -2,15 +2,8 @@ package nl.tudelft.unischeduler.schedulegenerate.generator;
 
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.*;
+
 import lombok.Data;
 import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
@@ -130,7 +123,6 @@ public class Generator {
         // and separate them per year
         List<List<Course>> coursesPerYear = new ArrayList<>();
         Util.populateCoursesPerYear(courses, coursesPerYear, maxNumberOfYears);
-
         int numYears = coursesPerYear.size();
         schedulingYears(numYears, coursesPerYear, rooms);
     }
@@ -160,7 +152,7 @@ public class Generator {
                 Util.addIfAllowed(it, studentsQueue, courseStudents, apiCommunicator);
 
                 // for each lecture in the course
-                ArrayList<Lecture> lecturesCurrentCourse = new ArrayList<Lecture>(c.getLectures());
+                ArrayList<Lecture> lecturesCurrentCourse = new ArrayList<>(c.getLectures());
                 schedulingLectures(lecturesCurrentCourse, rooms, courseStudents, studentsQueue);
             }
         }
@@ -186,8 +178,9 @@ public class Generator {
             // if the lecture is not assigned in the schedule yet
             if (l.getRoom() == null && !(l.getIsOnline())) {
                 // then we schedule it
+                boolean scheduled = schedulingLecture(l, rooms, courseStudents, studentsQueue);
                 everythingWentWell = everythingWentWell
-                        || schedulingLecture(l, rooms, courseStudents, studentsQueue);
+                        || scheduled;
             }
         }
         return everythingWentWell;
@@ -227,8 +220,17 @@ public class Generator {
                         studentsQueue, everythingWentWell, l);
         List<Student> studentsToAdd = (List<Student>) retObjects.get(0);
         Set<Student> notSelected = (Set<Student>) retObjects.get(1);
-        studentsQueue.addAll(notSelected);
 
+        System.out.println("=============== yahallo! ===============");
+         System.out.println(studentsQueue);
+        System.out.println("=============== ======== ===============");
+        System.out.println("=============== yahallo! ===============");
+         System.out.println(studentsToAdd);
+        System.out.println("=============== ======== ===============");
+        System.out.println("=============== yahallo! ===============");
+         System.out.println(notSelected);
+        System.out.println("=============== ======== ===============");
+        studentsQueue.addAll(notSelected);
         // now we can add the students that were selected
         List<Student> addTheseStudents = new ArrayList<>(studentsToAdd);
         for (int a = 0; a < addTheseStudents.size(); a++) {
@@ -267,8 +269,10 @@ public class Generator {
     public Room findRoom(ArrayList<Room> rooms,
                           Lecture lecture) {
         // sort in descending order
+        System.out.println(rooms);
         Collections.sort(rooms);
         Collections.reverse(rooms);
+        System.out.println(rooms);
         Timestamp time = null;
         Room currRoom = null;
         // for each room
@@ -278,10 +282,10 @@ public class Generator {
             time = getEarliestTime(currRoom, lecture);
             // if there is none, return null
             if (time != null) {
-                break;
+                return Util.assignRoomToLecture(time, lecture, timeTable, currRoom, currentTime);
             }
         }
-        return Util.assignRoomToLecture(time, lecture, timeTable, currRoom, currentTime);
+        return null;
     }
 
     /**
@@ -327,13 +331,16 @@ public class Generator {
      */
     public Timestamp isFree(Timestamp timeslot, Room room,
                              Lecture lecture, int day) {
-        List<Lecture> lectures = timeTable.get(day);
+        List<Lecture> lectures = new ArrayList<>();
+        if(timeTable.size() >= day + 1 && day >= 0) {
+            lectures = timeTable.get(day);
+        }
         long intervalBetweenLectures = getIntervalBetweenLectures();
-
-        Timestamp found = new Timestamp(timeslot.getTime());
+        Timestamp found = Util.getStartOfDay(timeslot);
         for (int i = 0; i < lectures.size(); i++) {
             Lecture l = lectures.get(i);
-            if (!Util.areLecturesConflicting(lecture, l, found, room, intervalBetweenLectures)) {
+            if (!Util.areLecturesConflicting(lecture, l, found,
+                    room, intervalBetweenLectures)) {
                 found = new Timestamp(l.computeEndTime().getTime()
                         + intervalBetweenLectures);
             }
