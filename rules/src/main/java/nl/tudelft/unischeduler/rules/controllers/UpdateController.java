@@ -18,7 +18,6 @@ public class UpdateController {
 
     @Autowired private RulesParser parser;
     @Autowired private RulesModule module;
-//    @Autowired private DatabaseService databaseService;
 
     /**
      * Updates the current rules file to the newRules passed by the body of the request.
