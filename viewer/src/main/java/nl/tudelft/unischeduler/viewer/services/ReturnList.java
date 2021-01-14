@@ -11,7 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 
 public class ReturnList {
-    public List<Object[]> returnList(WebClient.Builder webClientBuilder,String uri, String id){
+    public List<Object[]> returnList(WebClient.Builder webClientBuilder, String uri, String id){
         return webClientBuilder.build()
                 .get()
                 .uri(uri + id)
