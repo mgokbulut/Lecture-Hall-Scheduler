@@ -10,7 +10,9 @@ import nl.tudelft.unischeduler.rules.entities.Lecture;
 import nl.tudelft.unischeduler.rules.entities.Room;
 import nl.tudelft.unischeduler.rules.entities.Ruleset;
 import nl.tudelft.unischeduler.rules.entities.Student;
-import nl.tudelft.unischeduler.rules.services.DatabaseService;
+import nl.tudelft.unischeduler.rules.services.ClassRoomDatabaseService;
+import nl.tudelft.unischeduler.rules.services.LectureDatabaseService;
+import nl.tudelft.unischeduler.rules.services.StudentDatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Data
@@ -24,7 +26,13 @@ public class RulesModule {
     private Ruleset rules;
 
     @Autowired
-    private DatabaseService databaseService;
+    private ClassRoomDatabaseService classRoomDatabaseService;
+
+    @Autowired
+    private LectureDatabaseService lectureDatabaseService;
+
+    @Autowired
+    private StudentDatabaseService studentDatabaseService;
 
     /**
      * Sets the ruleset as the standard rules for the rulesModule.
@@ -65,7 +73,7 @@ public class RulesModule {
     }
 
     public int getCapacityOfRoom(int roomId) {
-        Room room = databaseService.getClassroom(roomId);
+        Room room = classRoomDatabaseService.getClassroom(roomId);
         return getCapacity(room.getCapacity());
     }
 
@@ -119,7 +127,7 @@ public class RulesModule {
      * @return true if there is space else false.
      */
     public boolean overlap(Lecture lecture) {
-        Lecture[] lectures = databaseService.getLectures();
+        Lecture[] lectures = lectureDatabaseService.getLectures();
 
         for (Lecture lectureOnDay : lectures) {
             if (Objects.equals(lecture.getRoom(), lectureOnDay.getRoom())
@@ -131,7 +139,7 @@ public class RulesModule {
     }
 
     public boolean canBeScheduled(String studentNetId) {
-        Student student = databaseService.getStudent(studentNetId);
+        Student student = studentDatabaseService.getStudent(studentNetId);
         return student.isInterested() && student.isRecovered();
     }
 
@@ -175,12 +183,12 @@ public class RulesModule {
      */
     public boolean verifyLectures() {
 
-        Lecture[] lectures = databaseService.getLectures();
+        Lecture[] lectures = lectureDatabaseService.getLectures();
         Lecture[] toRemove = verifyLectures(lectures);
 
         for (int i = 0; i < toRemove.length; i++) {
-            databaseService.removeLectureFromSchedule(toRemove[i].getId());
-            databaseService.removeRoomFromLecture(toRemove[i].getId());
+            lectureDatabaseService.removeLectureFromSchedule(toRemove[i].getId());
+            classRoomDatabaseService.removeRoomFromLecture(toRemove[i].getId());
         }
         return toRemove.length == 0;
     }
