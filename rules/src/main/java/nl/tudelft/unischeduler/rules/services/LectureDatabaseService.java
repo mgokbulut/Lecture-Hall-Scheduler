@@ -3,10 +3,8 @@ package nl.tudelft.unischeduler.rules.services;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.experimental.SuperBuilder;
 import nl.tudelft.unischeduler.rules.entities.Lecture;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -30,7 +28,6 @@ public class LectureDatabaseService {
                 .bodyToFlux(Lecture.class)
                 .collectList()
                 .block();
-        assert list != null;
         Lecture[] result = new Lecture[list.size()];
         return list.toArray(result);
     }
