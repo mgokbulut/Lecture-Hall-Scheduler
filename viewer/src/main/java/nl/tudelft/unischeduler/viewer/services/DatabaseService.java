@@ -68,7 +68,7 @@ public class DatabaseService extends ReturnList {
     public User[] getUsers(List<Object[]> result) {
         List<User> ret = new ArrayList<>();
 
-        for(Iterator<Object[]> it = result.iterator(); it.hasNext();) {
+        for (Iterator<Object[]> it = result.iterator(); it.hasNext();) {
             Object[] ob = it.next();
             User user = (User) ob[0];
             ret.add(user);
@@ -78,7 +78,7 @@ public class DatabaseService extends ReturnList {
 
     public Lecture[] getLectures(List<Object[]> result) {
         List<Lecture> ret = new ArrayList<>();
-        for(Iterator<Object[]> it = result.iterator(); it.hasNext();) {
+        for (Iterator<Object[]> it = result.iterator(); it.hasNext();) {
             Object[] ob = it.next();
             Lecture lect = (Lecture) ob[0];
             lect.setClassroom((Classroom) ob[1]);
