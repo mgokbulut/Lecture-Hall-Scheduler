@@ -22,7 +22,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @AllArgsConstructor
 @Service
 @EqualsAndHashCode(callSuper = false)
-public class DatabaseService extends ReturnList{
+public class DatabaseService extends ReturnList {
 
     @Autowired
     private WebClient.Builder webClientBuilder;
