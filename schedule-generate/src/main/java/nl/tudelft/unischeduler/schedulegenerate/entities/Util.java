@@ -98,11 +98,12 @@ public class Util {
                                                    Boolean everythingWentWell, Lecture l) {
         // then we want to add students to it
         // first we have to figure out which students to add, without duplicates
-        Set<Student> studentsToAdd = new HashSet<>();
-        List<Student> notSelected = new ArrayList<>();
+        List<Student> studentsToAdd = new ArrayList<>();
+        Set<Student> notSelected = new HashSet<>();
         int iteration = 0;
         while (studentsToAdd.size() < capacity
-                && iteration < maxIterations * capacity) {
+                && iteration < maxIterations * capacity
+                && studentsQueue.size() > 0) {
             try {
                 Student prioStudent = studentsQueue.remove();
                 // if student wasn't added already, add him
@@ -117,6 +118,7 @@ public class Util {
                 System.out.println("there was an error "
                         + "scheduling students to lectures...");
                 System.out.println(e.toString());
+                e.printStackTrace();
                 everythingWentWell = false;
             }
             iteration++;
@@ -151,6 +153,22 @@ public class Util {
         c.setTimeInMillis(time.getTime());
         c.set(Calendar.HOUR_OF_DAY, 17);
         c.set(Calendar.MINUTE, 45);
+        return new Timestamp(c.getTimeInMillis());
+    }
+
+    /**
+     * Returns the start of the day, as per university standards.
+     * Currently set to 09:45 of the timestamp's day.
+     *
+     * @param time which day to take the end of
+     * @return a timestamp of the same day but at the right hour
+     */
+    public static Timestamp getStartOfDay(Timestamp time) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(time.getTime());
+        c.set(Calendar.HOUR_OF_DAY, 9);
+        c.set(Calendar.MINUTE, 45);
+        c.set(Calendar.MILLISECOND, 0);
         return new Timestamp(c.getTimeInMillis());
     }
 
@@ -195,7 +213,7 @@ public class Util {
         }
         for (int i = 0; i < courses.size(); i++) {
             Course c = courses.get(i);
-            coursesPerYear.get(c.getYear()).add(c);
+            coursesPerYear.get(c.getYear() - 1).add(c);
         }
     }
 
