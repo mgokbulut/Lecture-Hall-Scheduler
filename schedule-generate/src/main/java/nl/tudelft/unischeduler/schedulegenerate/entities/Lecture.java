@@ -4,7 +4,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import javax.persistence.Entity;
 
-@Entity
+//@Entity
 @SuppressWarnings("PMD.NullAssignment") // needed to express an unscheduled lecture
 public class Lecture implements Comparable<Lecture> {
 
