@@ -1,9 +1,14 @@
 package nl.tudelft.unischeduler.schedulegenerate.generator;
 
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Set;
 import lombok.Data;
 import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
@@ -200,12 +205,11 @@ public class Generator {
                                      PriorityQueue<Student> studentsQueue) {
         // TODO change this to a proper template online room, ask Kuba
         Room onlineRoom = new Room(0, Integer.MAX_VALUE, ONLINE_ROOM_NAME);
-        Boolean everythingWentWell = true;
         // then we want to assign it a room
         Room room = findRoom(rooms, l);
         // if no room was found (no space or bug)
         if (room == null) {
-            return moveOnline(l, room, onlineRoom, apiCommunicator, courseStudents);
+            return moveOnline(l, room, onlineRoom, courseStudents);
         }
         // if a room was found
         // we assign it
@@ -214,21 +218,13 @@ public class Generator {
         apiCommunicator.setLectureTime(l, l.getStartTime());
 
         // we add back the ones that weren't selected
+        Boolean everythingWentWell = true;
         List<Object> retObjects =
                 Util.computeStudentsList(getCapacity(room), MAX_ITERATIONS,
                         studentsQueue, everythingWentWell, l);
-        List<Student> studentsToAdd = (List<Student>) retObjects.get(0);
-        Set<Student> notSelected = (Set<Student>) retObjects.get(1);
+        Set<Student> studentsToAdd = (Set<Student>) retObjects.get(0);
+        List<Student> notSelected = (List<Student>) retObjects.get(1);
 
-        System.out.println("=============== yahallo! ===============");
-         System.out.println(studentsQueue);
-        System.out.println("=============== ======== ===============");
-        System.out.println("=============== yahallo! ===============");
-         System.out.println(studentsToAdd);
-        System.out.println("=============== ======== ===============");
-        System.out.println("=============== yahallo! ===============");
-         System.out.println(notSelected);
-        System.out.println("=============== ======== ===============");
         studentsQueue.addAll(notSelected);
         // now we can add the students that were selected
         List<Student> addTheseStudents = new ArrayList<>(studentsToAdd);
@@ -241,18 +237,28 @@ public class Generator {
         return everythingWentWell;
     }
 
-    public boolean moveOnline(Lecture l, Room room, Room onlineRoom,
-                                  ApiCommunicator apiCom, Set<Student> courseStudents) {
+    /**
+     * Moves a lecture online, assigns the template room for that,
+     * assigns all concerned students to it.
+     *
+     * @param l the lecture in question
+     * @param room the room not to schedule it in
+     * @param onlineRoom the online room template
+     * @param courseStudents the students of the course
+     * @return whether the operation was successful
+     */
+    public boolean moveOnline(Lecture l, Room room,
+                              Room onlineRoom, Set<Student> courseStudents) {
         // then we want to move it online
         // so we set its time, its room, and its isOnline
         l.setStartTime(getEarliestTime(room, l));
         l.setRoom(onlineRoom);
         l.setIsOnline(true);
-        apiCom.assignRoomToLecture(l, onlineRoom);
+        apiCommunicator.assignRoomToLecture(l, onlineRoom);
         // and we assign all students to it
         Iterator<Student> its = courseStudents.iterator();
         for (int m = 0; m < courseStudents.size(); m++) {
-            apiCom.assignStudentToLecture(its.next(),
+            apiCommunicator.assignStudentToLecture(its.next(),
                     l);
         }
         return true;
@@ -331,7 +337,7 @@ public class Generator {
     public Timestamp isFree(Timestamp timeslot, Room room,
                              Lecture lecture, int day) {
         List<Lecture> lectures = new ArrayList<>();
-        if(timeTable.size() >= day + 1 && day >= 0) {
+        if (timeTable.size() >= day + 1 && day >= 0) {
             lectures = timeTable.get(day);
         }
         long intervalBetweenLectures = getIntervalBetweenLectures();

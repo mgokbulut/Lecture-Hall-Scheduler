@@ -1,9 +1,16 @@
 package nl.tudelft.unischeduler.schedulegenerate.entities;
 
-import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
-
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Set;
+import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
 
 public class Util {
 
@@ -96,14 +103,8 @@ public class Util {
                                                    PriorityQueue<Student> studentsQueue,
                                                    Boolean everythingWentWell, Lecture l) {
         // first we have to figure out which students to add, without duplicates
-<<<<<<< HEAD
-        List<Student> studentsToAdd = new ArrayList<>();
-        Set<Student> notSelected = new HashSet<>();
-=======
-        // then we want to add students to it
         Set<Student> studentsToAdd = new HashSet<>();
         List<Student> notSelected = new ArrayList<>();
->>>>>>> refactoring-generator
         int iteration = 0;
         while (studentsToAdd.size() < capacity
                 && iteration < maxIterations * capacity
@@ -185,8 +186,9 @@ public class Util {
      * @param currentTime the start time of the algorithm
      * @return the list of lectures, sorted by endtime
      */
-    public static ArrayList<Lecture> populateLectures(List<Course> courses, int numOfDays,
-                                                      ApiCommunicator apiComm, Timestamp currentTime) {
+    public static ArrayList<Lecture> populateLectures(
+            List<Course> courses, int numOfDays,
+            ApiCommunicator apiComm, Timestamp currentTime) {
         ArrayList<Lecture> lectures = new ArrayList<>();
 
         // populate the lectures array
@@ -194,7 +196,9 @@ public class Util {
             Course course = courses.get(i);
             ArrayList<Lecture> toAdd =
                     apiComm.getLecturesInCourse(course.getId(), currentTime, numOfDays);
-            if(toAdd == null) toAdd = new ArrayList<>();
+            if (toAdd == null) {
+                toAdd = new ArrayList<>();
+            }
             lectures.addAll(toAdd);
         }
 

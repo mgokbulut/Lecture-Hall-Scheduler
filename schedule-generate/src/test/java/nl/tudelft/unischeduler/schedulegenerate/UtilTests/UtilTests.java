@@ -4,13 +4,22 @@ import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
 import nl.tudelft.unischeduler.schedulegenerate.entities.*;
 import nl.tudelft.unischeduler.schedulegenerate.generator.Generator;
 import org.junit.jupiter.api.Test;
-
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.*;
-
-import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.*;
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Set;
+import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.createListLecturesScheduled;
+import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.createListLectures;
+import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.makeBasicStartTime;
+import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.makeGenerator;
+import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.makeTimeLength;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UtilTests {
@@ -51,7 +60,7 @@ public class UtilTests {
         Timestamp time = null;
         Lecture lecture = new Lecture(0, 0, null, false, 0);
         List<List<Lecture>> timeTable = new ArrayList<>();
-        Room room = new Room(0, 0,"room");
+        Room room = new Room(0, 0, "room");
         Timestamp currentTime = new Timestamp(0);
 
         Room expected = null;
@@ -68,7 +77,7 @@ public class UtilTests {
         List<List<Lecture>> timeTable = new ArrayList<>();
         timeTable.add(new ArrayList<>());
         timeTable.add(new ArrayList<>());
-        Room room = new Room(0, 0,"room");
+        Room room = new Room(0, 0, "room");
         Timestamp currentTime = new Timestamp(2021, 1, 4, 0, 0, 0, 0);
 
         Room expected = room;
@@ -101,7 +110,8 @@ public class UtilTests {
         studentsQueue.add(stu3);
         studentsQueue.add(stu1);
 
-        List<Object> res = Util.computeStudentsList(capacity, maxIterations, studentsQueue, false, l);
+        List<Object> res = Util.computeStudentsList(
+                capacity, maxIterations, studentsQueue, false, l);
 
         Set<Student> studentsToAdd = ((Set<Student>) res.get(0));
         List<Student> notSelected = ((List<Student>) res.get(1));
@@ -113,7 +123,8 @@ public class UtilTests {
     @Test
     void testAddClassDurationAndTime() {
 
-        Lecture lecture = new Lecture(1, 0, new Timestamp(5), new Time(200), false, 2, null);
+        Lecture lecture = new Lecture(1, 0,
+                new Timestamp(5), new Time(200), false, 2, null);
         Timestamp time = new Timestamp(300);
 
         Timestamp expected = new Timestamp(500);
@@ -131,6 +142,18 @@ public class UtilTests {
 
         Timestamp expected = new Timestamp(1, 1, 1, 17, 45, 0, 0);
         Timestamp actual = Util.getEndOfDay(time);
+
+        assertEquals(expected, actual);
+
+    }
+
+    @Test
+    void testGetStartOfDay() {
+
+        Timestamp time = new Timestamp(1, 1, 1, 4, 45, 0, 0);
+
+        Timestamp expected = new Timestamp(1, 1, 1, 9, 45, 0, 0);
+        Timestamp actual = Util.getStartOfDay(time);
 
         assertEquals(expected, actual);
 
@@ -180,7 +203,7 @@ public class UtilTests {
 
         Lecture l1 = new Lecture(1, 200, new Time(1, 0, 0), true, 1);
         Lecture l2 = new Lecture(2, 200,
-                new Timestamp(2020, 2, 1, 10, 45, 0 , 0),
+                new Timestamp(2020, 2, 1, 10, 45, 0, 0),
                 new Time(1, 0, 0),
                 false, 2, r2);
 
@@ -202,7 +225,7 @@ public class UtilTests {
 
         Lecture l1 = new Lecture(1, 200, new Time(1, 0, 0), true, 1);
         Lecture l2 = new Lecture(2, 200,
-                new Timestamp(2020, 2, 1, 10, 45, 0 , 0),
+                new Timestamp(2020, 2, 1, 10, 45, 0, 0),
                 new Time(1, 0, 0),
                 false, 2, r2);
 
@@ -224,7 +247,7 @@ public class UtilTests {
 
         Lecture l1 = new Lecture(1, 200, new Time(1, 0, 0), true, 1);
         Lecture l2 = new Lecture(2, 200,
-                new Timestamp(2020, 2, 1, 10, 45, 0 , 0),
+                new Timestamp(2020, 2, 1, 10, 45, 0, 0),
                 new Time(1, 0, 0),
                 false, 1, r2);
 
@@ -245,7 +268,7 @@ public class UtilTests {
 
         Lecture l1 = new Lecture(1, 200, new Time(1, 0, 0), true, 1);
         Lecture l2 = new Lecture(2, 200,
-                new Timestamp(2020, 2, 1, 10, 45, 0 , 0),
+                new Timestamp(2020, 2, 1, 10, 45, 0, 0),
                 new Time(1, 0, 0),
                 false, 2, r1);
 
@@ -265,7 +288,7 @@ public class UtilTests {
         Set<Student> courseStudents = new HashSet<>();
         ApiCommunicator apiCom = new ApiCommunicator();
         int expected = 5;
-        for(int i = 0; i < expected; i++) {
+        for (int i = 0; i < expected; i++) {
             Student stu = new Student();
             stu.setNetId(String.valueOf(i));
             courseStudents.add(stu);

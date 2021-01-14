@@ -8,18 +8,32 @@ import nl.tudelft.unischeduler.schedulegenerate.entities.Student;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.*;
-
-import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Set;
+import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.createEmptyTimeTable;
+import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.createListCourses;
+import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.createListLecturesScheduled;
+import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.createListLectures;
+import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.makeBasicStartTime;
+import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.makeGenerator;
+import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.makeRoom;
+import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.makeTimeLength;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class GeneratorTest {
 
@@ -32,7 +46,9 @@ public class GeneratorTest {
     private static String basicNetId = "netId";
     private static String basicType = "type";
 
-
+    /**
+     * Makes some basic initializations.
+     */
     @Before
     public void setUp() {
         initMocks(this);
@@ -81,8 +97,6 @@ public class GeneratorTest {
     @Test
     public void testCreateTimeTable() {
         // Setup
-//        public Lecture(int id, int attendance, Timestamp startTime,
-//                Time duration, boolean isOnline, int year, Room room) {
         Lecture l = new Lecture(0, 0,
                 new Timestamp(makeBasicStartTime().getTime() + makeTimeLength(48).getTime()),
                 new Time(makeTimeLength(2).getTime()),
@@ -180,11 +194,13 @@ public class GeneratorTest {
         when(mockApiCommunicator.getIntervalBetweenLectures()).thenReturn(0L);
 
         // Run the test
-        final boolean result = generatorUnderTest.schedulingLectures(lectures, rooms, courseStudents, studentsQueue);
+        final boolean result = generatorUnderTest
+                .schedulingLectures(lectures, rooms, courseStudents, studentsQueue);
 
         // Verify the results
         assertThat(result).isTrue();
-        verify(mockApiCommunicator).assignRoomToLecture(any(Lecture.class), eq(new Room(0, 10, basicName)));
+        verify(mockApiCommunicator).assignRoomToLecture(any(Lecture.class),
+                eq(new Room(0, 10, basicName)));
         verify(mockApiCommunicator).setLectureTime(any(Lecture.class), any(Timestamp.class));
         verify(mockApiCommunicator).assignStudentToLecture(
                 eq(new Student(basicNetId, basicType, false,
@@ -206,7 +222,8 @@ public class GeneratorTest {
         when(mockApiCommunicator.allowedOnCampus(any(Student.class))).thenReturn(true);
 
         // Run the test
-        final boolean result = generatorUnderTest.schedulingLecture(l, rooms, courseStudents, studentsQueue);
+        final boolean result = generatorUnderTest.schedulingLecture(l,
+                rooms, courseStudents, studentsQueue);
 
         // Verify the results
         assertThat(result).isTrue();
@@ -225,14 +242,13 @@ public class GeneratorTest {
         final Lecture l = new Lecture(0, 0, new Time(0L), false, 2021);
         final Room room = new Room(0, 0, basicName);
         final Room onlineRoom = new Room(0, 0, basicName);
-        final ApiCommunicator apiCom = new ApiCommunicator();
         final Set<Student> courseStudents = Set.of(
                 new Student(basicNetId, basicType, false,
                         new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime()));
         when(mockApiCommunicator.getIntervalBetweenLectures()).thenReturn(0L);
 
         // Run the test
-        final boolean result = generatorUnderTest.moveOnline(l, room, onlineRoom, apiCom, courseStudents);
+        final boolean result = generatorUnderTest.moveOnline(l, room, onlineRoom, courseStudents);
 
         // Verify the results
         assertThat(result).isTrue();

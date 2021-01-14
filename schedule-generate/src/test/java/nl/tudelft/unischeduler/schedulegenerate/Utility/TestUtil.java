@@ -23,6 +23,11 @@ public class TestUtil {
         return new Room(1, 200, roomName);
     }
 
+    /**
+     * Creates a basic start time.
+     *
+     * @return a basic start time
+     */
     public static Timestamp makeBasicStartTime() {
         Calendar c = Calendar.getInstance();
         c.set(Calendar.YEAR, 2020);
@@ -36,6 +41,12 @@ public class TestUtil {
         return new Timestamp(c.getTimeInMillis());
     }
 
+    /**
+     * Creates a timestamp of n hours.
+     *
+     * @param n the length in hours of the timestamp
+     * @return a timestamp of n hours
+     */
     public static Time makeTimeLength(int n) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(0);
@@ -48,6 +59,11 @@ public class TestUtil {
         return gen;
     }
 
+    /**
+     * Creates a basic list of lectures.
+     *
+     * @return a basic list of lectures
+     */
     public static ArrayList<Lecture> createListLectures() {
         Room r = makeRoom();
         Lecture l1 = new Lecture(324324, 0, null,
@@ -63,6 +79,12 @@ public class TestUtil {
         return a;
     }
 
+    /**
+     * Creates empty time table.
+     *
+     * @param n how many days it should contain
+     * @return empty time table
+     */
     public static List<List<Lecture>> createEmptyTimeTable(int n) {
         List<List<Lecture>> li = new ArrayList<>();
         for (int i = 0; i < n; i++) {
@@ -71,6 +93,11 @@ public class TestUtil {
         return li;
     }
 
+    /**
+     * creates basic list of scheduled lectures.
+     *
+     * @return a basic list of scheduled lectures
+     */
     public static ArrayList<Lecture> createListLecturesScheduled() {
         Room r = makeRoom();
         Timestamp t1 = makeBasicStartTime();
@@ -89,6 +116,11 @@ public class TestUtil {
         return a;
     }
 
+    /**
+     * Creates a basic list of courses.
+     *
+     * @return a basic list of courses
+     */
     public static ArrayList<Course> createListCourses() {
         Student g = new Student("georgeclooney", "STUDENT",
                 true, new Date(makeBasicStartTime().getTime()));
