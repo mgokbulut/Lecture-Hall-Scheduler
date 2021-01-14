@@ -26,6 +26,7 @@ import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.makeRoom
 import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.makeTimeLength;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -366,6 +367,7 @@ public class GeneratorTest {
 
         // Verify the results
         assertThat(result).isEqualTo(-169967052);
+        assertFalse(result == 0);
     }
 
     @Test
