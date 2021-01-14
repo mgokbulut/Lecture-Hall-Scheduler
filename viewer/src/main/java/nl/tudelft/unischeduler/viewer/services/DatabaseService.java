@@ -29,10 +29,6 @@ public class DatabaseService extends ReturnList{
 
     protected WebClient webClient;
 
-    public DatabaseService(WebClient.Builder webClientBuilder, WebClient webClient) {
-        this.webClientBuilder = webClientBuilder;
-    }
-
     @PostConstruct
     public void setUp() {
         webClientBuilder.baseUrl("http://database-service");
