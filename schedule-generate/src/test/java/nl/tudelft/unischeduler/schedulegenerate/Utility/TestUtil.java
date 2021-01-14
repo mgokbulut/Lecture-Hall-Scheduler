@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
 import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
@@ -60,6 +61,14 @@ public class TestUtil {
         a.add(l2);
         a.add(l3);
         return a;
+    }
+
+    public static List<List<Lecture>> createEmptyTimeTable(int n) {
+        List<List<Lecture>> li = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            li.add(new ArrayList<>());
+        }
+        return li;
     }
 
     public static ArrayList<Lecture> createListLecturesScheduled() {
