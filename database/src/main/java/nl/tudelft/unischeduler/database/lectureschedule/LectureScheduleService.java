@@ -1,7 +1,6 @@
 package nl.tudelft.unischeduler.database.lectureschedule;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,8 +10,6 @@ import nl.tudelft.unischeduler.database.lecture.Lecture;
 import nl.tudelft.unischeduler.database.lecture.LectureRepository;
 import nl.tudelft.unischeduler.database.schedule.Schedule;
 import nl.tudelft.unischeduler.database.schedule.ScheduleRepository;
-import nl.tudelft.unischeduler.database.user.UserRepository;
-import nl.tudelft.unischeduler.database.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,36 +28,24 @@ public class LectureScheduleService {
     private transient LectureRepository lectureRepository;
 
     @Autowired
-    private transient UserRepository userRepository;
-
-    @Autowired
     private transient ClassroomRepository classroomRepository;
-
-    @Autowired
-    private transient UserService userService;
 
     /**
      * Constructor.
      *
      * @param lectureScheduleRepository input repository
      * @param scheduleRepository input repository
-     * @param userRepository input repository
      * @param lectureRepository input repository
      * @param classroomRepository input repository
-     * @param userService input repository
      */
     public LectureScheduleService(LectureScheduleRepository lectureScheduleRepository,
                                   ScheduleRepository scheduleRepository,
-                                  UserRepository userRepository,
                                   LectureRepository lectureRepository,
-                                  ClassroomRepository classroomRepository,
-                                  UserService userService) {
+                                  ClassroomRepository classroomRepository) {
         this.lectureScheduleRepository = lectureScheduleRepository;
         this.scheduleRepository = scheduleRepository;
-        this.userRepository = userRepository;
         this.lectureRepository = lectureRepository;
         this.classroomRepository = classroomRepository;
-        this.userService = userService;
     }
 
     /**
@@ -206,38 +191,7 @@ public class LectureScheduleService {
         }
     }
 
-    /**
-     * Returns a list of students that are scheduled to attend the given lecture
-     * with an Object array of size 2: arr[0] = the student with the given netId
-     * arr[1] = boolean whether the student has finished being sick.
-     *
-     * @param lectureId lecture Id
-     * @return a list of student scheduled for a lecture
-     */
-    public List<Object[]> getStudentsInLecture(Long lectureId) {
-        try {
-            var lectureSchedules = lectureScheduleRepository
-                    .findAllByLectureId(lectureId)
-                    .stream()
-                    .map(x -> scheduleRepository
-                            .findById(x.getScheduleId())
-                            .get())
-                    .map(x -> userRepository
-                            .findByNetId(x.getUser())
-                            .get()
-                            .getNetId())
-                    .collect(Collectors.toList());
-            List<Object []> ans = new ArrayList<>();
-            for (String netId : lectureSchedules) {
-                ans.add(userService.getUser(netId));
-            }
-            return ans;
 
-        } catch (Exception a) {
-            a.printStackTrace();
-            return null;
-        }
-    }
 
     /**
      * Removes a user from a lecture.
@@ -252,7 +206,7 @@ public class LectureScheduleService {
             Optional<Schedule> schedule = scheduleRepository.findByUser(netId);
             if (schedule.isEmpty()) {
                 System.out.println("Schedule with such netId does not exist");
-                return ResponseEntity.noContent().build();
+                return ResponseEntity.notFound().build();
             }
             lectureScheduleRepository
                     .deleteByLectureIdAndScheduleId(lectureId, schedule.get().getId());
