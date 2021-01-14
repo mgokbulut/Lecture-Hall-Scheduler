@@ -65,14 +65,13 @@ public class Util {
      * Adds a student to a candidate list, if and only if the rules module says they
      * are allowed to be on campus.
      *
-     * @param it iterator through a set of students
      * @param studentsQueue queue of students, ordered by last seen on campus
      * @param courseStudents set of students enrolled in the course
      * @return whether the operation succeeded
      */
-    public static boolean addIfAllowed(Iterator<Student> it, PriorityQueue<Student> studentsQueue,
+    public static boolean addIfAllowed(PriorityQueue<Student> studentsQueue,
                                 Set<Student> courseStudents, ApiCommunicator apiCom) {
-        for (int k = 0; k < courseStudents.size(); k++) {
+        for (Iterator<Student> it = courseStudents.iterator(); it.hasNext();) {
             Student s = it.next();
             if (apiCom.allowedOnCampus(s)) {
                 studentsQueue.add(s);
@@ -96,10 +95,15 @@ public class Util {
                                                    int maxIterations,
                                                    PriorityQueue<Student> studentsQueue,
                                                    Boolean everythingWentWell, Lecture l) {
-        // then we want to add students to it
         // first we have to figure out which students to add, without duplicates
+<<<<<<< HEAD
         List<Student> studentsToAdd = new ArrayList<>();
         Set<Student> notSelected = new HashSet<>();
+=======
+        // then we want to add students to it
+        Set<Student> studentsToAdd = new HashSet<>();
+        List<Student> notSelected = new ArrayList<>();
+>>>>>>> refactoring-generator
         int iteration = 0;
         while (studentsToAdd.size() < capacity
                 && iteration < maxIterations * capacity
@@ -190,6 +194,7 @@ public class Util {
             Course course = courses.get(i);
             ArrayList<Lecture> toAdd =
                     apiComm.getLecturesInCourse(course.getId(), currentTime, numOfDays);
+            if(toAdd == null) toAdd = new ArrayList<>();
             lectures.addAll(toAdd);
         }
 
@@ -230,9 +235,9 @@ public class Util {
     public static boolean areLecturesConflicting(Lecture lecture1, Lecture lecture2,
                                                  Timestamp time, Room room,
                                                  long intervalBetweenLectures) {
-        return !((Util.overlap(lecture1, intervalBetweenLectures, time, lecture2)
-                && lecture2.getRoom().equals(room))
-                || lecture2.getYear() == lecture1.getYear());
+        return !(Util.overlap(lecture1, intervalBetweenLectures, time, lecture2)
+                && (lecture2.getRoom().equals(room)
+                || lecture2.getYear() == lecture1.getYear()));
     }
 
     /**

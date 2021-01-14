@@ -148,8 +148,7 @@ public class Generator {
                 // sort them per when they were last on campus in a priority queue
                 PriorityQueue<Student> studentsQueue = new PriorityQueue<>();
                 // add a student to the queue if he's allowed to
-                Iterator<Student> it = courseStudents.iterator();
-                Util.addIfAllowed(it, studentsQueue, courseStudents, apiCommunicator);
+                Util.addIfAllowed(studentsQueue, courseStudents, apiCommunicator);
 
                 // for each lecture in the course
                 ArrayList<Lecture> lecturesCurrentCourse = new ArrayList<>(c.getLectures());
