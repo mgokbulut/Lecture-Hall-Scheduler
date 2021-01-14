@@ -48,19 +48,22 @@ public class DatabaseService extends ReturnList {
     }
 
     public ResponseEntity<Lecture[]> getPossibleLectures(String netId) {
-        List<Object[]> result = returnList(webClientBuilder, "/userCourseService/possibleLectures/", netId);
+        List<Object[]> result = returnList(
+            webClientBuilder, "/userCourseService/possibleLectures/", netId);
 
         return ResponseEntity.ok(getLectures(result));
     }
 
     public ResponseEntity<Lecture[]> getLecturesInCourse(int courseId) {
-        List<Object[]> result = returnList(webClientBuilder, "/lectureSchedules/course/", String.valueOf(courseId));
+        List<Object[]> result = returnList(
+            webClientBuilder, "/lectureSchedules/course/", String.valueOf(courseId));
 
         return ResponseEntity.ok(getLectures(result));
     }
 
     public ResponseEntity<User[]> getStudentsInLecture(int lectureId) {
-        List<Object[]> result = returnList(webClientBuilder, "lectureSchedules/studentsLecture/", String.valueOf(lectureId));
+        List<Object[]> result = returnList(
+            webClientBuilder, "lectureSchedules/studentsLecture/", String.valueOf(lectureId));
 
         return ResponseEntity.ok(getUsers(result));
     }
