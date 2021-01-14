@@ -52,12 +52,6 @@ public class LectureScheduleController {
         return lectureScheduleService.getTeacherSchedule(netId);
     }
 
-    @GetMapping(path = "/lectureSchedules/studentsLecture/{lectureId}")
-    public @ResponseBody
-    List<Object []> getStudentsInLecture(@PathVariable Long lectureId) {
-        return lectureScheduleService.getStudentsInLecture(lectureId);
-    }
-
     @GetMapping(path = "/lectureSchedules/course/{courseId}")
     public @ResponseBody
     List<Object []> getAllLecturesInCourse(@PathVariable Long courseId) {
