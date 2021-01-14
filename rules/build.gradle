@@ -61,7 +61,7 @@ test {
 	useJUnitPlatform()
 	jacoco {
 		enabled = true
-		includes = ['nl.tudelft.sem.template.*']
+		includes = ['nl.tudelft.unischeduler.*']
 		excludes = []
 	}
 	systemProperty 'eureka.client.enabled', 'false'
@@ -73,19 +73,6 @@ repositories {
 
 jacocoTestCoverageVerification() {
 	dependsOn test
-	violationRules {
-		rule {
-			enabled = true
-			element = 'CLASS'
-			includes = ['nl.tudelft.sem.template.*']
-
-			limit {
-				counter = 'BRANCH'
-				value = 'COVEREDRATIO'
-				minimum = 0.1
-			}
-		}
-	}
 }
 
 jacoco {
