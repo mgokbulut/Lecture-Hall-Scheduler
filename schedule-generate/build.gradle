@@ -59,7 +59,7 @@ test {
 	useJUnitPlatform()
 	jacoco {
 		enabled = true
-		includes = ['nl.tudelft.unischeduler.schedulegenerate.*']
+		includes = ['nl.tudelft.unischeduler.*']
 		excludes = []
 	}
 	systemProperty 'eureka.client.enabled', 'false'
