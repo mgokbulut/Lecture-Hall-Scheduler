@@ -1,15 +1,11 @@
 package nl.tudelft.unischeduler.sysinteract;
 
-import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.Date;
-import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
-import net.minidev.json.JSONObject;
 import nl.tudelft.unischeduler.authentication.TokenParser;
 import nl.tudelft.unischeduler.utilentities.ArgsBuilder;
 import nl.tudelft.unischeduler.utilentities.Arguments;
+import nl.tudelft.unischeduler.utilentities.Course;
 import nl.tudelft.unischeduler.utilentities.Lecture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -26,9 +22,9 @@ public class SysInteractController {
     @Autowired
     private transient TokenParser tokenParser;
 
-    public static final String NOT_FOUND = "404";
-    public static final String PARSING_ERROR_MESSAGE = "could not parse request body";
-    public static final String URI_EXCEPTION = "could not parse request body";
+
+    public static final String BAD_REQUEST = "{ \"status\": \"400\" }";
+    //    public static final String DEFAULT_EXCEPTION_MESSAGE = "Something went wrong.";
 
     /**
      * Adds a course.
@@ -42,14 +38,10 @@ public class SysInteractController {
             ArgsBuilder builder = new ArgsBuilder(sysInteraction.getArgs());
             builder.buildCourse();
             Arguments args = builder.getResult();
-
             return sysInteractor.addCourse(args);
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return exception_message(NOT_FOUND, URI_EXCEPTION, "/system/add_course");
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-            return exception_message(NOT_FOUND, PARSING_ERROR_MESSAGE, "/system/add_course");
+            return BAD_REQUEST;
         }
     }
 
@@ -67,11 +59,10 @@ public class SysInteractController {
             builder.buildUser();
             Arguments args = builder.getResult();
 
-
             return sysInteractor.addUser(args);
-        } catch (ClassCastException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return exception_message(NOT_FOUND, PARSING_ERROR_MESSAGE, "/system/add_user");
+            return BAD_REQUEST;
         }
     }
 
@@ -86,13 +77,9 @@ public class SysInteractController {
         try {
             String username = tokenParser.extract_username(request);
             return sysInteractor.reportCorona(username);
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return exception_message(NOT_FOUND, URI_EXCEPTION, "/system/report_corona");
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-            return exception_message(NOT_FOUND, PARSING_ERROR_MESSAGE,
-                "/system/report_corona");
+            return BAD_REQUEST;
         }
     }
 
@@ -109,16 +96,10 @@ public class SysInteractController {
             builder.buildCourse();
             Arguments args = builder.getResult();
 
-
             return sysInteractor.courseInformation(args);
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return new Object[] {
-                exception_message(NOT_FOUND, URI_EXCEPTION, "/system/course_information")};
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-            return new Object[] {exception_message(NOT_FOUND, PARSING_ERROR_MESSAGE,
-                "/system/course_information")};
+            return new Object[] {BAD_REQUEST};
         }
     }
 
@@ -150,10 +131,10 @@ public class SysInteractController {
         try {
             String username = tokenParser.extract_username(request);
             return sysInteractor.teacherSchedule(username);
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
-
     }
 
     /**
@@ -176,31 +157,40 @@ public class SysInteractController {
             int year = args.getCourse().getYear();
             int week = args.getLecture().getWeek();
             Duration duration = args.getLecture().getDuration();
-
             return sysInteractor.createLecture(courseId, teacherNetId, year, week, duration);
-        } catch (URISyntaxException e) {
-            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return BAD_REQUEST;
         }
     }
 
 
-    /**
-     * Creates a json error message.
-     *
-     * @param statusCode status code
-     * @param message    message
-     * @param path       path
-     * @return returns json error message
-     */
-    public static String exception_message(String statusCode, String message, String path) {
-        String timeStamp =
-            new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss", Locale.ENGLISH).format(new Date());
-        JSONObject res = new JSONObject();
-        res.put("timestamp", timeStamp);
-        res.put("status", statusCode);
-        res.put("error", "Bad Request");
-        res.put("message", message);
-        res.put("path", path);
-        return res.toString();
-    }
+    //    /**
+    //     * Creates a json error message.
+    //     *
+    //     * @param statusCode status code
+    //     * @param message    message
+    //     * @param path       path
+    //     * @return returns json error message
+    //     */
+    //    public static String exception_message(String statusCode, String message, String path) {
+    //        String timeStamp =
+    //            new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss", Locale.ENGLISH).format(new Date());
+    //        JSONObject res = new JSONObject();
+    //        res.put("timestamp", timeStamp);
+    //        res.put("status", statusCode);
+    //        res.put("error", "Bad Request");
+    //        res.put("message", message);
+    //        res.put("path", path);
+    //        return res.toString();
+    //        /*
+    //        ("{\n\t"
+    //            + "\"timestamp\": \"" + timeStamp + "\"" + "\n\t"
+    //            + "\"status\": \"" + status_code + "\"" + "\n\t"
+    //            + "\"error\": \"" + "Bad Request" + "\"" + "\n\t"
+    //            + "\"message\": \"" + message + "\"," + "\n\t"
+    //            + "\"path\": \"" + path + "\"" + "\n\t"
+    //            + "}");
+    //         */
+    //    }
 }
