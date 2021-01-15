@@ -93,6 +93,9 @@ pitest {
 	//adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"
 	junit5PluginVersion = '0.12'
 
+	jvmArgs = ['-Deureka.client.enabled=false']
+	excludedTestClasses = ['nl.tudelft.unischeduler.rules.integration.*']
+
 	targetClasses = ['nl.tudelft.unischeduler.rules.*']  //by default "${project.group}.*"
 	pitestVersion = '1.5.1' //not needed when a default PIT version should be used
 	threads = 4
