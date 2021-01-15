@@ -16,6 +16,7 @@ import nl.tudelft.unischeduler.viewer.entities.Classroom;
 import nl.tudelft.unischeduler.viewer.entities.Lecture;
 import nl.tudelft.unischeduler.viewer.entities.User;
 import nl.tudelft.unischeduler.viewer.services.DatabaseService;
+import nl.tudelft.unischeduler.viewer.services.ReturnList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

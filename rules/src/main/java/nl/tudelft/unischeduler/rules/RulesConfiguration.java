@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import nl.tudelft.unischeduler.rules.core.RulesModule;
 import nl.tudelft.unischeduler.rules.storing.RulesParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 @Data
@@ -29,9 +31,6 @@ public class RulesConfiguration {
         return new ObjectMapper();
     }
 
-    public static ObjectMapper getDefaultObjectMapper() {
-        return defaultObjectMapper;
-    }
 
     @Bean
     RulesParser rulesParser() {
@@ -46,5 +45,10 @@ public class RulesConfiguration {
     @Bean
     ObjectMapper objectMapper() {
         return defaultObjectMapper;
+    }
+
+    @Bean
+    WebClient databaseWebClient(@Autowired WebClient.Builder webClientBuilder) {
+        return webClientBuilder.baseUrl("http://database-service/").build();
     }
 }
