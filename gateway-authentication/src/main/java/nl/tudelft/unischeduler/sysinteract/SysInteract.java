@@ -1,9 +1,7 @@
 package nl.tudelft.unischeduler.sysinteract;
 
 import java.util.Dictionary;
-import java.util.List;
 import java.util.Objects;
-import nl.tudelft.unischeduler.user.User;
 
 /**
  * This object models an interaction between the user and the rest of the system.
