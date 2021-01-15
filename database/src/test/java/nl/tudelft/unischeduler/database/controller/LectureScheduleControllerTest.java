@@ -19,6 +19,7 @@ import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleRepositor
 import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleService;
 import nl.tudelft.unischeduler.database.schedule.Schedule;
 import nl.tudelft.unischeduler.database.schedule.ScheduleRepository;
+import nl.tudelft.unischeduler.database.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,16 +121,6 @@ public class LectureScheduleControllerTest {
     @Test
     public void getTeacherScheduleTest() throws Exception {
         String uri = "/lectureSchedules/teacher/byarar";
-        Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
-
-        mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(lectureSchedule)))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void getStudentsInLectureTest() throws Exception {
-        String uri = "/lectureSchedules/studentsLecture/1";
         Optional<LectureSchedule> lectureSchedule = Optional.of(new LectureSchedule(0L, 1L));
 
         mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)

@@ -7,14 +7,16 @@ import lombok.Setter;
 import nl.tudelft.unischeduler.authentication.JwtUtil;
 import nl.tudelft.unischeduler.authentication.MyUserDetailsService;
 import nl.tudelft.unischeduler.user.User;
+import java.util.Date;
+import java.util.Locale;
+import javax.servlet.http.HttpServletRequest;
+import net.minidev.json.JSONObject;
+import nl.tudelft.unischeduler.authentication.TokenParser;
 import nl.tudelft.unischeduler.utilentities.ArgsBuilder;
 import nl.tudelft.unischeduler.utilentities.Arguments;
-import nl.tudelft.unischeduler.utilentities.Course;
 import nl.tudelft.unischeduler.utilentities.Lecture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,17 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class SysInteractController {
 
     @Autowired
-    @Getter
-    @Setter
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    @Getter
-    @Setter
-    private MyUserDetailsService userDetailsService;
-
-    @Autowired
     private transient SysInteractor sysInteractor;
+
+    @Autowired
+    private transient TokenParser tokenParser;
 
 
     public static final String BAD_REQUEST = "{ \"status\": \"400\" }";
@@ -56,9 +51,8 @@ public class SysInteractController {
 
             return sysInteractor.addCourse(course);
         } catch (Exception e) {
-            e.printStackTrace();
-            return BAD_REQUEST;
-        }
+            return sysInteractor.addCourse(args);
+        } 
     }
 
     /**
@@ -75,13 +69,10 @@ public class SysInteractController {
             builder.buildUser();
             Arguments args = builder.getResult();
 
-            User user = args.getUser();
-
             return sysInteractor.addUser(user);
         } catch (Exception e) {
-            e.printStackTrace();
-            return BAD_REQUEST;
-        }
+            return sysInteractor.addUser(args);
+        } 
     }
 
     /**
@@ -93,7 +84,7 @@ public class SysInteractController {
     @PostMapping(path = "/system/report_corona", produces = MediaType.APPLICATION_JSON_VALUE)
     public String reportCorona(HttpServletRequest request) {
         try {
-            String username = extract_username(request);
+            String username = tokenParser.extract_username(request);
             return sysInteractor.reportCorona(username);
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,10 +105,10 @@ public class SysInteractController {
             builder.buildCourse();
             Arguments args = builder.getResult();
 
-            Course course = args.getCourse();
-
             return sysInteractor.courseInformation(course);
         } catch (Exception e) {
+            return sysInteractor.courseInformation(args);
+        } catch (URISyntaxException e) {
             e.printStackTrace();
             return new Object[] {BAD_REQUEST};
         }
@@ -132,13 +123,12 @@ public class SysInteractController {
     @PostMapping(path = "/system/student_schedule", produces = MediaType.APPLICATION_JSON_VALUE)
     public Lecture[] studentSchedule(HttpServletRequest request) {
         try {
-            String username = extract_username(request);
+            String username = tokenParser.extract_username(request);
             return sysInteractor.studentSchedule(username);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-
     }
 
     /**
@@ -150,7 +140,7 @@ public class SysInteractController {
     @PostMapping(path = "/system/teacher_schedule", produces = MediaType.APPLICATION_JSON_VALUE)
     public Lecture[] teacherSchedule(HttpServletRequest request) {
         try {
-            String username = extract_username(request);
+            String username = tokenParser.extract_username(request);
             return sysInteractor.teacherSchedule(username);
         } catch (Exception e) {
             e.printStackTrace();
@@ -185,34 +175,6 @@ public class SysInteractController {
         }
     }
 
-    /**
-     * Extracts username from jwt token.
-     *
-     * @param request http request object
-     * @return returns username
-     */
-    public String extract_username(HttpServletRequest request) {
-        final String authorizationHeader = request.getHeader("Authorization");
-        String username = "";
-        String jwt = "";
-
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt += authorizationHeader.substring(7);
-            username += jwtUtil.extractUsername(jwt);
-        }
-        if (!username.equals("")
-            && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            userDetails.getUsername(); // passes the PMD
-        }
-        try {
-            jwt += "";
-        } catch (Exception e) {
-            System.out.println("This is just unnecessary!!!!");
-        }
-
-        return username;
-    }
 
     //    /**
     //     * Creates a json error message.

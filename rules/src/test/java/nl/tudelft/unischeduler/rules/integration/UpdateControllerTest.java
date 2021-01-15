@@ -1,15 +1,20 @@
 package nl.tudelft.unischeduler.rules.integration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import nl.tudelft.unischeduler.rules.storing.RulesParser;
 import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -50,5 +55,9 @@ public class UpdateControllerTest extends ControllerTest {
                                 + "\"breakTime\":45,"
                                 + "\"maxDays\":14}")
         ).andExpect(status().isOk());
+        RecordedRequest requestOut = server.takeRequest(30, TimeUnit.SECONDS);
+        assertNotNull(requestOut);
+        assertEquals(MediaType.APPLICATION_JSON.toString(),
+                requestOut.getHeader(HttpHeaders.CONTENT_TYPE));
     }
 }

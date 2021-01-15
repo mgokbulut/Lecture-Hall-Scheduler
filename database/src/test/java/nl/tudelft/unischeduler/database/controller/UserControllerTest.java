@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Optional;
 import nl.tudelft.unischeduler.database.user.User;
 import nl.tudelft.unischeduler.database.user.UserController;
 import nl.tudelft.unischeduler.database.user.UserService;
@@ -92,6 +93,17 @@ public class UserControllerTest {
     public void getUserTest() throws Exception {
         String uri = "/users/a.baran@student.tudelft.nl";
         User user = new User("a.baran@student.tudelft.nl", "STUDENT", true, timestamp);
+
+        mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getStudentsInLectureTest() throws Exception {
+        String uri = "/lectureSchedules/studentsLecture/1";
+        Optional<User> user = Optional.of(new User(
+                "a.baran@student.tudelft.nl", "STUDENT", true, timestamp));
 
         mockMvc.perform(get(uri).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(user)))

@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Entity;
 
-@Entity
+//@Entity
 public class Student implements Comparable<Student> {
 
     private String netId;
@@ -25,7 +25,8 @@ public class Student implements Comparable<Student> {
      * This method initialises the user object.
      */
     public Student() {
-
+        this.netId = "";
+        this.lastTimeOnCampus = new Date(0);
     }
 
     /**

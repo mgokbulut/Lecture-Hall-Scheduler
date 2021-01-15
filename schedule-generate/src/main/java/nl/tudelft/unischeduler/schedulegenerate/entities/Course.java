@@ -1,10 +1,11 @@
 package nl.tudelft.unischeduler.schedulegenerate.entities;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Entity;
 
-@Entity
+//@Entity
 public class Course {
 
     private Long id;
@@ -20,7 +21,9 @@ public class Course {
      * This method initialises the course object.
      */
     public Course() {
-
+        this.id = 0L;
+        this.students = new HashSet<>();
+        this.lectures = new HashSet<>();
     }
 
     /**

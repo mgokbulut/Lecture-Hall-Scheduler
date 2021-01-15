@@ -1,5 +1,7 @@
 package nl.tudelft.unischeduler.database.service;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -23,8 +25,6 @@ import nl.tudelft.unischeduler.database.lectureschedule.LectureScheduleService;
 import nl.tudelft.unischeduler.database.schedule.Schedule;
 import nl.tudelft.unischeduler.database.schedule.ScheduleRepository;
 import nl.tudelft.unischeduler.database.user.User;
-import nl.tudelft.unischeduler.database.user.UserRepository;
-import nl.tudelft.unischeduler.database.user.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,9 +44,6 @@ public class LectureScheduleServiceTest {
     private final transient LectureScheduleRepository lectureScheduleRepository =
             Mockito.mock(LectureScheduleRepository.class);
 
-    private final transient UserRepository userRepository =
-            Mockito.mock(UserRepository.class);
-
     private final transient LectureRepository lectureRepository =
             Mockito.mock(LectureRepository.class);
 
@@ -55,9 +52,6 @@ public class LectureScheduleServiceTest {
 
     private final transient ScheduleRepository scheduleRepository =
             Mockito.mock(ScheduleRepository.class);
-
-    private final  transient UserService userService =
-            Mockito.mock(UserService.class);
 
     private final transient Timestamp timestamp = new Timestamp(new GregorianCalendar(
             2020, Calendar.DECEMBER, 1, 0, 0).getTimeInMillis());
@@ -101,17 +95,74 @@ public class LectureScheduleServiceTest {
         when(lectureScheduleRepository.findByLectureIdAndScheduleId(2L, 1L))
                 .thenReturn(Optional.empty());
 
-        when(lectureScheduleRepository.save(Mockito.any(LectureSchedule.class)))
+        when(lectureScheduleRepository.save(any(LectureSchedule.class)))
                 .thenAnswer(x -> x.getArguments()[0]);
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
 
         Assertions.assertEquals(new ResponseEntity<>(
                         new LectureSchedule(1L, 1L), HttpStatus.OK),
                 lectureScheduleService.assignLectureToSchedule("a.baran@student.tudelft.nl", 1L));
+    }
+
+    @Test
+    public void assignLectureToScheduleErrorTest() {
+        Schedule schedule = new Schedule(1L, "a.baran@student.tudelft.nl");
+        when(scheduleRepository.findByUser("a.baran@student.tudelft.nl"))
+                .thenReturn(java.util.Optional.of(schedule));
+
+        when(lectureScheduleRepository.findByLectureIdAndScheduleId(2L, 1L))
+                .thenReturn(Optional.empty());
+
+        doThrow(new NullPointerException()).when(lectureScheduleRepository).save(any());
+
+        LectureScheduleService lectureScheduleService = new LectureScheduleService(
+                lectureScheduleRepository, scheduleRepository,
+                lectureRepository, classroomRepository);
+
+        ResponseEntity<?> responseEntity = lectureScheduleService.assignLectureToSchedule(
+                "a.baran@student.tudelft.nl", 1L);
+
+        Assertions.assertEquals(ResponseEntity.badRequest().build(), responseEntity);
+    }
+
+    @Test
+    public void assignLectureToScheduleErrorTest1() {
+        when(scheduleRepository.findByUser("a.baran@student.tudelft.nl"))
+                .thenReturn(Optional.empty());
+
+        LectureScheduleService lectureScheduleService = new LectureScheduleService(
+                lectureScheduleRepository, scheduleRepository,
+                lectureRepository, classroomRepository);
+
+        ResponseEntity<?> responseEntity = lectureScheduleService.assignLectureToSchedule(
+                "a.baran@student.tudelft.nl", 1L);
+
+        Assertions.assertEquals(ResponseEntity.notFound().build(), responseEntity);
+    }
+
+    @Test
+    public void assignLectureToScheduleErrorTest2() {
+        Schedule schedule = new Schedule(1L, "a.baran@student.tudelft.nl");
+        when(scheduleRepository.findByUser("a.baran@student.tudelft.nl"))
+                .thenReturn(java.util.Optional.of(schedule));
+
+        LectureSchedule lectureSchedule = new LectureSchedule(2L, 1L);
+
+        when(lectureScheduleRepository.findByLectureIdAndScheduleId(2L, 1L))
+                .thenReturn(Optional.of(lectureSchedule));
+
+        LectureScheduleService lectureScheduleService = new LectureScheduleService(
+                lectureScheduleRepository, scheduleRepository,
+                lectureRepository, classroomRepository);
+
+        ResponseEntity<?> responseEntity = lectureScheduleService
+                .assignLectureToSchedule("a.baran@student.tudelft.nl", 2L);
+
+        Assertions.assertEquals(ResponseEntity.notFound().build(), responseEntity);
     }
 
     @Test
@@ -121,13 +172,27 @@ public class LectureScheduleServiceTest {
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
 
         lectureScheduleService.removeLectureFromSchedule(1L);
 
         verify(lectureScheduleRepository, times(1)).deleteLectureSchedulesByLectureId(1L);
         verifyNoMoreInteractions(lectureScheduleRepository);
+    }
+
+    @Test
+    public void removeLectureFromScheduleErrorTest() {
+        doThrow(new NullPointerException()).when(lectureScheduleRepository)
+                .deleteLectureSchedulesByLectureId(null);
+
+        LectureScheduleService lectureScheduleService = new LectureScheduleService(
+                lectureScheduleRepository, scheduleRepository,
+                lectureRepository, classroomRepository);
+
+        ResponseEntity<?> responseEntity = lectureScheduleService.removeLectureFromSchedule(null);
+
+        Assertions.assertEquals(ResponseEntity.badRequest().build(), responseEntity);
     }
 
     @Test
@@ -144,7 +209,7 @@ public class LectureScheduleServiceTest {
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
 
         lectureScheduleService.cancelStudentAttendance("a.baran@student.tudelft.nl", timestamp,
@@ -158,6 +223,37 @@ public class LectureScheduleServiceTest {
     }
 
     @Test
+    public void cancelStudentAttendanceErrorTest() {
+        when(scheduleRepository.findByUser("a.baran@student.tudelft.nl"))
+                .thenReturn(Optional.empty());
+
+        LectureScheduleService lectureScheduleService = new LectureScheduleService(
+                lectureScheduleRepository, scheduleRepository,
+                lectureRepository, classroomRepository);
+
+        ResponseEntity<?> responseEntity = lectureScheduleService.cancelStudentAttendance(
+                "a.baran@student.tudelft.nl", timestamp,
+                new Timestamp(timestamp.getTime() + 10000));
+
+        Assertions.assertEquals(ResponseEntity.notFound().build(), responseEntity);
+    }
+
+    @Test
+    public void cancelStudentAttendanceErrorTest2() {
+        doThrow(new NullPointerException()).when(scheduleRepository).findByUser(any());
+
+        LectureScheduleService lectureScheduleService = new LectureScheduleService(
+                lectureScheduleRepository, scheduleRepository,
+                lectureRepository, classroomRepository);
+
+        ResponseEntity<?> responseEntity = lectureScheduleService.cancelStudentAttendance(
+                "a.baran@student.tudelft.nl", timestamp,
+                new Timestamp(timestamp.getTime() + 10000));
+
+        Assertions.assertEquals(ResponseEntity.badRequest().build(), responseEntity);
+    }
+
+    @Test
     public void removeStudentFromLectureTest() {
 
         when(scheduleRepository.findByUser("a.baran@student.tudelft.nl"))
@@ -165,7 +261,7 @@ public class LectureScheduleServiceTest {
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
 
         lectureScheduleService.removeStudentFromLecture("a.baran@student.tudelft.nl", 0L);
@@ -173,6 +269,37 @@ public class LectureScheduleServiceTest {
         verify(lectureScheduleRepository, times(1))
                 .deleteByLectureIdAndScheduleId(0L, 1L);
         verifyNoMoreInteractions(lectureScheduleRepository);
+    }
+
+    @Test
+    public void removeStudentFromLectureErrorTest() {
+        when(scheduleRepository.findByUser("a.baran@student.tudelft.nl"))
+                .thenReturn(Optional.empty());
+
+        LectureScheduleService lectureScheduleService = new LectureScheduleService(
+                lectureScheduleRepository, scheduleRepository,
+                lectureRepository, classroomRepository);
+
+
+        ResponseEntity<?> responseEntity = lectureScheduleService.removeStudentFromLecture(
+                "a.baran@student.tudelft.nl", 0L);
+
+        Assertions.assertEquals(ResponseEntity.notFound().build(), responseEntity);
+    }
+
+    @Test
+    public void removeStudentFromLectureErrorTest2() {
+        doThrow(new NullPointerException()).when(scheduleRepository).findByUser(any());
+
+        LectureScheduleService lectureScheduleService = new LectureScheduleService(
+                lectureScheduleRepository, scheduleRepository,
+                lectureRepository, classroomRepository);
+
+
+        ResponseEntity<?> responseEntity = lectureScheduleService.removeStudentFromLecture(
+                "a.baran@student.tudelft.nl", 0L);
+
+        Assertions.assertEquals(ResponseEntity.badRequest().build(), responseEntity);
     }
 
     @Test
@@ -189,11 +316,26 @@ public class LectureScheduleServiceTest {
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
 
         Assertions.assertTrue(Arrays.equals(new Object[]{lectures.get(0), classroom},
                 lectureScheduleService.getStudentSchedule("a.baran@student.tudelft.nl").get(0)));
+    }
+
+    @Test
+    public void getStudentScheduleErrorTest() {
+        doThrow(new NullPointerException()).when(scheduleRepository).findByUser(any());
+
+        LectureScheduleService lectureScheduleService = new LectureScheduleService(
+                lectureScheduleRepository, scheduleRepository,
+                lectureRepository, classroomRepository);
+
+
+        List<Object []> responseEntity = lectureScheduleService
+                .getStudentSchedule("a.baran@student.tudelft.nl");
+
+        Assertions.assertNull(responseEntity);
     }
 
     @Test
@@ -207,7 +349,7 @@ public class LectureScheduleServiceTest {
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
 
         Assertions.assertTrue(Arrays.equals(new Object[]{lectures.get(0), classroom},
@@ -215,25 +357,18 @@ public class LectureScheduleServiceTest {
     }
 
     @Test
-    public void getStudentsInLectureTest() {
-        when(lectureScheduleRepository.findAllByLectureId(0L))
-                .thenReturn(List.of(lectureSchedules.get(0)));
-
-        when(scheduleRepository.findById(1L))
-                .thenReturn(Optional.of(new Schedule(1L, "a.baran@student.tudelft.nl")));
-
-        when(userRepository.findByNetId("a.baran@student.tudelft.nl")).thenReturn(
-                Optional.of(users.get(0)));
-
-        when(userService.getUser(users.get(0).getNetId()))
-                .thenReturn(new Object[]{users.get(0), true});
+    public void getTeacherScheduleErrorTest() {
+        doThrow(new NullPointerException()).when(lectureRepository).findAllByTeacher(any());
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
-        Assertions.assertTrue(Arrays.equals(new Object[]{users.get(0), true},
-                lectureScheduleService.getStudentsInLecture(0L).get(0)));
+
+        List<Object []> responseEntity = lectureScheduleService
+                .getTeacherSchedule("sanders@tudelft.nl");
+
+        Assertions.assertNull(responseEntity);
     }
 
     @Test
@@ -247,7 +382,7 @@ public class LectureScheduleServiceTest {
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
 
         Assertions.assertTrue(Arrays.equals(new Object[]{lectures.get(2), classroom},
@@ -263,7 +398,7 @@ public class LectureScheduleServiceTest {
 
         LectureScheduleService lectureScheduleService = new LectureScheduleService(
                 lectureScheduleRepository, scheduleRepository,
-                userRepository, lectureRepository, classroomRepository, userService);
+                lectureRepository, classroomRepository);
 
 
         Assertions.assertNull(lectureScheduleService.getAllLecturesInCourse(2L));

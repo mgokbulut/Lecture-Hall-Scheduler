@@ -21,8 +21,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @NoArgsConstructor
 @AllArgsConstructor
 @Service
-@EqualsAndHashCode(callSuper=false)
-public class DatabaseService extends ReturnList{
+@EqualsAndHashCode(callSuper = false)
+public class DatabaseService extends ReturnList {
 
     @Autowired
     private WebClient.Builder webClientBuilder;
@@ -48,19 +48,22 @@ public class DatabaseService extends ReturnList{
     }
 
     public ResponseEntity<Lecture[]> getPossibleLectures(String netId) {
-        List<Object[]> result = returnList(webClientBuilder, "/userCourseService/possibleLectures/", netId);
+        List<Object[]> result = returnList(
+            webClientBuilder, "/userCourseService/possibleLectures/", netId);
 
         return ResponseEntity.ok(getLectures(result));
     }
 
     public ResponseEntity<Lecture[]> getLecturesInCourse(int courseId) {
-        List<Object[]> result = returnList(webClientBuilder, "/lectureSchedules/course/", String.valueOf(courseId));
+        List<Object[]> result = returnList(
+            webClientBuilder, "/lectureSchedules/course/", String.valueOf(courseId));
 
         return ResponseEntity.ok(getLectures(result));
     }
 
     public ResponseEntity<User[]> getStudentsInLecture(int lectureId) {
-        List<Object[]> result = returnList(webClientBuilder, "lectureSchedules/studentsLecture/", String.valueOf(lectureId));
+        List<Object[]> result = returnList(
+            webClientBuilder, "lectureSchedules/studentsLecture/", String.valueOf(lectureId));
 
         return ResponseEntity.ok(getUsers(result));
     }
@@ -68,7 +71,7 @@ public class DatabaseService extends ReturnList{
     public User[] getUsers(List<Object[]> result) {
         List<User> ret = new ArrayList<>();
 
-        for(Iterator<Object[]> it = result.iterator(); it.hasNext();) {
+        for (Iterator<Object[]> it = result.iterator(); it.hasNext();) {
             Object[] ob = it.next();
             User user = (User) ob[0];
             ret.add(user);
@@ -78,7 +81,7 @@ public class DatabaseService extends ReturnList{
 
     public Lecture[] getLectures(List<Object[]> result) {
         List<Lecture> ret = new ArrayList<>();
-        for(Iterator<Object[]> it = result.iterator(); it.hasNext();) {
+        for (Iterator<Object[]> it = result.iterator(); it.hasNext();) {
             Object[] ob = it.next();
             Lecture lect = (Lecture) ob[0];
             lect.setClassroom((Classroom) ob[1]);
