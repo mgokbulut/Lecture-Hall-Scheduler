@@ -2,18 +2,10 @@ package nl.tudelft.unischeduler.sysinteract;
 
 import java.time.Duration;
 import javax.servlet.http.HttpServletRequest;
-import lombok.Getter;
-import lombok.Setter;
-import nl.tudelft.unischeduler.authentication.JwtUtil;
-import nl.tudelft.unischeduler.authentication.MyUserDetailsService;
-import nl.tudelft.unischeduler.user.User;
-import java.util.Date;
-import java.util.Locale;
-import javax.servlet.http.HttpServletRequest;
-import net.minidev.json.JSONObject;
 import nl.tudelft.unischeduler.authentication.TokenParser;
 import nl.tudelft.unischeduler.utilentities.ArgsBuilder;
 import nl.tudelft.unischeduler.utilentities.Arguments;
+import nl.tudelft.unischeduler.utilentities.Course;
 import nl.tudelft.unischeduler.utilentities.Lecture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -46,13 +38,11 @@ public class SysInteractController {
             ArgsBuilder builder = new ArgsBuilder(sysInteraction.getArgs());
             builder.buildCourse();
             Arguments args = builder.getResult();
-
-            Course course = args.getCourse();
-
-            return sysInteractor.addCourse(course);
-        } catch (Exception e) {
             return sysInteractor.addCourse(args);
-        } 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return BAD_REQUEST;
+        }
     }
 
     /**
@@ -69,10 +59,11 @@ public class SysInteractController {
             builder.buildUser();
             Arguments args = builder.getResult();
 
-            return sysInteractor.addUser(user);
-        } catch (Exception e) {
             return sysInteractor.addUser(args);
-        } 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return BAD_REQUEST;
+        }
     }
 
     /**
@@ -105,10 +96,8 @@ public class SysInteractController {
             builder.buildCourse();
             Arguments args = builder.getResult();
 
-            return sysInteractor.courseInformation(course);
-        } catch (Exception e) {
             return sysInteractor.courseInformation(args);
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new Object[] {BAD_REQUEST};
         }
