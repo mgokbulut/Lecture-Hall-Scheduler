@@ -1,7 +1,8 @@
-package nl.tudelft.unischeduler.user;
+package nl.tudelft.unischeduler.tmp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import nl.tudelft.unischeduler.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

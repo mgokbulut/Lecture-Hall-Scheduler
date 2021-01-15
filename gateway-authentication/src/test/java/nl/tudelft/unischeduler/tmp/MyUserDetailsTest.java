@@ -1,4 +1,4 @@
-package nl.tudelft.unischeduler.authentication;
+package nl.tudelft.unischeduler.tmp;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Data;
+import nl.tudelft.unischeduler.authentication.MyUserDetails;
 import nl.tudelft.unischeduler.user.User;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
