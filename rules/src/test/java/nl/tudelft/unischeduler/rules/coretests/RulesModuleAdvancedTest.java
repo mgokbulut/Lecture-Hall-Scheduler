@@ -7,9 +7,11 @@ import static org.mockito.Mockito.when;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import java.util.stream.Stream;
 import nl.tudelft.unischeduler.rules.core.RulesModule;
 import nl.tudelft.unischeduler.rules.entities.Lecture;
 import nl.tudelft.unischeduler.rules.entities.Room;
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
 public class RulesModuleAdvancedTest {
@@ -107,5 +110,28 @@ public class RulesModuleAdvancedTest {
         Lecture l1 = new Lecture(-1, -1, Timestamp.valueOf(startTime1), Time.valueOf(duration1), null);
         Lecture l2 = new Lecture(-1, -1, Timestamp.valueOf(startTime2), Time.valueOf(duration2), null);
         assertThat(rulesModule.overlap(l1, l2)).isEqualTo(expected);
+    }
+
+    public static Stream<List<Lecture>> generateNoOverlapLectures() {
+        Lecture l1 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 12:00:00"), Time.valueOf("1:00:00"), new Room());
+        Lecture l2 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 11:00:00"), Time.valueOf("1:00:00"), new Room(38, 38, "differentRoom"));
+        Lecture l3 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 08:30:00"), Time.valueOf("1:00:00"), new Room());
+        return Stream.of(
+                Collections.emptyList(),
+                Collections.singletonList(l1),
+                List.of(l1, l2),
+                List.of(l1, l2, l3)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("generateNoOverlapLectures")
+    public void overlapTest(List<Lecture> lectures) {
+        Lecture[] returnValue = new Lecture[lectures.size()];
+        lectures.toArray(returnValue);
+        Mockito.when(lectureDatabaseServiceMock.getLectures()).thenReturn(returnValue);
+
+        Lecture input = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 10:15:00"), Time.valueOf("01:00:00"), new Room());
+        assertThat(rulesModule.overlap(input)).isTrue();
     }
 }
