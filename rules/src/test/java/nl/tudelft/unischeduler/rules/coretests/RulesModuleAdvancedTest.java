@@ -128,13 +128,35 @@ public class RulesModuleAdvancedTest {
 
     @ParameterizedTest
     @MethodSource("generateNoOverlapLectures")
-    public void overlapTest(List<Lecture> lectures) {
+    public void noOverlapTest(List<Lecture> lectures) {
         Lecture[] returnValue = new Lecture[lectures.size()];
         lectures.toArray(returnValue);
         Mockito.when(lectureDatabaseServiceMock.getLectures()).thenReturn(returnValue);
 
         Lecture input = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 10:15:00"), Time.valueOf("01:00:00"), new Room());
         assertThat(rulesModule.overlap(input)).isTrue();
+    }
+
+    public static Stream<List<Lecture>> generateOverlapLectures() {
+        Lecture l1 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 12:00:00"), Time.valueOf("1:00:00"), new Room());
+        Lecture l2 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 11:00:00"), Time.valueOf("1:00:00"), new Room(38, 38, "differentRoom"));
+        Lecture l3 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 08:30:00"), Time.valueOf("1:00:00"), new Room());
+        return Stream.of(
+                Collections.singletonList(l1),
+                List.of(l1, l2),
+                List.of(l1, l2, l3)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("generateOverlapLectures")
+    public void overlapTest(List<Lecture> lectures) {
+        Lecture[] returnValue = new Lecture[lectures.size()];
+        lectures.toArray(returnValue);
+        Mockito.when(lectureDatabaseServiceMock.getLectures()).thenReturn(returnValue);
+
+        Lecture input = lectures.get(lectures.size() - 1);
+        assertThat(rulesModule.overlap(input)).isFalse();
     }
 
     @ParameterizedTest
