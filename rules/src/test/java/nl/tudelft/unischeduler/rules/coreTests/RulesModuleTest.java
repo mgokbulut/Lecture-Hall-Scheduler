@@ -178,7 +178,7 @@ class RulesModuleTest {
 
         Lecture l1 = new Lecture(1, 60,
                 new Timestamp(0), new Time(60000), null);
-        Lecture l2 = new Lecture(1, 60, new Timestamp(670000), new Time(600000), null);
+        Lecture l2 = new Lecture(1, 160, new Timestamp(670000), new Time(600000), null);
 
         Room room = new Room(1, 400, roomName);
 
@@ -197,7 +197,7 @@ class RulesModuleTest {
 
         Lecture l1 = new Lecture(1, 60,
                 new Timestamp(0), new Time(60000), null);
-        Lecture l2 = new Lecture(1, 200, new Timestamp(670000), new Time(600000), null);
+        Lecture l2 = new Lecture(1, 161, new Timestamp(670000), new Time(600000), null);
 
         Room room = new Room(1, 400, roomName);
 

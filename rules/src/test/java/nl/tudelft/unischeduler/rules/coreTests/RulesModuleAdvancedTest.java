@@ -4,13 +4,20 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.stream.Stream;
 import nl.tudelft.unischeduler.rules.core.RulesModule;
+import nl.tudelft.unischeduler.rules.entities.Lecture;
 import nl.tudelft.unischeduler.rules.entities.Room;
 import nl.tudelft.unischeduler.rules.entities.Ruleset;
 import nl.tudelft.unischeduler.rules.services.ClassRoomDatabaseService;
 import nl.tudelft.unischeduler.rules.services.LectureDatabaseService;
 import nl.tudelft.unischeduler.rules.services.StudentDatabaseService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,6 +34,11 @@ public class RulesModuleAdvancedTest {
     private ClassRoomDatabaseService classRoomDatabaseServiceMock;
     private LectureDatabaseService lectureDatabaseServiceMock;
     private StudentDatabaseService studentDatabaseServiceMock;
+
+    private List<Lecture> lectures;
+
+    private final transient Timestamp timestamp = new Timestamp(new GregorianCalendar(
+            2020, Calendar.DECEMBER, 1, 0, 0).getTimeInMillis());
 
     /**
      * Generates a RulesModule class with mocks for the databaseServices.
@@ -45,6 +57,8 @@ public class RulesModuleAdvancedTest {
         rulesModule.setClassRoomDatabaseService(classRoomDatabaseServiceMock);
         rulesModule.setLectureDatabaseService(lectureDatabaseServiceMock);
         rulesModule.setStudentDatabaseService(studentDatabaseServiceMock);
+        lectures = List.of(new Lecture(1, 50, timestamp, Time.valueOf("02:00:00"), new Room(1, 300, "Room")),
+                new Lecture(1, 50, timestamp, Time.valueOf("02:00:00"), new Room(1, 300, "Room")));
     }
 
     /**
@@ -73,5 +87,13 @@ public class RulesModuleAdvancedTest {
         when(classRoomDatabaseServiceMock.getClassroom(anyInt())).thenReturn(new Room(1, 101, "testRoom"));
 
         assertThat(rulesModule.getCapacityOfRoom(1)).isEqualTo(20);
+    }
+
+    @Test
+    public void verifyLecturesTest(){
+        when(lectureDatabaseServiceMock.getLectures()).thenReturn(new Lecture[]{lectures.get(0)});
+
+
+        Assertions.assertEquals(rulesModule.verifyLectures(), false);
     }
 }
