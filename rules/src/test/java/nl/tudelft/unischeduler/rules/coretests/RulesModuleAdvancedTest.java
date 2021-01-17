@@ -1,7 +1,6 @@
 package nl.tudelft.unischeduler.rules.coretests;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -11,7 +10,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
-
 import java.util.stream.Stream;
 import nl.tudelft.unischeduler.rules.core.RulesModule;
 import nl.tudelft.unischeduler.rules.entities.Lecture;
@@ -39,6 +37,8 @@ public class RulesModuleAdvancedTest {
 
     private transient List<Lecture> lectures;
 
+    private static final String ONE_HOUR = "01:00:00";
+
     private final transient Timestamp timestamp = new Timestamp(new GregorianCalendar(
             2020, Calendar.DECEMBER, 1, 0, 0).getTimeInMillis());
 
@@ -59,12 +59,13 @@ public class RulesModuleAdvancedTest {
         rulesModule.setClassRoomDatabaseService(classRoomDatabaseServiceMock);
         rulesModule.setLectureDatabaseService(lectureDatabaseServiceMock);
         rulesModule.setStudentDatabaseService(studentDatabaseServiceMock);
-        lectures = List.of(new Lecture(1, 50, timestamp, Time.valueOf("02:00:00"), new Room(1, 300, "Room")),
+        lectures = List.of(
+                new Lecture(1, 50, timestamp, Time.valueOf("02:00:00"), new Room(1, 300, "Room")),
                 new Lecture(1, 50, timestamp, Time.valueOf("02:00:00"), new Room(1, 300, "Room")));
     }
 
     /**
-     * Sets a new ruleset to the rulesModule
+     * Sets a new ruleset to the rulesModule.
      */
     @Test
     public void setRulesTest() {
@@ -86,13 +87,14 @@ public class RulesModuleAdvancedTest {
 
     @Test
     public void getCapacityOfRoomTest() {
-        when(classRoomDatabaseServiceMock.getClassroom(anyInt())).thenReturn(new Room(1, 101, "testRoom"));
+        when(classRoomDatabaseServiceMock.getClassroom(anyInt()))
+                .thenReturn(new Room(1, 101, "testRoom"));
 
         assertThat(rulesModule.getCapacityOfRoom(1)).isEqualTo(20);
     }
 
     @Test
-    public void verifyLecturesTest(){
+    public void verifyLecturesTest() {
         when(lectureDatabaseServiceMock.getLectures()).thenReturn(new Lecture[]{lectures.get(0)});
 
 
@@ -100,6 +102,15 @@ public class RulesModuleAdvancedTest {
     }
 
 
+    /**
+     * Verifies that the method overlap works as intended.
+     *
+     * @param startTime1 The startTime of the first lecture.
+     * @param duration1 The duration of the first lecture.
+     * @param startTime2 The startTime of the second lecture.
+     * @param duration2 The duration of the second lecture.
+     * @param expected The expected result.
+     */
     @ParameterizedTest
     @CsvSource({
             "2000-01-01 12:00:00, 1:00:00, 2000-01-01 12:00:01, 1:00:00, true",
@@ -108,16 +119,30 @@ public class RulesModuleAdvancedTest {
             "2000-01-01 13:45:00, 1:00:00, 2000-01-01 12:00:00, 1:00:00, false",
             "2000-01-01 12:00:00, 1:00:00, 2000-01-01 12:00:00, 1:00:00, true"
     })
-    public void overlapTest(String startTime1, String duration1, String startTime2, String duration2, boolean expected) {
-        Lecture l1 = new Lecture(-1, -1, Timestamp.valueOf(startTime1), Time.valueOf(duration1), null);
-        Lecture l2 = new Lecture(-1, -1, Timestamp.valueOf(startTime2), Time.valueOf(duration2), null);
+    public void overlapTest(String startTime1,
+                            String duration1,
+                            String startTime2,
+                            String duration2,
+                            boolean expected) {
+        Lecture l1 = new Lecture(-1, -1, Timestamp.valueOf(startTime1),
+                Time.valueOf(duration1), null);
+        Lecture l2 = new Lecture(-1, -1, Timestamp.valueOf(startTime2),
+                Time.valueOf(duration2), null);
         assertThat(rulesModule.overlap(l1, l2)).isEqualTo(expected);
     }
 
+    /**
+     * Generates A stream of list of lectures to be used in noOverLapTest.
+     *
+     * @return A stream of lists of lectures.
+     */
     public static Stream<List<Lecture>> generateNoOverlapLectures() {
-        Lecture l1 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 12:00:00"), Time.valueOf("1:00:00"), new Room());
-        Lecture l2 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 11:00:00"), Time.valueOf("1:00:00"), new Room(38, 38, "differentRoom"));
-        Lecture l3 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 08:30:00"), Time.valueOf("1:00:00"), new Room());
+        Lecture l1 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 12:00:00"),
+                Time.valueOf("1:00:00"), new Room());
+        Lecture l2 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 11:00:00"),
+                Time.valueOf("1:00:00"), new Room(38, 38, "differentRoom"));
+        Lecture l3 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 08:30:00"),
+                Time.valueOf("1:00:00"), new Room());
         return Stream.of(
                 Collections.emptyList(),
                 Collections.singletonList(l1),
@@ -126,6 +151,11 @@ public class RulesModuleAdvancedTest {
         );
     }
 
+    /**
+     * Verifies that the code does not recognize overlap where there is no overlap.
+     *
+     * @param lectures A List of lectures.
+     */
     @ParameterizedTest
     @MethodSource("generateNoOverlapLectures")
     public void noOverlapTest(List<Lecture> lectures) {
@@ -133,14 +163,23 @@ public class RulesModuleAdvancedTest {
         lectures.toArray(returnValue);
         Mockito.when(lectureDatabaseServiceMock.getLectures()).thenReturn(returnValue);
 
-        Lecture input = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 10:15:00"), Time.valueOf("01:00:00"), new Room());
+        Lecture input = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 10:15:00"),
+                Time.valueOf(ONE_HOUR), new Room());
         assertThat(rulesModule.overlap(input)).isTrue();
     }
 
+    /**
+     * Generates Lectures for use in the overlapLectureTest.
+     *
+     * @return A stream of lectures.
+     */
     public static Stream<List<Lecture>> generateOverlapLectures() {
-        Lecture l1 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 12:00:00"), Time.valueOf("1:00:00"), new Room());
-        Lecture l2 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 11:00:00"), Time.valueOf("1:00:00"), new Room(38, 38, "differentRoom"));
-        Lecture l3 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 08:30:00"), Time.valueOf("1:00:00"), new Room());
+        Lecture l1 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 12:00:00"),
+                Time.valueOf(ONE_HOUR), new Room());
+        Lecture l2 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 11:00:00"),
+                Time.valueOf(ONE_HOUR), new Room(38, 38, "differentRoom"));
+        Lecture l3 = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 08:30:00"),
+                Time.valueOf(ONE_HOUR), new Room());
         return Stream.of(
                 Collections.singletonList(l1),
                 List.of(l1, l2),
@@ -148,9 +187,14 @@ public class RulesModuleAdvancedTest {
         );
     }
 
+    /**
+     * verifies that their is a olap between any of the lectures and the last lecture in the list.
+     *
+     * @param lectures A list of lectures.
+     */
     @ParameterizedTest
     @MethodSource("generateOverlapLectures")
-    public void overlapTest(List<Lecture> lectures) {
+    public void overlapLectureTest(List<Lecture> lectures) {
         Lecture[] returnValue = new Lecture[lectures.size()];
         lectures.toArray(returnValue);
         Mockito.when(lectureDatabaseServiceMock.getLectures()).thenReturn(returnValue);
@@ -159,6 +203,13 @@ public class RulesModuleAdvancedTest {
         assertThat(rulesModule.overlap(input)).isFalse();
     }
 
+    /**
+     * Tests to see when a student can be scheduled is correctly implemented.
+     *
+     * @param interested The value for the interested field in the student object.
+     * @param recovered The value for the recovered field in the student object.
+     * @param expected The expected result.
+     */
     @ParameterizedTest
     @CsvSource({
             "false, false, false",
