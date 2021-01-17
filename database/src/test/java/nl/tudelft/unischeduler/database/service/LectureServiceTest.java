@@ -77,7 +77,7 @@ public class LectureServiceTest {
     public void getLecturesWithCoursesTestExceptionCourseRepo() {
         when(lectureRepository.findAll()).thenReturn(lectures);
 
-        when(courseRepository.findById(0L)).thenThrow(IllegalArgumentException.class); //thenReturn(Optional.of((courses.get(0))));
+        when(courseRepository.findById(0L)).thenThrow(IllegalArgumentException.class);
 
         LectureService lectureService = new LectureService(
             lectureRepository, courseRepository);
@@ -117,7 +117,7 @@ public class LectureServiceTest {
     @Test
     public void setClassroomToEmptyTest() {
         when(lectureRepository.findById(0L))
-                .thenReturn(Optional.of(lectures.get(0)));
+                .thenReturn(Optional.empty());
 
         when(lectureRepository.save(Mockito.any(Lecture.class)))
                 .thenAnswer(x -> x.getArguments()[0]);
@@ -125,24 +125,42 @@ public class LectureServiceTest {
         LectureService lectureService = new LectureService(
                 lectureRepository, courseRepository);
 
-        Assertions.assertEquals(new ResponseEntity<>(lectures.get(0), HttpStatus.OK),
-                lectureService.setClassroomToEmpty(0L));
+        Assertions.assertEquals(404,
+                lectureService.setClassroomToEmpty(0L)
+                .getStatusCodeValue());
     }
 
     @Test
-    public void setClassroomToEmptyTestException() {
+    public void setClassroomToEmptyTestException1() {
         when(lectureRepository.findById(0L))
             .thenThrow(IllegalArgumentException.class);
-        when(lectureRepository.save(Mockito.any(Lecture.class)))
-            .thenAnswer(x -> x.getArguments()[0]);
+        //when(lectureRepository.save(Mockito.any(Lecture.class)))
+        //   .thenAnswer(x -> x.getArguments()[0]);
 
         LectureService lectureService = new LectureService(
             lectureRepository, courseRepository);
 
         lectures.get(0).setClassroom(-1L);
 
-        //        Assertions.assertEquals(ResponseEntity.badRequest().build(),
-        //            lectureService.setClassroomToEmpty(0L));
+        Assertions.assertEquals(400,
+            lectureService.setClassroomToEmpty(0L).getStatusCodeValue());
+    }
+
+    @Test
+    public void setClassroomToEmptyTestException2() {
+        when(lectureRepository.findById(0L))
+            .thenReturn(Optional.of(lectures.get(0)));
+
+        when(lectureRepository.save(Mockito.any(Lecture.class)))
+            .thenThrow(IllegalArgumentException.class);
+
+        LectureService lectureService = new LectureService(
+            lectureRepository, courseRepository);
+
+        lectures.get(0).setClassroom(-1L);
+
+        Assertions.assertEquals(400,
+            lectureService.setClassroomToEmpty(0L).getStatusCodeValue());
     }
 
     @Test
@@ -158,6 +176,55 @@ public class LectureServiceTest {
 
         Assertions.assertEquals(new ResponseEntity<>(lectures.get(0), HttpStatus.OK),
                 lectureService.setTime(0L, new Timestamp(timestamp.getTime() - 100000L)));
+    }
+
+    @Test
+    public void setTimeTestIsEmpty() {
+        Optional<Lecture> res = Optional.empty();
+        when(lectureRepository.findById(0L))
+            .thenReturn(res);
+
+        when(lectureRepository.save(Mockito.any(Lecture.class)))
+            .thenAnswer(x -> x.getArguments()[0]);
+
+        LectureService lectureService = new LectureService(
+            lectureRepository, courseRepository);
+
+        Assertions.assertEquals(404,
+            lectureService.setTime(0L, new Timestamp(timestamp.getTime() - 100000L))
+                .getStatusCodeValue());
+    }
+
+    @Test
+    public void setTimeTestException() {
+        when(lectureRepository.findById(0L))
+            .thenThrow(IllegalArgumentException.class);
+
+        when(lectureRepository.save(Mockito.any(Lecture.class)))
+            .thenAnswer(x -> x.getArguments()[0]);
+
+        LectureService lectureService = new LectureService(
+            lectureRepository, courseRepository);
+
+        Assertions.assertEquals(400,
+            lectureService.setTime(0L, new Timestamp(timestamp.getTime() - 100000L))
+                .getStatusCodeValue());
+    }
+
+    @Test
+    public void setTimeTestException2() {
+        when(lectureRepository.findById(0L))
+            .thenReturn(Optional.of(lectures.get(0)));
+
+        when(lectureRepository.save(Mockito.any(Lecture.class)))
+            .thenThrow(IllegalArgumentException.class);
+
+        LectureService lectureService = new LectureService(
+            lectureRepository, courseRepository);
+
+        Assertions.assertEquals(400,
+            lectureService.setTime(0L, new Timestamp(timestamp.getTime() - 100000L))
+                .getStatusCodeValue());
     }
 
     @Test
@@ -179,6 +246,56 @@ public class LectureServiceTest {
     }
 
     @Test
+    public void setClassroomIsEmpty() {
+        when(lectureRepository.findById(0L))
+            .thenReturn(Optional.empty());
+
+        when(lectureRepository.save(Mockito.any(Lecture.class)))
+            .thenAnswer(x -> x.getArguments()[0]);
+
+        LectureService lectureService = new LectureService(
+            lectureRepository, courseRepository);
+
+
+        Assertions.assertEquals(404,
+            lectureService.setClassroom(0L, 2L).getStatusCodeValue());
+    }
+
+    @Test
+    public void setClassroomException() {
+        when(lectureRepository.findById(0L))
+            .thenThrow(IllegalArgumentException.class);
+
+        when(lectureRepository.save(Mockito.any(Lecture.class)))
+            .thenAnswer(x -> x.getArguments()[0]);
+
+        LectureService lectureService = new LectureService(
+            lectureRepository, courseRepository);
+
+
+        Assertions.assertEquals(400,
+            lectureService.setClassroom(0L, 2L).getStatusCodeValue());
+    }
+
+    @Test
+    public void setClassroomException2() {
+        when(lectureRepository.findById(0L))
+            .thenReturn(Optional.of(lectures.get(0)));
+
+        when(lectureRepository.save(Mockito.any(Lecture.class)))
+            .thenThrow(IllegalArgumentException.class);
+
+        LectureService lectureService = new LectureService(
+            lectureRepository, courseRepository);
+
+
+        Assertions.assertEquals(400,
+            lectureService.setClassroom(0L, 2L)
+                .getStatusCodeValue());
+
+    }
+
+    @Test
     public void setLectureToOnlineTest1() {
         when(lectureRepository.findAllByTeacherAndStartTimeDateBetween(
                 "sanders@tudelft.nl", timestamp, new Timestamp(7200000 + timestamp.getTime())))
@@ -193,6 +310,26 @@ public class LectureServiceTest {
         Assertions.assertEquals(new ResponseEntity<>(HttpStatus.OK),
                 lectureService.setLectureToOnline("sanders@tudelft.nl", timestamp,
                         new Timestamp(7200000 + timestamp.getTime()), true));
+
+        Assertions.assertTrue(lectures.get(0).isMovedOnline());
+        Assertions.assertEquals(lectures.get(0).getClassroom(), -2L);
+    }
+
+    @Test
+    public void setLectureToOnlineTestException() {
+        when(lectureRepository.findAllByTeacherAndStartTimeDateBetween(
+            "sanders@tudelft.nl", timestamp, new Timestamp(7200000 + timestamp.getTime())))
+            .thenReturn(List.of(lectures.get(0)));
+
+        when(lectureRepository.save(Mockito.any(Lecture.class)))
+            .thenThrow(IllegalArgumentException.class);
+
+        LectureService lectureService = new LectureService(
+            lectureRepository, courseRepository);
+
+        Assertions.assertEquals(400,
+            lectureService.setLectureToOnline("sanders@tudelft.nl", timestamp,
+                new Timestamp(7200000 + timestamp.getTime()), true).getStatusCodeValue());
 
         Assertions.assertTrue(lectures.get(0).isMovedOnline());
         Assertions.assertEquals(lectures.get(0).getClassroom(), -2L);
@@ -225,7 +362,7 @@ public class LectureServiceTest {
         when(lectureRepository.save(Mockito.any(Lecture.class)))
                 .thenAnswer(x -> x.getArguments()[0]);
 
-        LectureService lectureService = new LectureService(
+        final LectureService lectureService = new LectureService(
                 lectureRepository, courseRepository);
 
         lectures.get(0).setMovedOnline(true);
