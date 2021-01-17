@@ -1,15 +1,12 @@
-package nl.tudelft.unischeduler.rules.entitiesTests;
+package nl.tudelft.unischeduler.rules.entitiestests;
 
-import nl.tudelft.unischeduler.rules.entities.Lecture;
-import nl.tudelft.unischeduler.rules.entities.Room;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.internal.verification.Times;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Time;
 import java.sql.Timestamp;
-
-import static org.junit.jupiter.api.Assertions.*;
+import nl.tudelft.unischeduler.rules.entities.Lecture;
+import nl.tudelft.unischeduler.rules.entities.Room;
+import org.junit.jupiter.api.Test;
 
 class LectureTest {
 

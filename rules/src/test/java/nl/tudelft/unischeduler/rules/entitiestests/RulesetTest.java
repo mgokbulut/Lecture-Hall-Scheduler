@@ -1,13 +1,14 @@
-package nl.tudelft.unischeduler.rules.entitiesTests;
+package nl.tudelft.unischeduler.rules.entitiestests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import nl.tudelft.unischeduler.rules.entities.Ruleset;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class RulesetTest {
 
-    static Ruleset makeRuleset(){
+    static Ruleset makeRuleset() {
         return new Ruleset();
     }
 
