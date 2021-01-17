@@ -49,7 +49,7 @@ public class RulesModuleAdvancedTest {
         int[] firstThreshold = new int[]{0, 10};
         int[] secondThreshold = new int[]{100, 20};
         rulesModule.setThresholds(new int[][]{firstThreshold, secondThreshold});
-        rulesModule.setBreakTime(45);
+        rulesModule.setBreakTime(2700000);
         rulesModule.setMaxDays(14);
         classRoomDatabaseServiceMock = Mockito.mock(ClassRoomDatabaseService.class);
         lectureDatabaseServiceMock = Mockito.mock(LectureDatabaseService.class);
@@ -95,5 +95,20 @@ public class RulesModuleAdvancedTest {
 
 
         Assertions.assertEquals(rulesModule.verifyLectures(), false);
+    }
+
+
+    @ParameterizedTest
+    @CsvSource({
+            "2000-01-01 12:00:00, 1:00:00, 2000-01-01 12:00:01, 1:00:00, true",
+            "2000-01-01 12:00:00, 1:00:00, 2000-01-01 13:45:00, 1:00:00, false",
+            "2000-01-01 12:00:01, 1:00:00, 2000-01-01 12:00:00, 1:00:00, true",
+            "2000-01-01 13:45:00, 1:00:00, 2000-01-01 12:00:00, 1:00:00, false",
+            "2000-01-01 12:00:00, 1:00:00, 2000-01-01 12:00:00, 1:00:00, true"
+    })
+    public void overlapTest(String startTime1, String duration1, String startTime2, String duration2, boolean expected) {
+        Lecture l1 = new Lecture(-1, -1, Timestamp.valueOf(startTime1), Time.valueOf(duration1), null);
+        Lecture l2 = new Lecture(-1, -1, Timestamp.valueOf(startTime2), Time.valueOf(duration2), null);
+        assertThat(rulesModule.overlap(l1, l2)).isEqualTo(expected);
     }
 }
