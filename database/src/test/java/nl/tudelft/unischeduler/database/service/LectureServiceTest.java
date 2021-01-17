@@ -149,12 +149,12 @@ public class LectureServiceTest {
         LectureService lectureService = new LectureService(
                 lectureRepository, courseRepository);
 
-        lectures.get(0).setMovedOnline(true);
-        lectures.get(0).setClassroom(-2L);
-
         Assertions.assertEquals(new ResponseEntity<>(HttpStatus.OK),
                 lectureService.setLectureToOnline("sanders@tudelft.nl", timestamp,
                         new Timestamp(7200000 + timestamp.getTime()), true));
+
+        Assertions.assertTrue(lectures.get(0).isMovedOnline());
+        Assertions.assertEquals(lectures.get(0).getClassroom(), -2L);
     }
 
     @Test
@@ -168,18 +168,18 @@ public class LectureServiceTest {
         LectureService lectureService = new LectureService(
                 lectureRepository, courseRepository);
 
-        lectures.get(0).setMovedOnline(true);
-        lectures.get(0).setClassroom(-2L);
-
         Assertions.assertEquals(new ResponseEntity<>(HttpStatus.OK),
                 lectureService.setLectureToOnline(0L, true));
+
+        Assertions.assertTrue(lectures.get(0).isMovedOnline());
+        Assertions.assertEquals(lectures.get(0).getClassroom(), -2L);
     }
 
     @Test
     public void setLectureToOfflineTest1() {
         when(lectureRepository.findAllByTeacherAndStartTimeDateGreaterThanEqual(
                 "sanders@tudelft.nl", timestamp))
-                .thenReturn(List.of(lectures.get(0)));
+                .thenReturn(List.of(lectures.get(0), lectures.get(1)));
 
         when(lectureRepository.save(Mockito.any(Lecture.class)))
                 .thenAnswer(x -> x.getArguments()[0]);
@@ -187,11 +187,15 @@ public class LectureServiceTest {
         LectureService lectureService = new LectureService(
                 lectureRepository, courseRepository);
 
-        lectures.get(0).setMovedOnline(false);
-        lectures.get(0).setClassroom(-1L);
+        lectures.get(0).setMovedOnline(true);
+        lectures.get(1).setMovedOnline(true);
+        lectures.get(1).setClassroom(-2L);
 
         Assertions.assertEquals(new ResponseEntity<>(HttpStatus.OK),
                 lectureService.setLectureToOffline("sanders@tudelft.nl", timestamp));
+
+        Assertions.assertFalse(lectures.get(0).isMovedOnline());
+        Assertions.assertTrue(lectures.get(1).isMovedOnline());
     }
 
     @Test
@@ -205,11 +209,32 @@ public class LectureServiceTest {
         LectureService lectureService = new LectureService(
                 lectureRepository, courseRepository);
 
-        lectures.get(0).setMovedOnline(false);
-        lectures.get(0).setClassroom(-1L);
+        lectures.get(0).setMovedOnline(true);
 
         Assertions.assertEquals(new ResponseEntity<>(HttpStatus.OK),
                 lectureService.setLectureToOffline(0L));
+
+        Assertions.assertFalse(lectures.get(0).isMovedOnline());
+    }
+
+    @Test
+    public void setLectureToOfflineTest3() {
+        when(lectureRepository.findById(0L))
+                .thenReturn(Optional.of(lectures.get(0)));
+
+        when(lectureRepository.save(Mockito.any(Lecture.class)))
+                .thenAnswer(x -> x.getArguments()[0]);
+
+        LectureService lectureService = new LectureService(
+                lectureRepository, courseRepository);
+
+        lectures.get(0).setMovedOnline(true);
+        lectures.get(0).setClassroom(-2L);
+
+        Assertions.assertEquals(new ResponseEntity<>(HttpStatus.OK),
+                lectureService.setLectureToOffline(0L));
+
+        Assertions.assertTrue(lectures.get(0).isMovedOnline());
     }
 
     @Test
