@@ -32,14 +32,14 @@ public class LectureService {
      *
      * @return List of Objects (os size 2) with Lecture and Course objects
      */
-    public List<Object []>  getLecturesWithCourses() {
+    public List<Object[]> getLecturesWithCourses() {
         try {
             var lectures = lectureRepository.findAll();
-            List<Object []> lecturesWithCourses = new ArrayList<>();
+            List<Object[]> lecturesWithCourses = new ArrayList<>();
 
             for (Lecture lecture : lectures) {
-                lecturesWithCourses.add(new Object[]{lecture,
-                        courseRepository.findById(lecture.getCourse()).get()});
+                lecturesWithCourses.add(new Object[] {lecture,
+                    courseRepository.findById(lecture.getCourse()).get()});
             }
             return lecturesWithCourses;
         } catch (Exception e) {
@@ -55,22 +55,27 @@ public class LectureService {
      * @return ResponseEntity with result of the operation
      */
     public ResponseEntity<?> setClassroomToEmpty(Long lectureId) {
-        Optional<Lecture> temp = lectureRepository.findById(lectureId);
-        if (temp.isEmpty()) {
-            System.err.println("LectureID not present in the DB");
-            return ResponseEntity.notFound().build();
-        } else {
-            try {
-                Lecture lecture = temp.get();
-                lecture.setClassroom(-1L);
-                lecture.setMovedOnline(true);
-                lectureRepository.save(lecture);
-                return ResponseEntity.ok(lecture);
-            } catch (Exception e) {
-                System.err.println("Something went wrong in setClassroomToEmpty method");
-                e.printStackTrace();
-                return ResponseEntity.badRequest().build();
+        try {
+            Optional<Lecture> temp = lectureRepository.findById(lectureId);
+
+            if (temp.isEmpty()) {
+                System.err.println("LectureID not present in the DB");
+                return ResponseEntity.notFound().build();
+            } else {
+                try {
+                    Lecture lecture = temp.get();
+                    lecture.setClassroom(-1L);
+                    lecture.setMovedOnline(true);
+                    lectureRepository.save(lecture);
+                    return ResponseEntity.ok(lecture);
+                } catch (Exception e) {
+                    System.err.println("Something went wrong in setClassroomToEmpty method");
+                    e.printStackTrace();
+                    return ResponseEntity.badRequest().build();
+                }
             }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -79,75 +84,83 @@ public class LectureService {
      * such that it starts after ts and ends before ts+t.
      *
      * @param courseId course ID
-     * @param ts Timestamp
-     * @param t Time
+     * @param ts       Timestamp
+     * @param t        Time
      * @return List of Lectures fulfilling above specified requirements
      */
     public List<Lecture> getLecturesInCourse(Long courseId, Timestamp ts, Time t) {
-        List<Lecture> lectures =  lectureRepository.findAllByCourse(courseId);
+        List<Lecture> lectures = lectureRepository.findAllByCourse(courseId);
         return lectures
-                .stream()
-                .filter(x -> x.getStartTimeDate().after(ts)
-                        && x.getStartTimeDate().before(new Timestamp(ts.getTime() + t.getTime())))
-                .collect(Collectors.toList());
+            .stream()
+            .filter(x -> x.getStartTimeDate().after(ts)
+                && x.getStartTimeDate().before(new Timestamp(ts.getTime() + t.getTime())))
+            .collect(Collectors.toList());
     }
 
     /**
      * Assigns Time t to a specific lecture as its startTime.
      *
      * @param lectureId lecture ID
-     * @param t Time
+     * @param t         Time
      * @return ResponseEntity with result of the operation
      */
     public ResponseEntity<?> setTime(Long lectureId, Timestamp t) {
-        Optional<Lecture> temp = lectureRepository.findById(lectureId);
-        if (temp.isEmpty()) {
-            System.out.println("LectureID not present in the DB");
-            return ResponseEntity.notFound().build();
-        } else {
-            try {
-                Lecture lecture = temp.get();
-                lecture.setStartTimeDate(t);
-                lectureRepository.save(lecture);
-                return ResponseEntity.ok(lecture);
-            } catch (Exception e) {
-                System.out.println("Something went wrong in getLecturesInRoomOnDay method");
-                return ResponseEntity.badRequest().build();
+        try {
+            Optional<Lecture> temp = lectureRepository.findById(lectureId);
+            if (temp.isEmpty()) {
+                System.out.println("LectureID not present in the DB");
+                return ResponseEntity.notFound().build();
+            } else {
+                try {
+                    Lecture lecture = temp.get();
+                    lecture.setStartTimeDate(t);
+                    lectureRepository.save(lecture);
+                    return ResponseEntity.ok(lecture);
+                } catch (Exception e) {
+                    System.out.println("Something went wrong in getLecturesInRoomOnDay method");
+                    return ResponseEntity.badRequest().build();
+                }
             }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
     /**
      * Assigns a specified classroom to a specified lecture.
      *
-     * @param lectureId lecture ID
+     * @param lectureId   lecture ID
      * @param classroomId classroom ID
      * @return ResponseEntity with result of the operation
      */
     public ResponseEntity<?> setClassroom(Long lectureId, Long classroomId) {
-        Optional<Lecture> temp = lectureRepository.findById(lectureId);
-        if (temp.isEmpty()) {
-            System.out.println("LectureID not present in the DB");
-            return ResponseEntity.notFound().build();
-        } else {
-            try {
-                Lecture lecture = temp.get();
-                lecture.setClassroom(classroomId);
-                lectureRepository.save(lecture);
-                return ResponseEntity.ok(lecture);
-            } catch (Exception e) {
-                System.out.println("Something went wrong in assignRoomToLecture method");
-                return ResponseEntity.badRequest().build();
+        try {
+            Optional<Lecture> temp = lectureRepository.findById(lectureId);
+            if (temp.isEmpty()) {
+                System.out.println("LectureID not present in the DB");
+                return ResponseEntity.notFound().build();
+            } else {
+                try {
+                    Lecture lecture = temp.get();
+                    lecture.setClassroom(classroomId);
+                    lectureRepository.save(lecture);
+                    return ResponseEntity.ok(lecture);
+                } catch (Exception e) {
+                    System.out.println("Something went wrong in assignRoomToLecture method");
+                    return ResponseEntity.badRequest().build();
+                }
             }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
     /**
      * Sets a lecture to online.
      *
-     * @param teacherId the teacher
-     * @param start startTime start window
-     * @param end startTime end Window
+     * @param teacherId    the teacher
+     * @param start        startTime start window
+     * @param end          startTime end Window
      * @param updateOnline whether the classroom should be updated or not
      * @return ResponseEntity with result of the operation
      */
@@ -157,7 +170,7 @@ public class LectureService {
                                                 boolean updateOnline) {
         try {
             List<Lecture> lectures = lectureRepository
-                    .findAllByTeacherAndStartTimeDateBetween(teacherId, start, end);
+                .findAllByTeacherAndStartTimeDateBetween(teacherId, start, end);
             for (Lecture lecture : lectures) {
                 lecture.setMovedOnline(true);
                 if (updateOnline) {
@@ -175,7 +188,7 @@ public class LectureService {
     /**
      * Sets a lecture to online.
      *
-     * @param lectureId the lecture
+     * @param lectureId    the lecture
      * @param updateOnline whether the classroom should be updated or not
      * @return ResponseEntity with result of the operation
      */
@@ -204,13 +217,13 @@ public class LectureService {
      * Sets lecture(found by teacher and startTime) to offline, with EMPTY classroom.
      *
      * @param teacherId the teacher
-     * @param start the startTime
+     * @param start     the startTime
      * @return ResponseEntity with result of the operation
      */
     public ResponseEntity<?> setLectureToOffline(String teacherId, Timestamp start) {
         try {
             List<Lecture> lectures = lectureRepository
-                    .findAllByTeacherAndStartTimeDateGreaterThanEqual(teacherId, start);
+                .findAllByTeacherAndStartTimeDateGreaterThanEqual(teacherId, start);
 
             for (Lecture lecture : lectures) {
                 if (lecture.getClassroom() > -2L) {
@@ -254,20 +267,20 @@ public class LectureService {
     /**
      * Creates a new lecture with given attributes.
      *
-     * @param courseId course of this lecture
-     * @param teacher a teacher of that lecture
-     * @param startTime starting of the lecture
-     * @param duration duration of it
+     * @param courseId    course of this lecture
+     * @param teacher     a teacher of that lecture
+     * @param startTime   starting of the lecture
+     * @param duration    duration of it
      * @param movedOnline is this lecture online?
      * @return ResponseEntity with result of the operation
      */
     public ResponseEntity<?> createLecture(Long courseId, String teacher,
-                                           Timestamp startTime,  Time duration,
+                                           Timestamp startTime, Time duration,
                                            boolean movedOnline) {
         try {
             Optional<Lecture> lectureOptional = lectureRepository
-                    .findAllByClassroomAndCourseAndTeacherAndStartTimeDateAndDurationAndMovedOnline(
-                            -1L, courseId, teacher, startTime, duration, movedOnline);
+                .findAllByClassroomAndCourseAndTeacherAndStartTimeDateAndDurationAndMovedOnline(
+                    -1L, courseId, teacher, startTime, duration, movedOnline);
             if (lectureOptional.isPresent()) {
                 return ResponseEntity.notFound().build();
             }
