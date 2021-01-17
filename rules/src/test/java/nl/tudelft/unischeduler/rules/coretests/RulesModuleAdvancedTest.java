@@ -1,6 +1,7 @@
 package nl.tudelft.unischeduler.rules.coretests;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -16,6 +17,7 @@ import nl.tudelft.unischeduler.rules.core.RulesModule;
 import nl.tudelft.unischeduler.rules.entities.Lecture;
 import nl.tudelft.unischeduler.rules.entities.Room;
 import nl.tudelft.unischeduler.rules.entities.Ruleset;
+import nl.tudelft.unischeduler.rules.entities.Student;
 import nl.tudelft.unischeduler.rules.services.ClassRoomDatabaseService;
 import nl.tudelft.unischeduler.rules.services.LectureDatabaseService;
 import nl.tudelft.unischeduler.rules.services.StudentDatabaseService;
@@ -133,5 +135,19 @@ public class RulesModuleAdvancedTest {
 
         Lecture input = new Lecture(-1, -1, Timestamp.valueOf("2000-01-01 10:15:00"), Time.valueOf("01:00:00"), new Room());
         assertThat(rulesModule.overlap(input)).isTrue();
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "false, false, false",
+            "false, true, false",
+            "true, false, false",
+            "true, true, true",
+    })
+    public void canScheduleTest(boolean interested, boolean recovered, boolean expected) {
+        Student fakeStudent = new Student("fake", interested, recovered);
+        when(studentDatabaseServiceMock.getStudent("fake")).thenReturn(fakeStudent);
+
+        assertThat(rulesModule.canBeScheduled("fake")).isEqualTo(expected);
     }
 }
