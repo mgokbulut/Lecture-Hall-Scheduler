@@ -97,8 +97,6 @@ public class LectureServiceTest {
         LectureService lectureService = new LectureService(
                 lectureRepository, courseRepository);
 
-        lectures.get(0).setClassroom(-1L);
-
         Assertions.assertEquals(new ResponseEntity<>(lectures.get(0), HttpStatus.OK),
                 lectureService.setClassroomToEmpty(0L));
     }
@@ -113,8 +111,6 @@ public class LectureServiceTest {
 
         LectureService lectureService = new LectureService(
                 lectureRepository, courseRepository);
-
-        lectures.get(0).setStartTimeDate(new Timestamp(timestamp.getTime() - 100000L));
 
         Assertions.assertEquals(new ResponseEntity<>(lectures.get(0), HttpStatus.OK),
                 lectureService.setTime(0L, new Timestamp(timestamp.getTime() - 100000L)));
@@ -131,10 +127,11 @@ public class LectureServiceTest {
         LectureService lectureService = new LectureService(
                 lectureRepository, courseRepository);
 
-        lectures.get(0).setClassroom(2L);
 
         Assertions.assertEquals(new ResponseEntity<>(lectures.get(0), HttpStatus.OK),
                 lectureService.setClassroom(0L, 2L));
+
+        Assertions.assertEquals((long) lectures.get(0).getClassroom(), 2L);
     }
 
     @Test
