@@ -1,0 +1,77 @@
+package nl.tudelft.unischeduler.rules.coreTests;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
+
+import java.util.stream.Stream;
+import nl.tudelft.unischeduler.rules.core.RulesModule;
+import nl.tudelft.unischeduler.rules.entities.Room;
+import nl.tudelft.unischeduler.rules.entities.Ruleset;
+import nl.tudelft.unischeduler.rules.services.ClassRoomDatabaseService;
+import nl.tudelft.unischeduler.rules.services.LectureDatabaseService;
+import nl.tudelft.unischeduler.rules.services.StudentDatabaseService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class RulesModuleAdvancedTest {
+
+    private RulesModule rulesModule;
+
+    private ClassRoomDatabaseService classRoomDatabaseServiceMock;
+    private LectureDatabaseService lectureDatabaseServiceMock;
+    private StudentDatabaseService studentDatabaseServiceMock;
+
+    /**
+     * Generates a RulesModule class with mocks for the databaseServices.
+     */
+    @BeforeEach
+    public void setup() {
+        rulesModule = new RulesModule();
+        int[] firstThreshold = new int[]{0, 10};
+        int[] secondThreshold = new int[]{100, 20};
+        rulesModule.setThresholds(new int[][]{firstThreshold, secondThreshold});
+        rulesModule.setBreakTime(45);
+        rulesModule.setMaxDays(14);
+        classRoomDatabaseServiceMock = Mockito.mock(ClassRoomDatabaseService.class);
+        lectureDatabaseServiceMock = Mockito.mock(LectureDatabaseService.class);
+        studentDatabaseServiceMock = Mockito.mock(StudentDatabaseService.class);
+        rulesModule.setClassRoomDatabaseService(classRoomDatabaseServiceMock);
+        rulesModule.setLectureDatabaseService(lectureDatabaseServiceMock);
+        rulesModule.setStudentDatabaseService(studentDatabaseServiceMock);
+    }
+
+    /**
+     * Sets a new ruleset to the rulesModule
+     */
+    @Test
+    public void setRulesTest() {
+        int[] firstThreshold = new int[]{100, 10};
+        int[] secondThreshold = new int[]{200, 20};
+        Ruleset newRules = new Ruleset(new int[][]{firstThreshold, secondThreshold}, 120, 7);
+        rulesModule.setRules(newRules);
+        assertThat(rulesModule.getRules()).isEqualTo(newRules);
+        assertThat(rulesModule.getThresholds()).isEqualTo(newRules.getThresholds());
+        assertThat(rulesModule.getBreakTime()).isEqualTo(120);
+        assertThat(rulesModule.getMaxDays()).isEqualTo(7);
+    }
+
+    @ParameterizedTest(name = "getCapacityTest")
+    @CsvSource({"50, 5", "99, 9", "101, 20", "150, 30", "250, 50"})
+    public void getCapacityTest(int input, int expected) {
+        assertThat(rulesModule.getCapacity(input)).isEqualTo(expected);
+    }
+
+    @Test
+    public void getCapacityOfRoomTest() {
+        when(classRoomDatabaseServiceMock.getClassroom(anyInt())).thenReturn(new Room(1, 101, "testRoom"));
+
+        assertThat(rulesModule.getCapacityOfRoom(1)).isEqualTo(20);
+    }
+}
