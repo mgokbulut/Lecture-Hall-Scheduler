@@ -42,8 +42,8 @@ public class LectureService {
                         courseRepository.findById(lecture.getCourse()).get()});
             }
             return lecturesWithCourses;
-        } catch (Exception a) {
-            a.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

@@ -74,6 +74,34 @@ public class LectureServiceTest {
     }
 
     @Test
+    public void getLecturesWithCoursesTestExceptionCourseRepo() {
+        when(lectureRepository.findAll()).thenReturn(lectures);
+
+        when(courseRepository.findById(0L)).thenThrow(IllegalArgumentException.class); //thenReturn(Optional.of((courses.get(0))));
+
+        LectureService lectureService = new LectureService(
+            lectureRepository, courseRepository);
+
+        //when(lectureService.getLecturesWithCourses()).thenThrow(Exception.class);
+
+        Assertions.assertEquals(null, lectureService.getLecturesWithCourses());
+    }
+
+    @Test
+    public void getLecturesWithCoursesTestExceptionLectureRepo() {
+        when(lectureRepository.findAll()).thenThrow(IllegalArgumentException.class);
+
+        when(courseRepository.findById(0L)).thenReturn(Optional.of((courses.get(0))));
+
+        LectureService lectureService = new LectureService(
+            lectureRepository, courseRepository);
+
+        //when(lectureService.getLecturesWithCourses()).thenThrow(Exception.class);
+
+        Assertions.assertEquals(null, lectureService.getLecturesWithCourses());
+    }
+
+    @Test
     public void getLecturesInCourseTest() {
         when(lectureRepository.findAllByCourse(0L)).thenReturn(List.of(lectures.get(0)));
 
@@ -99,6 +127,22 @@ public class LectureServiceTest {
 
         Assertions.assertEquals(new ResponseEntity<>(lectures.get(0), HttpStatus.OK),
                 lectureService.setClassroomToEmpty(0L));
+    }
+
+    @Test
+    public void setClassroomToEmptyTestException() {
+        when(lectureRepository.findById(0L))
+            .thenThrow(IllegalArgumentException.class);
+        when(lectureRepository.save(Mockito.any(Lecture.class)))
+            .thenAnswer(x -> x.getArguments()[0]);
+
+        LectureService lectureService = new LectureService(
+            lectureRepository, courseRepository);
+
+        lectures.get(0).setClassroom(-1L);
+
+        //        Assertions.assertEquals(ResponseEntity.badRequest().build(),
+        //            lectureService.setClassroomToEmpty(0L));
     }
 
     @Test
