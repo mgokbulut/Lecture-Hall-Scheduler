@@ -1,4 +1,4 @@
-package nl.tudelft.unischeduler.rules.coreTests;
+package nl.tudelft.unischeduler.rules.coretests;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.stream.Stream;
+
 import nl.tudelft.unischeduler.rules.core.RulesModule;
 import nl.tudelft.unischeduler.rules.entities.Lecture;
 import nl.tudelft.unischeduler.rules.entities.Room;
@@ -22,20 +22,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class RulesModuleAdvancedTest {
 
-    private RulesModule rulesModule;
+    private transient RulesModule rulesModule;
 
-    private ClassRoomDatabaseService classRoomDatabaseServiceMock;
-    private LectureDatabaseService lectureDatabaseServiceMock;
-    private StudentDatabaseService studentDatabaseServiceMock;
+    private transient ClassRoomDatabaseService classRoomDatabaseServiceMock;
+    private transient LectureDatabaseService lectureDatabaseServiceMock;
+    private transient StudentDatabaseService studentDatabaseServiceMock;
 
-    private List<Lecture> lectures;
+    private transient List<Lecture> lectures;
 
     private final transient Timestamp timestamp = new Timestamp(new GregorianCalendar(
             2020, Calendar.DECEMBER, 1, 0, 0).getTimeInMillis());
