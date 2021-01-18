@@ -18,13 +18,28 @@ public class CourseTest {
     }
 
     @Test
+    public void testGetId() {
+        Long result = courseTest.getId();
+
+        assertThat(result == 1L).isTrue();
+    }
+
+    @Test
+    public void testGetName() {
+        String result = courseTest.getName();
+
+        assertThat(result.equals("SEM")).isTrue();
+    }
+
+    @Test
     public void testEquals() {
         // Setup
 
         // Run the test
         final boolean result1 = courseTest.equals(new Course(
                         1L, "SEM", Collections.emptySet(), Collections.emptySet(), 2021));
-        final boolean result2 = courseTest.equals("o");
+        final boolean result2 = courseTest.equals(new Course(
+                2L, "SEM", Collections.emptySet(), Collections.emptySet(), 2021));
 
         // Verify the results
         assertThat(result1).isTrue();
