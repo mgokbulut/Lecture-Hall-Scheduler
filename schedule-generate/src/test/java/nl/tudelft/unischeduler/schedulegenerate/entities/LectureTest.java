@@ -17,7 +17,28 @@ public class LectureTest {
     @Before
     public void setUp() {
         lectureTest = new Lecture(1, 1,
-                new Timestamp(1L), new Time(1l), false, 2021, new Room(1, 1, "Room"));
+                new Timestamp(1L), new Time(1l), true, 2021, new Room(1, 1, "Room"));
+    }
+
+    @Test
+    public void testGetId() {
+        int result = lectureTest.getId();
+
+        assertThat(result == 1).isTrue();
+    }
+
+    @Test
+    public void testGetAttendance() {
+        int result = lectureTest.getAttendance();
+
+        assertThat(result == 1).isTrue();
+    }
+
+    @Test
+    public void testGetYear() {
+        int result = lectureTest.getYear();
+
+        assertThat(result == 2021).isTrue();
     }
 
     @Test
