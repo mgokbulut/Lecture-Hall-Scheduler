@@ -3,7 +3,8 @@ package nl.tudelft.unischeduler.schedulegenerate.entities;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -55,6 +56,7 @@ public class CourseTest {
         final int result = test.hashCode();
 
         // Verify the results
-        assertThat(result).isEqualTo(Objects.hash(1L, "SEM", Collections.emptySet(), Collections.emptySet()));
+        assertThat(result).isEqualTo(Objects.hash(
+                1L, "SEM", Collections.emptySet(), Collections.emptySet()));
     }
 }

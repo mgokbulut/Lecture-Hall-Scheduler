@@ -17,7 +17,7 @@ public class LectureTest {
     @Before
     public void setUp() {
         test = new Lecture(1, 1,
-                new Timestamp(1L), new Time(1l), true, 2021, new Room(1, 1, "Room"));
+                new Timestamp(1L), new Time(1L), true, 2021, new Room(1, 1, "Room"));
     }
 
     @Test
@@ -52,9 +52,9 @@ public class LectureTest {
     public void testCompareTo() {
         // Setup
         Lecture yes = new Lecture(1, 1,
-                new Timestamp(1L), new Time(1l), false, 2021, new Room(1, 1, "Room"));
+                new Timestamp(1L), new Time(1L), false, 2021, new Room(1, 1, "Room"));
         Lecture no = new Lecture(1, 1,
-                new Timestamp(2L), new Time(2l), false, 2021, new Room(1, 1, "Room"));
+                new Timestamp(2L), new Time(2L), false, 2021, new Room(1, 1, "Room"));
 
         // Run the test
         final int result = test.compareTo(yes);
