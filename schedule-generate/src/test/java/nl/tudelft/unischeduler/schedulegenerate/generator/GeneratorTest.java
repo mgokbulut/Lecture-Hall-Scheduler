@@ -10,12 +10,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.*;
+
 import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.createEmptyTimeTable;
 import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.createListCourses;
 import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.createListLecturesScheduled;
@@ -25,10 +21,7 @@ import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.makeGene
 import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.makeRoom;
 import static nl.tudelft.unischeduler.schedulegenerate.Utility.TestUtil.makeTimeLength;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -59,6 +52,15 @@ public class GeneratorTest {
         generatorUnderTest.setTimeTable(createEmptyTimeTable(NUMBER_OF_DAYS));
         generatorUnderTest.setCurrentTime(makeBasicStartTime());
 
+    }
+
+    @Test
+    public void testConstructor() {
+
+        Date date = new Date();
+        Timestamp now = new Timestamp(date.getTime());
+        Generator gen = new Generator(mockApiCommunicator);
+        assertEquals(gen.getCurrentTime(), now);
     }
 
     @Test
@@ -214,9 +216,10 @@ public class GeneratorTest {
         // Setup
         final Lecture l = new Lecture(0, 0, new Time(0L), false, 2021);
         final ArrayList<Room> rooms = new ArrayList<>(List.of(new Room(0, 10, basicName)));
-        final Set<Student> courseStudents = Set.of(
-                new Student(basicNetId, basicType, false,
-                        new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime()));
+        final Student stu = new Student(basicNetId, basicType, false,
+                new Date(0));
+        //stu.setLastTimeOnCampus(new Date(0));
+        final Set<Student> courseStudents = Set.of(stu);
         final PriorityQueue<Student> studentsQueue = new PriorityQueue<>();
         studentsQueue.addAll(courseStudents);
         when(mockApiCommunicator.getIntervalBetweenLectures()).thenReturn(0L);
@@ -235,6 +238,7 @@ public class GeneratorTest {
                 eq(new Student(basicNetId, basicType, false,
                         new GregorianCalendar(2019, Calendar.JANUARY, 1).getTime())),
                 any(Lecture.class));
+        assertEquals(stu.getLastTimeOnCampus(), l.getStartTime());
     }
 
     @Test
@@ -253,6 +257,12 @@ public class GeneratorTest {
 
         // Verify the results
         assertThat(result).isTrue();
+        assertEquals(true, l.getIsOnline());
+        assertEquals(onlineRoom, l.getRoom());
+        assertNotEquals(null, l.getStartTime());
+        verify(mockApiCommunicator).assignRoomToLecture(l,
+                onlineRoom);
+        verify(mockApiCommunicator).assignStudentToLecture(any(Student.class), eq(l));
     }
 
     @Test

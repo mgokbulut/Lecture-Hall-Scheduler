@@ -274,10 +274,10 @@ public class Generator {
     public Room findRoom(ArrayList<Room> rooms,
                           Lecture lecture) {
         // sort in descending order
-        System.out.println(rooms);
+        //System.out.println(rooms);
         Collections.sort(rooms);
         Collections.reverse(rooms);
-        System.out.println(rooms);
+        //System.out.println(rooms);
         Timestamp time = null;
         Room currRoom = null;
         // for each room
