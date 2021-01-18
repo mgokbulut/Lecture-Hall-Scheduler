@@ -7,26 +7,27 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class CourseTest {
 
-    private transient Course courseTest;
+    private transient Course test;
 
     @Before
     public void setUp() {
-        courseTest = new Course(
+        test = new Course(
                 1L, "SEM", Collections.emptySet(), Collections.emptySet(), 2021);
     }
 
     @Test
     public void testGetId() {
-        Long result = courseTest.getId();
+        Long result = test.getId();
 
         assertThat(result == 1L).isTrue();
     }
 
     @Test
     public void testGetName() {
-        String result = courseTest.getName();
+        String result = test.getName();
 
         assertThat(result.equals("SEM")).isTrue();
     }
@@ -36,10 +37,10 @@ public class CourseTest {
         // Setup
 
         // Run the test
-        final boolean result1 = courseTest.equals(new Course(
+        final boolean result1 = test.equals(new Course(
                         1L, "SEM", Collections.emptySet(), Collections.emptySet(), 2021));
-        final boolean result2 = courseTest.equals(new Course(
-                2L, "SEM", Collections.emptySet(), Collections.emptySet(), 2021));
+        final boolean result2 = test.equals(new Course(
+                2L, "AD", Collections.emptySet(), Collections.emptySet(), 2021));
 
         // Verify the results
         assertThat(result1).isTrue();
@@ -51,7 +52,7 @@ public class CourseTest {
         // Setup
 
         // Run the test
-        final int result = courseTest.hashCode();
+        final int result = test.hashCode();
 
         // Verify the results
         assertThat(result).isEqualTo(Objects.hash(1L, "SEM", Collections.emptySet(), Collections.emptySet()));

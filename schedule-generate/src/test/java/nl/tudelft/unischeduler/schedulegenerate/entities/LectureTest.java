@@ -12,38 +12,38 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class LectureTest {
 
-    private transient Lecture lectureTest;
+    private transient Lecture test;
 
     @Before
     public void setUp() {
-        lectureTest = new Lecture(1, 1,
+        test = new Lecture(1, 1,
                 new Timestamp(1L), new Time(1l), true, 2021, new Room(1, 1, "Room"));
     }
 
     @Test
     public void testGetId() {
-        int result = lectureTest.getId();
+        int result = test.getId();
 
         assertThat(result == 1).isTrue();
     }
 
     @Test
     public void testGetAttendance() {
-        int result = lectureTest.getAttendance();
+        int result = test.getAttendance();
 
         assertThat(result == 1).isTrue();
     }
 
     @Test
     public void testGetYear() {
-        int result = lectureTest.getYear();
+        int result = test.getYear();
 
         assertThat(result == 2021).isTrue();
     }
 
     @Test
     public void testComputeEndTime() {
-        Timestamp result = lectureTest.computeEndTime();
+        Timestamp result = test.computeEndTime();
 
         assertThat(result.equals(new Timestamp(2L))).isTrue();
     }
@@ -57,8 +57,8 @@ public class LectureTest {
                 new Timestamp(2L), new Time(2l), false, 2021, new Room(1, 1, "Room"));
 
         // Run the test
-        final int result = lectureTest.compareTo(yes);
-        final int result2 = lectureTest.compareTo(no);
+        final int result = test.compareTo(yes);
+        final int result2 = test.compareTo(no);
 
         // Verify the results
         assertThat(result).isEqualTo(0);
