@@ -11,11 +11,8 @@ import java.util.PriorityQueue;
 import java.util.Set;
 import lombok.Data;
 import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
-import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
-import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
-import nl.tudelft.unischeduler.schedulegenerate.entities.Room;
-import nl.tudelft.unischeduler.schedulegenerate.entities.Student;
-import nl.tudelft.unischeduler.schedulegenerate.entities.Util;
+import nl.tudelft.unischeduler.schedulegenerate.entities.*;
+import org.apache.commons.lang.mutable.MutableBoolean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.tuple.Tuple2;
@@ -40,6 +37,10 @@ public class Generator {
 
     private List<List<Lecture>> timeTable;
 
+    private DateTimeImpl dater;
+
+    private Util util;
+
     @Autowired
     private final transient ApiCommunicator apiCommunicator;
 
@@ -48,17 +49,18 @@ public class Generator {
      *
      * @param apiCommunicator the communicator
      */
-    public Generator(ApiCommunicator apiCommunicator) {
+    public Generator(ApiCommunicator apiCommunicator, DateTimeImpl dater) {
 
         this.apiCommunicator = apiCommunicator;
-
+        this.dater = dater;
+        this.util = new Util();
         // take next monday, set as class attribute
-        Date date = new Date();
+        Date date = dater.getDate();
         Timestamp now = new Timestamp(date.getTime());
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = dater.getCal();
         cal.setTimeInMillis(now.getTime());
         while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
-            now = Util.nextDay(now);
+            now = util.nextDay(now);
             cal.setTimeInMillis(now.getTime());
         }
         this.currentTime = now;
@@ -73,7 +75,7 @@ public class Generator {
      */
     public void scheduleGenerate(Timestamp currentTime) {
         ArrayList<Course> courses = apiCommunicator.getCourses();
-        ArrayList<Lecture> lectures = Util.populateLectures(courses, numOfDays,
+        ArrayList<Lecture> lectures = util.populateLectures(courses, numOfDays,
                 apiCommunicator, currentTime);
 
         // Now we need to know which lectures are on which days in an
@@ -107,7 +109,7 @@ public class Generator {
 
             // now get which day compared to currentTime, as an int
             if (l.getStartTime() != null) {
-                int lecDay = Util.calDistance(currentTime, l.getStartTime());
+                int lecDay = util.calDistance(currentTime, l.getStartTime());
                 timeTable.get(lecDay).add(l);
             }
         }
@@ -127,7 +129,7 @@ public class Generator {
         int maxNumberOfYears = 3;
         // and separate them per year
         List<List<Course>> coursesPerYear = new ArrayList<>();
-        Util.populateCoursesPerYear(courses, coursesPerYear, maxNumberOfYears);
+        util.populateCoursesPerYear(courses, coursesPerYear, maxNumberOfYears);
         int numYears = coursesPerYear.size();
         schedulingYears(numYears, coursesPerYear, rooms);
     }
@@ -153,7 +155,7 @@ public class Generator {
                 // sort them per when they were last on campus in a priority queue
                 PriorityQueue<Student> studentsQueue = new PriorityQueue<>();
                 // add a student to the queue if he's allowed to
-                Util.addIfAllowed(studentsQueue, courseStudents, apiCommunicator);
+                util.addIfAllowed(studentsQueue, courseStudents, apiCommunicator);
 
                 // for each lecture in the course
                 ArrayList<Lecture> lecturesCurrentCourse = new ArrayList<>(c.getLectures());
@@ -184,7 +186,7 @@ public class Generator {
                 // then we schedule it
                 boolean scheduled = schedulingLecture(l, rooms, courseStudents, studentsQueue);
                 everythingWentWell = everythingWentWell
-                        || scheduled;
+                        && scheduled;
             }
         }
         return everythingWentWell;
@@ -220,7 +222,7 @@ public class Generator {
         // we add back the ones that weren't selected
         Boolean everythingWentWell = true;
         List<Object> retObjects =
-                Util.computeStudentsList(getCapacity(room), MAX_ITERATIONS,
+                util.computeStudentsList(getCapacity(room), MAX_ITERATIONS,
                         studentsQueue, everythingWentWell, l);
         Set<Student> studentsToAdd = (Set<Student>) retObjects.get(0);
         List<Student> notSelected = (List<Student>) retObjects.get(1);
@@ -274,10 +276,8 @@ public class Generator {
     public Room findRoom(ArrayList<Room> rooms,
                           Lecture lecture) {
         // sort in descending order
-        //System.out.println(rooms);
         Collections.sort(rooms);
         Collections.reverse(rooms);
-        //System.out.println(rooms);
         Timestamp time = null;
         Room currRoom = null;
         // for each room
@@ -287,7 +287,7 @@ public class Generator {
             time = getEarliestTime(currRoom, lecture);
             // if there is none, return null
             if (time != null) {
-                return Util.assignRoomToLecture(time, lecture, timeTable, currRoom, currentTime);
+                return util.assignRoomToLecture(time, lecture, timeTable, currRoom, currentTime);
             }
         }
         return null;
@@ -308,15 +308,14 @@ public class Generator {
         // end of the day is at 17:45, courses should not end any further than that
         Timestamp dayStartTime = new Timestamp(currentTime.getTime());
         while (day < numOfDays) {
-            Timestamp endOfDay = Util.getEndOfDay(dayStartTime);
+            Timestamp endOfDay = util.getEndOfDay(dayStartTime);
             Timestamp nextTime = isFree(dayStartTime, room, lecture, day);
-            Timestamp nextTimeWithDuration = Util.addClassDurationAndTime(lecture, nextTime);
-
+            Timestamp nextTimeWithDuration = util.addClassDurationAndTime(lecture, nextTime);
             if (!nextTimeWithDuration.after(endOfDay)) {
                 return nextTime;
             }
 
-            dayStartTime = Util.nextDay(dayStartTime);
+            dayStartTime = util.nextDay(dayStartTime);
             day++;
 
         }
@@ -341,10 +340,10 @@ public class Generator {
             lectures = timeTable.get(day);
         }
         long intervalBetweenLectures = getIntervalBetweenLectures();
-        Timestamp found = Util.getStartOfDay(timeslot);
+        Timestamp found = util.getStartOfDay(timeslot);
         for (int i = 0; i < lectures.size(); i++) {
             Lecture l = lectures.get(i);
-            if (!Util.areLecturesConflicting(lecture, l, found,
+            if (!util.areLecturesConflicting(lecture, l, found,
                     room, intervalBetweenLectures)) {
                 found = new Timestamp(l.computeEndTime().getTime()
                         + intervalBetweenLectures);
