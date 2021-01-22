@@ -1,9 +1,10 @@
-package nl.tudelft.unischeduler.rules.entitiesTests;
+package nl.tudelft.unischeduler.rules.entitiestests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import nl.tudelft.unischeduler.rules.entities.Room;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class RoomTest {
 

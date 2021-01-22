@@ -1,16 +1,16 @@
-package nl.tudelft.unischeduler.rules.coreTests;
+package nl.tudelft.unischeduler.rules.coretests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.sql.Time;
+import java.sql.Timestamp;
 import nl.tudelft.unischeduler.rules.core.RulesModule;
 import nl.tudelft.unischeduler.rules.entities.Lecture;
 import nl.tudelft.unischeduler.rules.entities.Room;
 import nl.tudelft.unischeduler.rules.entities.Ruleset;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.verification.Times;
 
-import java.sql.Time;
-import java.sql.Timestamp;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class RulesModuleTest {
 
@@ -22,7 +22,8 @@ class RulesModuleTest {
 
     static RulesModule makeRulesModule() {
         Ruleset rs = new Ruleset();
-        int[][] thresholds = {{0, 20},
+        int[][] thresholds = {
+                {0, 20},
                 {200, 30},
                 {400, 40}};
         rs.setMaxDays(20);
@@ -178,7 +179,7 @@ class RulesModuleTest {
 
         Lecture l1 = new Lecture(1, 60,
                 new Timestamp(0), new Time(60000), null);
-        Lecture l2 = new Lecture(1, 60, new Timestamp(670000), new Time(600000), null);
+        Lecture l2 = new Lecture(1, 160, new Timestamp(670000), new Time(600000), null);
 
         Room room = new Room(1, 400, roomName);
 
@@ -197,7 +198,7 @@ class RulesModuleTest {
 
         Lecture l1 = new Lecture(1, 60,
                 new Timestamp(0), new Time(60000), null);
-        Lecture l2 = new Lecture(1, 200, new Timestamp(670000), new Time(600000), null);
+        Lecture l2 = new Lecture(1, 161, new Timestamp(670000), new Time(600000), null);
 
         Room room = new Room(1, 400, roomName);
 
