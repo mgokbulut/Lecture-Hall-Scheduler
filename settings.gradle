@@ -6,6 +6,5 @@ include 'schedule-edit'
 include 'schedule-generate'
 include 'rules'
 include 'discovery-server'
-include 'test-module'
 include 'gateway-authentication'
 
