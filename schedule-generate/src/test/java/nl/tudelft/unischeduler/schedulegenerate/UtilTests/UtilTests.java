@@ -3,6 +3,9 @@ package nl.tudelft.unischeduler.schedulegenerate.UtilTests;
 import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
 import nl.tudelft.unischeduler.schedulegenerate.entities.*;
 import nl.tudelft.unischeduler.schedulegenerate.generator.Generator;
+import org.apache.commons.lang.mutable.MutableBoolean;
+import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -24,12 +27,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UtilTests {
 
+    private transient Util util;
+
+    @BeforeEach
+    public void setUp() {
+        util = new Util();
+    }
+
     @Test
     void testDistanceTwoTimestamps1() {
         Timestamp t1 = makeBasicStartTime();
         Timestamp t2 = new Timestamp(t1.getTime() + makeTimeLength(24).getTime());
         //Generator test = makeGenerator();
-        int n1 = Util.calDistance(t1, t2);
+        int n1 = util.calDistance(t1, t2);
         assertEquals(1, n1);
     }
 
@@ -39,7 +49,7 @@ public class UtilTests {
         Timestamp t2 = new Timestamp(t1.getTime() + makeTimeLength(24).getTime());
         Timestamp t3 = new Timestamp(t2.getTime() + makeTimeLength(24).getTime());
         //Generator test = makeGenerator();
-        int n2 = Util.calDistance(t1, t3);
+        int n2 = util.calDistance(t1, t3);
         assertEquals(2, n2);
     }
 
@@ -51,7 +61,7 @@ public class UtilTests {
         Timestamp timeMonday = new Timestamp(timeFriday.getTime()
                 + (3 * makeTimeLength(24).getTime())); // 2020-12-21T02:45:10.430
         //Generator test = makeGenerator();
-        int n1 = Util.calDistance(timeFriday, timeMonday);
+        int n1 = util.calDistance(timeFriday, timeMonday);
         assertEquals(1, n1);
     }
 
@@ -64,7 +74,7 @@ public class UtilTests {
         Timestamp currentTime = new Timestamp(0);
 
         Room expected = null;
-        Room actual = Util.assignRoomToLecture(time, lecture, timeTable, room, currentTime);
+        Room actual = util.assignRoomToLecture(time, lecture, timeTable, room, currentTime);
 
         assertEquals(expected, actual);
 
@@ -81,7 +91,7 @@ public class UtilTests {
         Timestamp currentTime = new Timestamp(2021, 1, 4, 0, 0, 0, 0);
 
         Room expected = room;
-        Room actual = Util.assignRoomToLecture(time, lecture, timeTable, room, currentTime);
+        Room actual = util.assignRoomToLecture(time, lecture, timeTable, room, currentTime);
         assertEquals(expected, actual);
 
         assertEquals(time, lecture.getStartTime());
@@ -110,7 +120,7 @@ public class UtilTests {
         studentsQueue.add(stu3);
         studentsQueue.add(stu1);
 
-        List<Object> res = Util.computeStudentsList(
+        List<Object> res = util.computeStudentsList(
                 capacity, maxIterations, studentsQueue, false, l);
 
         Set<Student> studentsToAdd = ((Set<Student>) res.get(0));
@@ -128,7 +138,7 @@ public class UtilTests {
         Timestamp time = new Timestamp(300);
 
         Timestamp expected = new Timestamp(500);
-        Timestamp actual = Util.addClassDurationAndTime(lecture, time);
+        Timestamp actual = util.addClassDurationAndTime(lecture, time);
 
         assertEquals(expected, actual);
 
@@ -141,7 +151,7 @@ public class UtilTests {
         Timestamp time = new Timestamp(1, 1, 1, 4, 45, 0, 0);
 
         Timestamp expected = new Timestamp(1, 1, 1, 17, 45, 0, 0);
-        Timestamp actual = Util.getEndOfDay(time);
+        Timestamp actual = util.getEndOfDay(time);
 
         assertEquals(expected, actual);
 
@@ -153,7 +163,7 @@ public class UtilTests {
         Timestamp time = new Timestamp(1, 1, 1, 4, 45, 0, 0);
 
         Timestamp expected = new Timestamp(1, 1, 1, 9, 45, 0, 0);
-        Timestamp actual = Util.getStartOfDay(time);
+        Timestamp actual = util.getStartOfDay(time);
 
         assertEquals(expected, actual);
 
@@ -169,7 +179,7 @@ public class UtilTests {
         Timestamp currentTime = new Timestamp(200);
 
         ArrayList<Lecture> expected = new ArrayList<>();
-        ArrayList<Lecture> actual = Util.populateLectures(courses, numOfDays, apiComm, currentTime);
+        ArrayList<Lecture> actual = util.populateLectures(courses, numOfDays, apiComm, currentTime);
 
         assertEquals(expected, actual);
 
@@ -188,7 +198,7 @@ public class UtilTests {
 
         courses.addAll(List.of(c1, c2, c3));
 
-        Util.populateCoursesPerYear(courses, coursesPerYear, maxNumberOfYears);
+        util.populateCoursesPerYear(courses, coursesPerYear, maxNumberOfYears);
 
         assertEquals(1, coursesPerYear.get(0).size());
         assertEquals(2, coursesPerYear.get(1).size());
@@ -211,7 +221,7 @@ public class UtilTests {
         long interval = 1000L;
 
         boolean expected = true;
-        boolean actual = Util.areLecturesConflicting(l1, l2, time, r1, interval);
+        boolean actual = util.areLecturesConflicting(l1, l2, time, r1, interval);
 
         assertEquals(expected, actual);
 
@@ -233,7 +243,7 @@ public class UtilTests {
         long interval = 1000L;
 
         boolean expected = true;
-        boolean actual = Util.areLecturesConflicting(l1, l2, time, r1, interval);
+        boolean actual = util.areLecturesConflicting(l1, l2, time, r1, interval);
 
         assertEquals(expected, actual);
 
@@ -255,7 +265,7 @@ public class UtilTests {
         long interval = 1000L;
 
         boolean expected = true;
-        boolean actual = Util.areLecturesConflicting(l1, l2, time, r1, interval);
+        boolean actual = util.areLecturesConflicting(l1, l2, time, r1, interval);
 
         assertEquals(expected, actual || true);
 
@@ -276,7 +286,7 @@ public class UtilTests {
         long interval = 1000L;
 
         boolean expected = true;
-        boolean actual = Util.areLecturesConflicting(l1, l2, time, r1, interval);
+        boolean actual = util.areLecturesConflicting(l1, l2, time, r1, interval);
 
         assertEquals(expected, actual || true);
 
@@ -293,7 +303,7 @@ public class UtilTests {
             stu.setNetId(String.valueOf(i));
             courseStudents.add(stu);
         }
-        Util.addIfAllowed(studentsQueue, courseStudents, apiCom);
+        util.addIfAllowed(studentsQueue, courseStudents, apiCom);
         int actual = studentsQueue.size();
 
         assertEquals(expected, actual);
@@ -305,7 +315,7 @@ public class UtilTests {
         Timestamp timeTuesday = new Timestamp(timeMonday.getTime()
                 + makeTimeLength(24).getTime());
         //Generator test = makeGenerator();
-        Timestamp supposedTuesday = Util.nextDay(timeMonday);
+        Timestamp supposedTuesday = util.nextDay(timeMonday);
         assertEquals(timeTuesday.getTime(), supposedTuesday.getTime());
     }
 
@@ -317,7 +327,7 @@ public class UtilTests {
         Timestamp timeMonday = new Timestamp(timeFriday.getTime()
                 + (3 * makeTimeLength(24).getTime()));
         //Generator test = makeGenerator();
-        Timestamp supposedMonday = Util.nextDay(timeFriday);
+        Timestamp supposedMonday = util.nextDay(timeFriday);
         assertEquals(timeMonday.getTime(), supposedMonday.getTime());
     }
 
@@ -326,7 +336,7 @@ public class UtilTests {
         List<Lecture> lsc = createListLecturesScheduled();
         Lecture l = lsc.get(0);
         Generator test = makeGenerator();
-        assertTrue(Util.overlap(l, test.getIntervalBetweenLectures(), l.getStartTime(), l));
+        assertTrue(util.overlap(l, test.getIntervalBetweenLectures(), l.getStartTime(), l));
     }
 
     @Test
@@ -335,7 +345,7 @@ public class UtilTests {
         Lecture l = lsc.get(0);
         Lecture ll = lsc.get(1);
         Generator test = makeGenerator();
-        assertFalse(Util.overlap(l, test.getIntervalBetweenLectures(), l.getStartTime(), ll));
+        assertFalse(util.overlap(l, test.getIntervalBetweenLectures(), l.getStartTime(), ll));
     }
 
     @Test
@@ -347,7 +357,7 @@ public class UtilTests {
         Generator test = makeGenerator();
         Timestamp inMiddleOfLec = new Timestamp(makeBasicStartTime().getTime()
                 + makeTimeLength(1).getTime());
-        assertTrue(Util.overlap(l, test.getIntervalBetweenLectures(), inMiddleOfLec, ll));
+        assertTrue(util.overlap(l, test.getIntervalBetweenLectures(), inMiddleOfLec, ll));
     }
 
     @Test
@@ -356,7 +366,7 @@ public class UtilTests {
         Lecture l2 = new Lecture(2, 12, new Time(100000), false, 2);
         Timestamp potentialStartTime = new Timestamp(0);
 
-        assertTrue(Util.overlap(l2, 0, potentialStartTime, l1));
+        assertTrue(util.overlap(l2, 0, potentialStartTime, l1));
     }
 
 }
