@@ -9,10 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
-import nl.tudelft.unischeduler.schedulegenerate.entities.Course;
-import nl.tudelft.unischeduler.schedulegenerate.entities.Lecture;
-import nl.tudelft.unischeduler.schedulegenerate.entities.Room;
-import nl.tudelft.unischeduler.schedulegenerate.entities.Student;
+import nl.tudelft.unischeduler.schedulegenerate.entities.*;
 import nl.tudelft.unischeduler.schedulegenerate.generator.Generator;
 
 // a class that creates basic entities, useful for unit testing
@@ -55,7 +52,7 @@ public class TestUtil {
     }
 
     public static Generator makeGenerator() {
-        Generator gen = new Generator(new ApiCommunicator());
+        Generator gen = new Generator(new ApiCommunicator(), new DateTimeImpl());
         return gen;
     }
 

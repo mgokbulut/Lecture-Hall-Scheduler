@@ -11,8 +11,17 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
 import nl.tudelft.unischeduler.schedulegenerate.api.ApiCommunicator;
+import org.apache.commons.lang.mutable.MutableBoolean;
 
 public class Util {
+
+    /**
+     * Does nothing as there is nothing to do!
+     * This class was not made static because
+     * then we can mock it more easily.
+     */
+    public Util() {
+    }
 
     /**
      * Calculates the distance in days between two dates excluding
@@ -22,7 +31,7 @@ public class Util {
      * @param c2 the timestamp of the second date
      * @return the number of days difference between them
      */
-    public static int calDistance(Timestamp c1, Timestamp c2) {
+    public int calDistance(Timestamp c1, Timestamp c2) {
         int maxIterations = 100; // just to never get stuck in the while loop
         Calendar cal1 = Calendar.getInstance();
         cal1.setTimeInMillis(c1.getTime());
@@ -54,7 +63,7 @@ public class Util {
      * @param currentTime the current time the system is working with
      * @return either an assigned room, or null
      */
-    public static Room assignRoomToLecture(Timestamp time, Lecture lecture,
+    public Room assignRoomToLecture(Timestamp time, Lecture lecture,
                                            List<List<Lecture>> timeTable, Room currRoom,
                                            Timestamp currentTime) {
         if (time == null) {
@@ -63,7 +72,7 @@ public class Util {
         // otherwise update the relevant values
         lecture.setStartTime(time);
         lecture.setRoom(currRoom);
-        int day = Util.calDistance(currentTime, time);
+        int day = calDistance(currentTime, time);
         timeTable.get(day).add(lecture);
         return currRoom;
     }
@@ -76,7 +85,7 @@ public class Util {
      * @param courseStudents set of students enrolled in the course
      * @return whether the operation succeeded
      */
-    public static boolean addIfAllowed(PriorityQueue<Student> studentsQueue,
+    public boolean addIfAllowed(PriorityQueue<Student> studentsQueue,
                                 Set<Student> courseStudents, ApiCommunicator apiCom) {
         for (Iterator<Student> it = courseStudents.iterator(); it.hasNext();) {
             Student s = it.next();
@@ -98,10 +107,10 @@ public class Util {
      * @param l the lecture in question
      * @return list containing 1. list of students to add and 2. set of students not selected
      */
-    public static List<Object> computeStudentsList(int capacity,
-                                                   int maxIterations,
-                                                   PriorityQueue<Student> studentsQueue,
-                                                   Boolean everythingWentWell, Lecture l) {
+    public List<Object> computeStudentsList(int capacity,
+                                            int maxIterations,
+                                            PriorityQueue<Student> studentsQueue,
+                                            Boolean everythingWentWell, Lecture l) {
         // first we have to figure out which students to add, without duplicates
         Set<Student> studentsToAdd = new HashSet<>();
         List<Student> notSelected = new ArrayList<>();
@@ -141,7 +150,7 @@ public class Util {
      * @param time the timestamp to add to
      * @return the timestamp + the lecture's duration
      */
-    public static Timestamp addClassDurationAndTime(Lecture lecture, Timestamp time) {
+    public Timestamp addClassDurationAndTime(Lecture lecture, Timestamp time) {
         return new Timestamp(time.getTime()
                 + lecture.getDuration().getTime());
     }
@@ -153,7 +162,7 @@ public class Util {
      * @param time which day to take the end of
      * @return a timestamp of the same day but at the right hour
      */
-    public static Timestamp getEndOfDay(Timestamp time) {
+    public Timestamp getEndOfDay(Timestamp time) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(time.getTime());
         c.set(Calendar.HOUR_OF_DAY, 17);
@@ -168,7 +177,7 @@ public class Util {
      * @param time which day to take the end of
      * @return a timestamp of the same day but at the right hour
      */
-    public static Timestamp getStartOfDay(Timestamp time) {
+    public Timestamp getStartOfDay(Timestamp time) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(time.getTime());
         c.set(Calendar.HOUR_OF_DAY, 9);
@@ -186,7 +195,7 @@ public class Util {
      * @param currentTime the start time of the algorithm
      * @return the list of lectures, sorted by endtime
      */
-    public static ArrayList<Lecture> populateLectures(
+    public ArrayList<Lecture> populateLectures(
             List<Course> courses, int numOfDays,
             ApiCommunicator apiComm, Timestamp currentTime) {
         ArrayList<Lecture> lectures = new ArrayList<>();
@@ -214,7 +223,7 @@ public class Util {
      * @param coursesPerYear the list to populate/contain the courses
      * @param maxNumberOfYears the number of years that are possible
      */
-    public static void populateCoursesPerYear(List<Course> courses,
+    public void populateCoursesPerYear(List<Course> courses,
                                               List<List<Course>> coursesPerYear,
                                               int maxNumberOfYears) {
         for (int i = 0; i < maxNumberOfYears; i++) {
@@ -236,10 +245,10 @@ public class Util {
      * @param intervalBetweenLectures standard interval in minutes between lectures
      * @return whether lecture1 can be scheduled at the given time without conflict
      */
-    public static boolean areLecturesConflicting(Lecture lecture1, Lecture lecture2,
+    public boolean areLecturesConflicting(Lecture lecture1, Lecture lecture2,
                                                  Timestamp time, Room room,
                                                  long intervalBetweenLectures) {
-        return !(Util.overlap(lecture1, intervalBetweenLectures, time, lecture2)
+        return !(overlap(lecture1, intervalBetweenLectures, time, lecture2)
                 && (lecture2.getRoom().equals(room)
                 || lecture2.getYear() == lecture1.getYear()));
     }
@@ -252,7 +261,7 @@ public class Util {
      * @param t the timestamp you want to add a day to
      * @return a new timestamp that is set to one day later
      */
-    public static Timestamp nextDay(Timestamp t) {
+    public Timestamp nextDay(Timestamp t) {
         Calendar cal1 = Calendar.getInstance();
 
         cal1.setTimeInMillis(t.getTime());
@@ -274,7 +283,7 @@ public class Util {
      * @param scheduledLecture the already-scheduled lecture we want to check against
      * @return whether there would be overlap should the lecture be scheduled at this time
      */
-    public static boolean overlap(Lecture lecture, long interval,
+    public boolean overlap(Lecture lecture, long interval,
                                   Timestamp potentialStartTime, Lecture scheduledLecture) {
         Timestamp scheduledLectureEndTime = scheduledLecture.computeEndTime();
         Timestamp schLecEndTiWithInterval = new Timestamp(scheduledLectureEndTime.getTime()
